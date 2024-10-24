@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Seçimi</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="portal-selection">
+        <h1>Portal Seçimi</h1>
+        <div class="button-container">
+            <button id="studentPortalBtn" class="portal-btn">Öğrenci Portalı</button>
+            <button id="userPortalBtn" class="portal-btn">Kullanıcı Portalı</button>
+        </div>
+    </div>
+
+    <!-- Öğrenci Portalı -->
+    <div id="studentPortal" class="portal hidden">
+        <h2>Öğrenci Portalı</h2>
+        <div class="form-toggle">
+            <button id="studentLoginBtn" class="active">Öğrenci Giriş</button>
+            <button id="studentRegisterBtn">Öğrenci Kayıt</button>
+        </div>
+
+        <!-- Öğrenci Giriş Formu -->
+        <form id="studentLoginForm" class="form">
+            <h3>Öğrenci Giriş</h3>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Şifre" required>
+            <button type="submit">Giriş Yap</button>
+        </form>
+
+        <!-- Öğrenci Kayıt Formu -->
+        <form id="studentRegisterForm" class="form hidden">
+            <h3>Öğrenci Kayıt</h3>
+            <input type="text" placeholder="Ad Soyad" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Şifre" required>
+            <button type="submit">Kayıt Ol</button>
+        </form>
+    </div>
+
+    <!-- Kullanıcı Portalı -->
+    <div id="userPortal" class="portal hidden">
+        <h2>Kullanıcı Portalı</h2>
+        <div class="form-toggle">
+            <button id="userLoginBtn" class="active">Kullanıcı Giriş</button>
+            <button id="userRegisterBtn">Kullanıcı Kayıt</button>
+        </div>
+
+        <!-- Kullanıcı Giriş Formu -->
+        <form id="userLoginForm" class="form">
+            <h3>Kullanıcı Giriş</h3>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Şifre" required>
+            <button type="submit">Giriş Yap</button>
+        </form>
+
+        <!-- Kullanıcı Kayıt Formu -->
+        <form id="userRegisterForm" class="form hidden">
+            <h3>Kullanıcı Kayıt</h3>
+            <input type="text" placeholder="Kullanıcı Adı" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Şifre" required>
+            <button type="submit">Kayıt Ol</button>
+        </form>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

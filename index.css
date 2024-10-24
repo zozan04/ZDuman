@@ -1,0 +1,267 @@
+/* Temel genel stil */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+body.light-mode {
+    background-color: white;
+    color: black;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: white;
+}
+
+/* Ana ekran başlığı */
+.main-header {
+    display: flex;
+    justify-content: space-between; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    background-color: rgba(74, 11, 11, 0.8); /* Navbar background color */
+    padding: 20px 0; /* Top and bottom padding to create space */
+    z-index: 1000;
+    width: 100%;
+    position: fixed;
+}
+
+.logo img {
+    width: 70px;
+    height: auto;
+    margin-top: -5px;
+    margin-left: 10px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: var(--max-width); /* Ensure this variable is defined in your CSS */
+    margin: auto;
+    text-decoration: none;
+}
+
+.nav_bar {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    width: 100%;
+    position: relative;
+    z-index: 150;
+}
+
+/* İkonlar */
+.icons-container {
+    display: flex; /* İkonları yan yana diz */
+    align-items: center; /* Dikey olarak ortala */
+    gap: 15px;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+}
+
+.login-icon {
+    position: absolute;
+    top: 25px;
+    right: 70px;
+    display: flex;
+}
+
+.light {
+    position: relative;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    margin-left: 1300px;
+    top: 2px;
+    right: -30px;
+}
+
+.cart-icon {
+    position: relative;
+    top: 6px;
+    left: 1270px;
+    display: flex;
+}
+
+/* Arama çubuğu */
+.search-container {
+    position: relative;
+    align-items: center;
+    display: flex;
+    margin-left: 20px; 
+    z-index: 1;
+    top: 6px;
+    left: 300px;
+}
+
+.search-bar {
+    display: none; /* Başlangıçta arama çubuğunu gizledik */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 150px;
+    transition: width 0.5s ease, opacity 0.5s ease; /* Smooth transition for expanding */
+    opacity: 0;
+}
+
+.search-container:hover .search-bar {
+    display: block; /* Üzerine gelindiğinde görünür */
+}
+
+.search-bar.active {
+    width: 100px; /* Genişlediğinde arama çubuğu genişliği */
+    opacity: 1;
+    pointer-events: all; /* Allow interaction when visible */
+}
+
+/* Navbar menü stilleri */
+ul.menu {
+    flex-grow: 1;
+    justify-content: center;
+    list-style-type: none; 
+    margin: 0;
+    padding: 0;
+    display: flex; 
+    gap: 20px; 
+}
+
+ul.menu li {
+    display: inline; /* Menüyü yan yana diz */
+}
+
+ul.menu li a {
+    color: white; 
+    text-decoration: none; 
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+ul.menu li a:hover {
+    background-color: #e0a4a4; 
+    border-radius: 5px; 
+    z-index: 10;
+}
+
+/* Hero Image */
+.hero-image {
+    position: relative; /* Positioning context for absolute children */
+    height: 100vh; /* Full height of the viewport */
+    overflow: hidden; /* Hide overflow to crop the image */
+}
+
+.hero-image img {
+    position: absolute; /* Position the image absolutely */
+    top: 50%; /* Move the image down */
+    left: 50%; /* Move the image right */
+    width: 100%; /* Full width of the container */
+    height: auto; /* Maintain aspect ratio */
+    min-height: 100%; /* Ensure it covers the entire height */
+    transform: translate(-50%, -50%); /* Center the image */
+}
+
+/* Text styling */
+.hero-text {
+    position: absolute; /* Position text over the image */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset the text */
+    color: white; /* Text color */
+    text-align: center; /* Center text */
+    z-index: 1; /* Ensure it stays above the background */
+}
+
+/* Yemek kategorileri */
+.categories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.category {
+    position: relative;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    aspect-ratio: 1 / 1; /* Kare görünümü sağlar */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.category img {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+}
+
+.category h4 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.category:hover {
+    transform: scale(1.05);
+}
+
+/* Footer Stil Ayarları */
+.footer {
+    background-color: #8B4513; /* Yeni arka plan rengi (Açık Kahverengi) */
+    color: white; 
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 1200px; /* Sayfanın genişliğiyle orantılı yapar */
+    margin: 0 auto; /* Ortalar */
+    padding: 0 20px; /* Yanlardan içeriklere boşluk bırakır */
+}
+
+.footer-container p {
+    margin: 10px 0; /* Üst ve alt boşluk */
+    font-size: 14px; /* Yazı boyutunu optimize eder */
+}
+
+/* Responsive ayarları */
+@media (max-width: 768px) {
+    .categories-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .categories-container {
+        grid-template-columns: 1fr;
+    }
+}
