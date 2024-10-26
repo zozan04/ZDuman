@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghibli Yemek Platformu</title>
+    <link rel="icon" href="resimler/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
+    <link rel="stylesheet" href="ana_yemekler.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+</head>
+<body>
+    <!-- Ana Ekran -->
+    <header class="main-header">
+        <nav>
+            <div class="nav_bar">
+                <div class="logo">
+                    <img src="resimler/A7.jpg" alt="GYP Logo">
+                </div>
+                <!-- Menüleri ekliyoruz -->
+                <ul class="menu">
+                    <li><a href="index.html">Anasayfa</a></li>
+                    <li><a href="#hakkimizda">Hakkımızda</a></li>
+                    <li><a href="#yemekler">Yemekler</a></li>
+                    <li><a href="#iletisim">İletişim</a></li>
+                    
+                </ul>
+                
+            </div>
+           
+        </nav>
+        
+        <div class="icons-container"> <!-- İkonlar için yeni bir kapsayıcı ekledik -->
+            <!-- Arama İkonu -->
+            <div class="search-container">
+                <div class="circle">
+                    <i class="fas fa-search search-icon" style="color: black; font-size: 20px;"></i>
+                </div>
+                <input type="text" class="search-bar" placeholder="Ara...">
+            </div>
+            <!-- Sepetim İkonu -->
+            <a href="sepetim.html" class="cart-icon" title="Sepetim">
+                <div class="circle">
+                    <i class="fas fa-shopping-cart" style="color: black; font-size: 20px;"></i>
+                </div>
+            </a>
+            <!-- Giriş İkonu -->
+            <a href="login/login.html" class="login-icon" title="Giriş Yap">
+                <div class="circle">
+                    <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
+                </div>
+            </a>
+            <!-- Tema Değiştir İkonu -->
+            <div class="light" id="light" title="Tema Değiştir">
+                <div class="circle">
+                    <i class="fas fa-sun" id="themeIcon" style="color: black; font-size: 20px;"></i>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- Yemek bölümü -->
+    <div class="main-dish-section">
+        <h2>Ana Yemekler</h2>
+        <div class="dish-gallery">
+            <div class="dish-item">
+                <img src="https://i.pinimg.com/550x/ce/04/35/ce043536ace8ac64a189904c8b947a04.jpg" alt="Yemek 1" />
+                <div class="dish-title">Yemek 1</div>
+            </div>
+            <div class="dish-item">
+                <img src="image2.jpg" alt="Yemek 2" />
+                <h4>Etli Yemek</h4>
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+                <h4>Yemek 1</h4>
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+                <h4>Yemek 1</h4>
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+            <div class="dish-item">
+                <img src="image3.jpg" alt="Yemek 3" />
+            </div>
+           
+            
+        </div>
+    </div>
+
+    <script src="ana_yemekler.js"></script>
+</body>
+</html>
