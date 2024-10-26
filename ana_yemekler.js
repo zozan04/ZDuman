@@ -1,8 +1,7 @@
-// Tema değiştirme butonuna tıklama olayını dinleyin
 document.getElementById("light").addEventListener("click", function() {
     const body = document.body;
     const themeIcon = document.getElementById("themeIcon");
-    const circle = document.querySelector(".light.circle");
+    const circle = document.querySelector("light .circle"); // .light .circle olarak güncellendi
 
     if (body.classList.contains("light-mode")) {
         // Karanlık moda geçiş

@@ -20,9 +20,9 @@
                 <!-- Menüleri ekliyoruz -->
                 <ul class="menu">
                     <li><a href="index.html">Anasayfa</a></li>
-                    <li><a href="hakkimizda.html">Hakkımızda</a></li>
-                    <li><a href="yemekler.html">Yemekler</a></li>
-                    <li><a href="iletisim.html">İletişim</a></li>
+                    <li><a href="#hakkimizda">Hakkımızda</a></li>
+                    <li><a href="#yemekler">Yemekler</a></li>
+                    <li><a href="#iletisim">İletişim</a></li>
                 </ul>
             
             </div>
@@ -42,7 +42,7 @@
                 </div>
             </a>
             <!-- Giriş İkonu -->
-            <a href="login.html" class="login-icon" title="Giriş Yap">
+            <a href="login/login.html" class="login-icon" title="Giriş Yap">
                 <div class="circle">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
@@ -58,26 +58,45 @@
     </header>
 
     <!-- Ana Görsel -->
-    <div class="hero-image">
+    <div class="main_image">
         <img src="https://www.floryabasakyemek.com/wp-content/uploads/2018/06/florya-basak-yemek-header-1600x925.jpg" alt="Lezzetli Yemekler">
-        <div class="hero-text">
-            <h2>Lezzetli Yemekler İçin Buradayız!</h2>
-            <p>Gastronomi dünyasının tadını çıkarın.</p>
+        <div class="main_text">
+            <h2>Gastronominin Sanatı Burada Başlıyor.</h2>
+            <p>Lezzet dolu bir dünyaya hoş geldiniz. Tarifler, deneyimler ve eşsiz tatlar burada.</p>
         </div>
     </div>
+       
+    <!-- Hakkımızda Bölümü -->
+    <h2 class="about-title" id="hakkimizda">Hakkımızda</h2>
+<section class="section-container about-container" id="about">
+    <div class="about-image">
+        <img src="http://gastroart.com.tr/wp-content/uploads/2018/07/profesyonel-ascilik-egitimi-1.jpg" alt="Hakkımızda Görseli">
+    </div>
+    <div class="about-content">
+        <div class="about-description">
+            <p>Ghibli Yemek Platformu olarak, gastronomi öğrencilerinin 
+                yeteneklerini sergileyebilecekleri, özgün tariflerini 
+                sunabilecekleri, ve farklı tatları keşfederek deneyim kazanmalarını sağlayacak bir ortam yaratıyoruz. 
+                Bu platformda, her bir yemeğin ardında yatan hikayeyi ve öğrencilerimizin yaratıcılığını sizlerle buluşturmayı hedefliyoruz. 
+                Ghibli Yemek Platformu’nda her lezzet, her sunum; öğrencilerin tutkusu ve emeğinin bir yansımasıdır.</p>
+        </div>
+    </div>
+</section>
+
 
     <!-- Yemek Kategorileri Bölümü -->
+    <h2 class="category-title" id="yemekler">Yemekler</h2>
     <section class="food-categories">
         <div class="categories-container">
-            <a href="ana-yemekler.html" class="category">
+            <a href="ana_yemekler.html" class="category">
                 <img src="https://iasbh.tmgrup.com.tr/5bfb4f/754/640/83/0/653/483?u=https://isbh.tmgrup.com.tr/sbh/2023/10/07/1696660626651.jpg" alt="Ana Yemekler">
                 <h4>Ana Yemekler</h4>
             </a>
-            <a href="sulu-yemekler.html" class="category">
+            <a href="sulu_yemekler.html" class="category">
                 <img src="https://cdn.yemek.com/mnresize/940/940/uploads/2017/01/terbiyeli-sulu-kofte-yeni.jpg" alt="Sulu Yemekler">
                 <h4>Sulu Yemekler</h4>
             </a>
-            <a href="kuru-yemekler.html" class="category">
+            <a href="kuru_yemekler.html" class="category">
                 <img src="https://lezzet.blob.core.windows.net/images-xxlarge-secondary/makarna-soslari-yemeklerinize-cok-yakisacak-lezzetli-ve-kolay-15-makarna-sosu-f1a94fcd-bec1-4e91-bd77-4de39db69b0d.jpg" alt="Kuru Yemekler">
                 <h4>Kuru Yemekler</h4>
             </a>
@@ -92,10 +111,12 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="footer-container">
+       <!-- iletisim Bölümü -->
+    <h2 class="iletisim-title" id="iletisim">İletişim</h2>
+    <footer class="iletisim">
+        <div class="iletisim-container">
             <p>&copy; 2024 Ghibli Yemek Platformu. Tüm hakları saklıdır.</p>
-            <p>İletişim: info@ghibliyemek.com | Tel: +90 123 456 7890</p>
+            <p>İletişim: info@ghibliyemek.com | Tel: +90 541 411 04 58</p>
         </div>
     </footer>
 

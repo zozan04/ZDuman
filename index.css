@@ -1,4 +1,3 @@
-/* Temel genel stil */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -137,6 +136,7 @@ nav {
 
 /* Navbar menü stilleri */
 ul.menu {
+    
     flex-grow: 1;
     justify-content: center;
     list-style-type: none; 
@@ -144,6 +144,7 @@ ul.menu {
     padding: 0;
     display: flex; 
     gap: 20px; 
+    isolation: isolate;
 }
 
 ul.menu li {
@@ -165,13 +166,16 @@ ul.menu li a:hover {
 }
 
 /* Hero Image */
-.hero-image {
+.main_image {
     position: relative; /* Positioning context for absolute children */
     height: 100vh; /* Full height of the viewport */
     overflow: hidden; /* Hide overflow to crop the image */
+    margin-bottom: 40px;
+    text-align: center;
+    color: white;
 }
 
-.hero-image img {
+.main_image img {
     position: absolute; /* Position the image absolutely */
     top: 50%; /* Move the image down */
     left: 50%; /* Move the image right */
@@ -182,14 +186,165 @@ ul.menu li a:hover {
 }
 
 /* Text styling */
-.hero-text {
+.main_text {
     position: absolute; /* Position text over the image */
     top: 50%; /* Center vertically */
     left: 50%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Offset the text */
     color: white; /* Text color */
     text-align: center; /* Center text */
+    opacity: 0;
+    transition: opacity 2s ease-out, transform 2s ease-out;
     z-index: 1; /* Ensure it stays above the background */
+}
+.main_text h2 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.main_text p {
+    font-size: 1.2rem;
+}
+
+.main_text.animate {
+    opacity: 1; /* Görünür yap */
+    transform: translate(-50%, -50%) scale(1.2); /* Orijinal boyut */
+}
+
+/* Hakkımızda */
+
+.about-title {
+    text-align: center; /* Yazıyı ortala */
+    font-size: 28px; /* Başlık boyutu */
+    font-weight: bold; /* Kalın yazı */
+    margin-top: 100px; /* Üst boşluk, ana resim ile başlık arasında */
+    margin-bottom: -5px; /* Alt boşluk, başlık ile içerik arasında */
+    position: relative; /* Konum ayarı */
+    display: flex; /* Esnek kutu modeli */
+    align-items: center; /* Dikey hizalama */
+    justify-content: center; /* Yatay hizalama */
+}
+
+.about-title::before,
+.about-title::after {
+    content: ""; /* İçerik yok */
+    flex: 1; /* Çizgilerin esnekliği */
+    height: 2px; /* Çizgi kalınlığı */
+    background-color: #8B4513; /* Çizgi rengi (koyu kahverengi) */
+    margin: 0 15px; /* Yazı ile çizgi arasındaki boşluk */
+    border-radius: 2px; /* Hafif yuvarlak köşe */
+    opacity: 0.7; /* Şeffaflık */
+}
+
+
+.about-container {
+    overflow: hidden;
+    display: flex; /* Flex kullanarak düzenleme yapıyoruz */
+    align-items: flex-start;
+    max-width: 600px;
+    margin: auto;
+    opacity: 0; /* Başlangıçta görünmez */
+    transform: translateY(-200px); /* Yukarıda başlama */
+    transition: opacity 1s ease, transform 1s ease; /* Geçiş efektleri */
+}
+
+.about-container.visible {
+    opacity: 1; /* Görünür hale gelir */
+    transform: translateY(0); /* Normal konumuna döner */
+}
+
+.about-content {
+    flex: 1; /* İçeriği esnek hale getir */
+    display: flex; /* Flex kullanarak düzenleme yapıyoruz */
+    align-items: center;
+}
+
+.about-image {
+    flex: 1; /* Görsel alanı esnek hale getir */
+    position: relative;
+    text-align: center;
+}
+
+.about-image img {
+    max-width: 450px;
+    margin: auto;
+    border-radius: 5px;
+    margin-left: 150px;
+    margin-right: 50px;
+    height: auto;
+    position: sticky;
+    top: 20px;
+    transition: opacity 2s ease, transform 2s ease; /* Geçiş süresi artırıldı */
+}
+
+
+.section-container {
+    max-width: var(--max-width);
+    margin: auto;
+    padding: 5rem 1rem;
+    display: flex; /* Flex kullanarak düzenleme yapıyoruz */
+}
+
+.about-description {
+    text-align: left; /* Metni sola hizala */
+    margin: 0; /* Varsayılan margin'leri kaldır */
+    padding: 0; /* Varsayılan padding'leri kaldır */
+    max-width: 600px;
+    font-size: 20px;
+    opacity: 0; /* Başlangıçta görünmez */
+    transform: translateY(30px); /* Aşağıdan yukarıya çıkma efekti */
+    transition: opacity 2s ease-out, transform 2s ease-out;
+}
+
+.about-description.animate {
+    opacity: 1; /* Görünür yap */
+    transform: translateY(0); /* Yukarı kaydır */
+}
+
+.section-header {
+    margin-bottom: 10px;
+    font-size: 24px;
+    position: relative;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: black;
+}
+
+.section-header::after {
+    position: absolute;
+    content: "";
+    top: 50%;
+    transform: translate(1rem, -50%);
+    height: 2px;
+    width: 4rem;
+    background-color: rgba(74, 11, 11, 0.8);
+}
+
+
+/* Yemek kategorileri */
+
+/* Kategori başlığı */
+.category-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-title::before,
+.category-title::after {
+    content: "";
+    flex: 1;
+    height: 2px; /* Çizgi kalınlığı */
+    background-color: #8B4513; /* Çizgi rengi (koyu kahverengi) */
+    margin: 0 15px; /* Yazı ile çizgi arasındaki boşluk */
+    border-radius: 2px; /* Çizgilere hafif yuvarlak köşe */
+    opacity: 0.7; /* Şeffaflık */
 }
 
 /* Yemek kategorileri */
@@ -200,6 +355,40 @@ ul.menu li a:hover {
     padding: 40px;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+/* Kategori */
+.category {
+    position: relative;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    aspect-ratio: 1 / 1; /* Kare görünümü sağlar */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0; /* Başlangıçta görünmez */
+    transform: translateY(-20px); /* Yukarıdan aşağıya kaydırma efekti */
+    transition: opacity 1s ease-out, transform 1s ease-out; /* Animasyon süreleri */
+}
+
+.category.visible {
+    opacity: 1; /* Görünür hale gelir */
+    transform: translateY(0); /* Normal konumuna döner */
+}
+
+.category img {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+}
+
+.category h4 {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
 }
 
 .category {
@@ -213,7 +402,14 @@ ul.menu li a:hover {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    transition: transform 0.3s ease;
+    opacity: 0; /* Başlangıçta görünmez */
+    transform: translateY(-20px); /* Yukarıdan aşağıya kaydırma efekti */
+    transition: opacity 1s ease-out, transform 1s ease-out; /* Animasyon süreleri */
+}
+
+.category.visible {
+    opacity: 1; /* Görünür hale gelir */
+    transform: translateY(0); /* Normal konumuna döner */
 }
 
 .category img {
@@ -229,11 +425,37 @@ ul.menu li a:hover {
 }
 
 .category:hover {
-    transform: scale(1.05);
+    transform: scale(1.1); /* Üzerine gelindiğinde %10 büyütme */
+    z-index: 1; /* Büyütüldüğünde öne çıkması için z-index artırılır */
+    transition: transform 0.5s ease; /* Animasyon süresi */
 }
 
-/* Footer Stil Ayarları */
-.footer {
+
+/* iletişim Stil Ayarları */
+
+.iletisim-title {
+    text-align: center; /* Yazıyı ortala */
+    font-size: 28px; /* Başlık boyutu */
+    font-weight: bold; /* Kalın yazı */
+    margin-top: 70px; /* Üst boşluk, ana resim ile başlık arasında */
+    margin-bottom: 50px; /* Alt boşluk, başlık ile içerik arasında */
+    position: relative; /* Konum ayarı */
+    display: flex; /* Esnek kutu modeli */
+    align-items: center; /* Dikey hizalama */
+    justify-content: center; /* Yatay hizalama */
+}
+
+.iletisim-title::before,
+.iletisim-title::after {
+    content: ""; /* İçerik yok */
+    flex: 1; /* Çizgilerin esnekliği */
+    height: 2px; /* Çizgi kalınlığı */
+    background-color: #8B4513; /* Çizgi rengi (koyu kahverengi) */
+    margin: 0 15px; /* Yazı ile çizgi arasındaki boşluk */
+    border-radius: 2px; /* Hafif yuvarlak köşe */
+    opacity: 0.7; /* Şeffaflık */
+}
+.iletisim {
     background-color: #8B4513; /* Yeni arka plan rengi (Açık Kahverengi) */
     color: white; 
     padding: 20px 0;
@@ -242,13 +464,13 @@ ul.menu li a:hover {
     width: 100%;
 }
 
-.footer-container {
+.iletisim-container {
     max-width: 1200px; /* Sayfanın genişliğiyle orantılı yapar */
     margin: 0 auto; /* Ortalar */
     padding: 0 20px; /* Yanlardan içeriklere boşluk bırakır */
 }
 
-.footer-container p {
+.iletisim-container p {
     margin: 10px 0; /* Üst ve alt boşluk */
     font-size: 14px; /* Yazı boyutunu optimize eder */
 }

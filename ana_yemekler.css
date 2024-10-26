@@ -21,7 +21,7 @@ body.dark-mode {
     justify-content: space-between; /* Center the content horizontally */
     align-items: center; /* Center the content vertically */
     background-color: rgba(74, 11, 11, 0.8); /* Navbar background color */
-    padding: 20px 0px; /* Top and bottom padding to create space */
+    padding: 20px 0; /* Top and bottom padding to create space */
     z-index: 1000;
     width: 100%;
     position: fixed;
@@ -42,10 +42,11 @@ nav {
     max-width: var(--max-width); /* Ensure this variable is defined in your CSS */
     margin: auto;
     text-decoration: none;
+    
 }
 
 .nav_bar {
-    padding:10px 0;
+    padding: 10px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -53,6 +54,7 @@ nav {
     width: 100%;
     position: relative;
     z-index: 150;
+    
 }
 
 /* İkonlar */
@@ -134,6 +136,7 @@ nav {
     opacity: 1;
     pointer-events: all; /* Allow interaction when visible */
 }
+
 
 /* Navbar menü stilleri */
 ul.menu {
