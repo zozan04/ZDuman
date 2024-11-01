@@ -14,7 +14,9 @@ body.dark-mode {
     background-color: #333;
     color: white;
 }
-
+html {
+    overflow-y: scroll; /* Her zaman sabit bir kaydırma çubuğu gösterir */
+}
 /* Ana ekran başlığı */
 .main-header {
     display: flex;
@@ -54,7 +56,6 @@ nav {
     width: 100%;
     position: relative;
     z-index: 150;
-    
 }
 
 /* İkonlar */
@@ -85,62 +86,143 @@ nav {
 }
 
 .light {
-    position: relative;
+    position: absolute;
     cursor: pointer;
     background: none;
     border: none;
     color: inherit;
     font-size: 20px;
-    margin-left: 1300px;
-    top: 2px;
-    right: -30px;
+    margin-left: 900px;
+    top: 25px;
+    right: 18px;
 }
 
 .cart-icon {
-    position: relative;
-    top: 6px;
-    left: 1270px;
+    position: absolute;
+    top: 25px;
+    left: 1355px;
     display: flex;
+ 
 }
 
 /* Arama çubuğu */
-.search-container {
+.search-icon {
     position: relative;
     align-items: center;
     display: flex;
     margin-left: 20px; 
     z-index: 1;
-    top: 6px;
-    left: 300px;
+    top: 4px;
+    left: 150px;
+}
+.search-icon .circle i {
+    color: black;
+    font-size: 20px;
+    margin-top: -4px;
+    margin-left: -295px;
 }
 
-.search-bar {
-    display: none; /* Başlangıçta arama çubuğunu gizledik */
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+
+/* search kutusu */
+#search-box {
+    display: none; /* Başlangıçta gizli */
     padding: 5px;
-    border-radius: 5px;
     border: 1px solid #ccc;
+    border-radius: 5px;
     width: 150px;
-    transition: width 0.5s ease, opacity 0.5s ease; /* Smooth transition for expanding */
-    opacity: 0;
+    position: absolute;
+    top: 8px; /* İkonun konumuna göre ayarlayın */
+    right: -170px; /* İkonun konumuna göre ayarlayın */
+    z-index: 10;
+    background-color: white;
 }
 
-.search-container:hover .search-bar {
-    display: block; /* Üzerine gelindiğinde görünür */
+#search-box input {
+    width: 100%; /* Kutunun içinde tam genişlik */
+    border: none; /* Kenarlık yok */
+    border-radius: 4px; /* Köşe yuvarlama */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hafif gölge */
 }
 
-.search-bar.active {
-    width: 100px; /* Genişlediğinde arama çubuğu genişliği */
-    opacity: 1;
-    pointer-events: all; /* Allow interaction when visible */
+#search-box input:focus {
+    outline: none; /* Kenarlık dışında bir görünüm yok */
 }
 
+#noResultsMessage {
+    margin-top: 10px;
+    font-weight: bold;
+}
+/* Filtreleme ikonu ve metin */
+.filter-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Çember ile yazı arasındaki boşluk */
+    cursor: pointer;
+    margin-right:800px;
+    margin-left: 400px;
+    
+    position: absolute;
+    
+}
+.filter-icon .circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transform: translateY(3px); /* İkonu aşağı çekmek için bu değeri ayarlayın */
+}
+
+.filter-icon .circle i {
+    color: black;
+    font-size: 20px;
+    margin-top: 4px;
+}
+
+.filter-icon .filter-text {
+    transform: translateY(3px);
+    color: white;
+    font-weight: bold;
+    max-width: 100px;
+    position: relative;
+}
+
+/* Filtre kutusu */
+#filter-box {
+    display: none; /* Başlangıçta gizli */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+    position: absolute;
+    top: 8px; /* İkonun konumuna göre ayarlayın */
+    right: -170px; /* İkonun konumuna göre ayarlayın */
+    z-index: 10;
+    background-color: white;
+}
+
+#filter-box input {
+    width: 100%; /* Kutunun içinde tam genişlik */
+    
+    border: none; /* Kenarlık yok */
+    border-radius: 4px; /* Köşe yuvarlama */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+#filter-box input:focus {
+    outline: none; /* Kenarlık dışında bir görünüm yok */
+}
 
 /* Navbar menü stilleri */
 ul.menu {
-    flex-grow: 1;
+    position:absolute;
+    flex-grow: 0;
+    right: 300px;
     justify-content: center;
     list-style-type: none; 
     margin: 0;
@@ -148,12 +230,13 @@ ul.menu {
     display: flex; 
     gap: 20px; 
     isolation: isolate;
-    align-items: center;
+    margin-top: 5px;
 }
 
 ul.menu li {
     display: inline; /* Menüyü yan yana diz */
     isolation: isolate;
+    display: flex;
     
 }
 
@@ -164,7 +247,8 @@ ul.menu li a {
     font-weight: bold;
     padding: 10px 20px;
     isolation: isolate;
-    
+    display: flex;
+
 }
 
 ul.menu li a:hover {
@@ -172,15 +256,12 @@ ul.menu li a:hover {
     border-radius: 5px; 
     z-index: 10;
 }
-
 /* Yemek kategorileri */
 .main-dish-section {
     padding: 100px; /* Ana yemek bölümüne iç boşluk ekle */
     margin-top: 20px;
-    background-color: #f8f9fa; /* Arka plan rengi */
     text-align: center;
 }
-
 .dish-gallery {
     margin-top: 50px;
     display: grid;
@@ -193,7 +274,7 @@ ul.menu li a:hover {
     width: 250px; /* Kutu genişliği */
     height: 260px; /* Kutu yüksekliği, resim ve başlık için yeterli alan sağlar */
     overflow: hidden; /* Taşan kısmı gizle */
-    border: 2px solid #ddd; /* Kenar rengi ve kalınlığı */
+    border: 1px solid #ddd; /* Kenar rengi ve kalınlığı */
     border-radius: 8px; /* Kenar yuvarlama */
     display: flex; /* Flexbox ile içeriği merkezleştir */
     flex-direction: column; /* Dikey yönde düzenle */
@@ -201,6 +282,12 @@ ul.menu li a:hover {
     position: relative; /* Metin ve resim konumlandırması için */
 }
 
+#no-results-message {
+    color: red;
+    font-weight: bold;
+    padding: 20px;
+    text-align: center;
+}
 .dish-item img {
     width: 100%; /* Resim genişliği kutu genişliğine eşit */
     height: 85%; /* Resim yüksekliği, başlığa göre ayarlanmış */
@@ -215,12 +302,13 @@ ul.menu li a:hover {
 
 .dish-title {
     
-    font-size: 18px; /* Yazı boyutu */
-    color: #333; /* Yazı rengi */
+    font-size: 16px; /* Yazı boyutu */
+    font-weight: bold;
+    color: black; /* Yazı rengi */
     width: 100%; /* Başlığın kutu genişliğine eşit olmasını sağlar */
     text-align: center; /* Başlığı ortala */
     margin: 0; /* Üst ve alt boşlukları kaldır */
-    padding: 6px 0; /* Başlığın üst ve altındaki boşluk */
+    padding: 10px 0; /* Başlığın üst ve altındaki boşluk */
     background-color: #f8f9fa; /* Başlığın arka plan rengi */
     border-top: 2px solid #ddd; 
     

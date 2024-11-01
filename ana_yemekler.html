@@ -31,14 +31,31 @@
            
         </nav>
         
-        <div class="icons-container"> <!-- İkonlar için yeni bir kapsayıcı ekledik -->
+        <div class="icons-container"> 
             <!-- Arama İkonu -->
-            <div class="search-container">
-                <div class="circle">
+            <div class="search-icon">
+                <div class="circle" onclick="toggleSearchInput()">
                     <i class="fas fa-search search-icon" style="color: black; font-size: 20px;"></i>
                 </div>
-                <input type="text" class="search-bar" placeholder="Ara...">
+                
+                <div id="search-box"> <!-- Filtre kutusu -->
+                    <input type="text" id="searchInput" oninput="searchDishes()" placeholder="Yemek arayın...">
+                </div>
             </div>
+            </div>
+            <div id="noResultsMessage" style="display: none; color: red;">Arama sonucuna uygun öğe bulunamadı.</div>
+             <!-- Filtreleme İkonu -->
+             <div class="filter-icon">
+                <div class="circle" onclick="toggleFilterInput()">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <span class="filter-text">Filtrele</span>
+                <div id="filter-box"> <!-- Filtre kutusu -->
+                    <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
+                </div>
+            </div>
+            
+   
             <!-- Sepetim İkonu -->
             <a href="sepetim.html" class="cart-icon" title="Sepetim">
                 <div class="circle">
@@ -60,59 +77,72 @@
         </div>
 
     </header>
+   
 
     <!-- Yemek bölümü -->
     <div class="main-dish-section">
         <h2>Ana Yemekler</h2>
         <div class="dish-gallery">
-            <div class="dish-item">
-                <img src="https://i.pinimg.com/550x/ce/04/35/ce043536ace8ac64a189904c8b947a04.jpg" alt="Yemek 1" />
-                <div class="dish-title">Yemek 1</div>
+            <div class="dish-item" id="ciger-yahnisi">
+                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/ciger-yahnisi-f30e2b30-25d1-49de-8a02-cdcd80c13c45.jpg" alt="Yemek 1" />
+                <div class="dish-title">Ciğer Yahnisi</div>
             </div>
-            <div class="dish-item">
-                <img src="image2.jpg" alt="Yemek 2" />
-                <h4>Etli Yemek</h4>
+            <div class="dish-item" id="baharatli-pilic-kulbasti">
+                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv5.jpg" alt="Yemek 2" />
+                <div class="dish-title">Baharatlı Piliç Külbastı
+                </div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
-                <h4>Yemek 1</h4>
+            <div class="dish-item" id="bonfile-kavurma" >
+                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e1.jpg" alt="Yemek 3" />
+                <div class="dish-title">Bonfile Kavurma</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
-                <h4>Yemek 1</h4>
+            <div class="dish-item" id="kori-soslu-tavuk">
+                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv4-768x764.jpg" alt="Yemek 3" />
+                <div class="dish-title">Köri Soslu Tavuk</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="cokertme-kebabi">
+                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e3.jpg" alt="Yemek 3" />
+                <div class="dish-title">Çökertme Kebabı</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="bes-kardes-yahnisi">
+                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/bes-kardes-yahnisi-dd631d5a-b4b9-48e1-9934-a1ccd60c06f6.jpg" alt="Yemek 3" />
+                <div class="dish-title">Beş Kardeş Yahnisi</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="kuzu-etli-enginar-yahni">
+                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/kuzu-etli-enginar-yahni-231e4728-afbc-48bc-b08c-aa5da1c7a597.jpg" alt="Yemek 3" />
+                <div class="dish-title">Kuzu Etli Enginar Yahni</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="sakiz-yahnisi" >
+                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/sakiz-yahnisi-de2ed74f-b4ae-48d9-be21-d72b047bf20a.jpg" alt="Yemek 3" />
+                <div class="dish-title">Sakız Yahnisi</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="karnabahar-kavurmasi">
+                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/karnabahar-kavurmasi-1edb2f9c-6618-4a2e-9084-07efeb24165e.jpg" alt="Yemek 3" />
+                <div class="dish-title">Karnabahar Kavurması</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="ciger-yahnisi">
+                <img src="https://img.piri.net/piri/upload/image/2019/2/13/fa6eae54-2_d0c7b44d.jpg" alt="Yemek 3" />
+                <div class="dish-title">Ciğer Yahnisi</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="cokertme-kebabi">
+                <img src="https://cdn.yemek.com/mnresize/1250/833/uploads/2024/03/cokertme-kebabi-yemekcom.jpg" alt="Yemek 3" />
+                <div class="dish-title">Çökertme Kebabı</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id="bonfile-kavurma" >
+                <img src="https://media-cdn.tripadvisor.com/media/photo-s/13/05/16/d2/bonfile-kavurma.jpg" alt="Yemek 3" />
+                <div class="dish-title">Bonfile Kavurma</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id= "karnabahar-kavurmasi">
+                <img src="https://cdn.yemek.com/mnresize/1250/833/uploads/2021/02/karnabahar-yemegi-yemekcom.jpg" alt="Yemek 3" />
+                <div class="dish-title">Karnabahar Kavurması</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item" id= "kori-soslu-tavuk">
+                <img src="https://i.ytimg.com/vi/o7WEfQ7CSxw/maxresdefault.jpg" alt="Yemek 3" />
+                <div class="dish-title">Köri Soslu Tavuk</div>
             </div>
-            <div class="dish-item">
-                <img src="image3.jpg" alt="Yemek 3" />
+            <div class="dish-item"id= "Kisnis-Soslu-Somon-Baligi">
+                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/kisnis-soslu-somon-baligi-e0aba9d8-4d3c-4fbd-b59e-920936697186.jpg" alt="Yemek 3" />
+                <div class="dish-title">Kişniş Soslu Somon Balığı</div>
             </div>
            
             
@@ -120,5 +150,19 @@
     </div>
 
     <script src="ana_yemekler.js"></script>
+    <script>
+        // Sayfa yüklendiğinde URL'den yemeği kontrol et ve yalnızca o yemeği göster
+        window.onload = function() {
+            const hash = window.location.hash.substring(1); // URL'deki hash kısmını al
+            if (hash) {
+                const items = document.querySelectorAll('.dish-item');
+                items.forEach(item => {
+                    if (item.id !== hash) {
+                        item.style.display = 'none'; // Diğer yemekleri gizle
+                    }
+                });
+            }
+        };
+    </script>
 </body>
 </html>

@@ -29,12 +29,17 @@
         </nav>
         <div class="icons-container"> <!-- İkonlar için yeni bir kapsayıcı ekledik -->
             <!-- Arama İkonu -->
-            <div class="search-container">
-                <div class="circle">
+            <div class="search-icon">
+                <div class="circle" onclick="toggleSearchInput()">
                     <i class="fas fa-search search-icon" style="color: black; font-size: 20px;"></i>
                 </div>
-                <input type="text" class="search-bar" placeholder="Ara...">
+                
+                <div id="search-box" style="display: none;"> <!-- Filtre kutusu -->
+                    <input type="text" id="searchInput"  placeholder="Yemek arayın...">
+                </div>
             </div>
+            </div>
+            <div id="noResultsMessage" style="display: none; color: red;">Arama sonucuna uygun öğe bulunamadı.</div>
             <!-- Sepetim İkonu -->
             <a href="sepetim.html" class="cart-icon" title="Sepetim">
                 <div class="circle">
