@@ -160,7 +160,7 @@ nav {
     cursor: pointer;
     margin-right:800px;
     margin-left: 400px;
-    
+    z-index: 10;
     position: absolute;
     
 }
@@ -202,7 +202,7 @@ nav {
     position: absolute;
     top: 8px; /* İkonun konumuna göre ayarlayın */
     right: -170px; /* İkonun konumuna göre ayarlayın */
-    z-index: 10;
+    z-index: 20;
     background-color: white;
 }
 
@@ -266,31 +266,29 @@ ul.menu li a:hover {
     margin-top: 50px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Kutuları düzenle */
-    gap: 5px; /* Kutular arasındaki boşluk */
+    gap: 20px; /* Kutular arasındaki boşluk */
     justify-content: center;
+    position: relative;
+    
 }
 
 .dish-item {
-    width: 250px; /* Kutu genişliği */
-    height: 260px; /* Kutu yüksekliği, resim ve başlık için yeterli alan sağlar */
+    width: 300px; /* Kutu genişliği */
+    height: 400px; /* Kutu yüksekliği, resim ve başlık için yeterli alan sağlar */
     overflow: hidden; /* Taşan kısmı gizle */
     border: 1px solid #ddd; /* Kenar rengi ve kalınlığı */
-    border-radius: 8px; /* Kenar yuvarlama */
+    border-radius: 8px;
     display: flex; /* Flexbox ile içeriği merkezleştir */
     flex-direction: column; /* Dikey yönde düzenle */
     text-align: center; /* Metni ortala */
     position: relative; /* Metin ve resim konumlandırması için */
+    isolation: isolate;
 }
 
-#no-results-message {
-    color: red;
-    font-weight: bold;
-    padding: 20px;
-    text-align: center;
-}
+
 .dish-item img {
     width: 100%; /* Resim genişliği kutu genişliğine eşit */
-    height: 85%; /* Resim yüksekliği, başlığa göre ayarlanmış */
+    height: 310px;
     object-fit: cover; /* Resmi kutuyu dolduracak şekilde kes */
     transition: transform 0.5s ease; /* Geçiş efekti */
     display: block;
@@ -312,6 +310,59 @@ ul.menu li a:hover {
     background-color: #f8f9fa; /* Başlığın arka plan rengi */
     border-top: 2px solid #ddd; 
     
+}
+  /* Fiyat ve Sepete Ekle kutularını düzenleme */
+  .dish-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    background-color: #f8f9fa;
+    width: 300px; /* Aynı genişlikte hizalamak için */
+    box-sizing: border-box;
+    height: 50px;
+    position: relative; 
+}
+
+.dish-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.add-to-cart {
+    padding: 10px 30px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-to-cart:hover {
+    background-color: #e65c00;
+}
+.separator {
+    width: 1.5px; /* Çizginin genişliği */
+    height: 50px; /* Çizginin yüksekliği */
+    background-color: #ddd; /* Çizginin rengi */
+    margin: 0 -60px 0 5px;  /* Çizgi ile diğer öğeler arasındaki boşluk */
+}
+
+
+.message-box {
+    position: absolute; /* Mutlak konumlandırma */
+    top: 10px; /* Üstten 10px boşluk */
+    right: 10px; /* Sağdan 10px boşluk */
+    padding: 5px 10px;
+    background-color: rgba(76, 175, 80, 0.9); /* Yeşil arka plan (yarı saydam) */
+    color: white; /* Beyaz yazı rengi */
+    border-radius: 5px; /* Yuvarlak köşeler */
+    font-size: 14px; /* Yazı boyutu */
+    z-index: 1000; /* Diğer öğelerin üzerinde görünmesi için */
 }
 
 

@@ -38,12 +38,12 @@
                     <i class="fas fa-search search-icon" style="color: black; font-size: 20px;"></i>
                 </div>
                 
-                <div id="search-box"> <!-- Filtre kutusu -->
-                    <input type="text" id="searchInput" oninput="searchDishes()" placeholder="Yemek arayın...">
+                <div id="search-box" style="display: none;"> <!-- Filtre kutusu -->
+                    <input type="text" id="searchInput"  placeholder="Yemek arayın...">
                 </div>
             </div>
             </div>
-            <div id="noResultsMessage" style="display: none; color: red;">Arama sonucuna uygun öğe bulunamadı.</div>
+            
              <!-- Filtreleme İkonu -->
              <div class="filter-icon">
                 <div class="circle" onclick="toggleFilterInput()">
@@ -86,65 +86,78 @@
             <div class="dish-item" id="ciger-yahnisi">
                 <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/ciger-yahnisi-f30e2b30-25d1-49de-8a02-cdcd80c13c45.jpg" alt="Yemek 1" />
                 <div class="dish-title">Ciğer Yahnisi</div>
-            </div>
-            <div class="dish-item" id="baharatli-pilic-kulbasti">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv5.jpg" alt="Yemek 2" />
-                <div class="dish-title">Baharatlı Piliç Külbastı
+                <div class="dish-footer">
+                    <div class="dish-price">₺300.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="ciger-yahnisi" data-dish-name="Ciğer Yahnisi" data-dish-price="₺300.00">Sepete Ekle</button>
                 </div>
             </div>
+           
+            <div class="dish-item" id="baharatli-pilic-kulbasti">
+                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv5.jpg" alt="Yemek 2" />
+                <div class="dish-title">Baharatlı Piliç Külbastı</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺350.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="baharatli-pilic-kulbasti" data-dish-name="Baharatlı Piliç Külbastı" data-dish-price="₺350.00">Sepete Ekle</button>
+                </div>
+            </div>
+           
             <div class="dish-item" id="bonfile-kavurma" >
                 <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e1.jpg" alt="Yemek 3" />
                 <div class="dish-title">Bonfile Kavurma</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺450.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="bonfile-kavurma" data-dish-name="Bonfile Kavurma" data-dish-price="₺450.00">Sepete Ekle</button>
+                </div>
             </div>
             <div class="dish-item" id="kori-soslu-tavuk">
                 <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv4-768x764.jpg" alt="Yemek 3" />
                 <div class="dish-title">Köri Soslu Tavuk</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺300.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="kori-soslu-tavuk" data-dish-name="Köri Soslu Tavuk" data-dish-price="₺300.00">Sepete Ekle</button>
+                </div>
             </div>
             <div class="dish-item" id="cokertme-kebabi">
                 <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e3.jpg" alt="Yemek 3" />
                 <div class="dish-title">Çökertme Kebabı</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺500.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="cokertme-kebabi" data-dish-name="Çökertme Kebabı" data-dish-price="₺500.00">Sepete Ekle</button>
+                </div>
             </div>
-            <div class="dish-item" id="bes-kardes-yahnisi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/bes-kardes-yahnisi-dd631d5a-b4b9-48e1-9934-a1ccd60c06f6.jpg" alt="Yemek 3" />
-                <div class="dish-title">Beş Kardeş Yahnisi</div>
-            </div>
-            <div class="dish-item" id="kuzu-etli-enginar-yahni">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/kuzu-etli-enginar-yahni-231e4728-afbc-48bc-b08c-aa5da1c7a597.jpg" alt="Yemek 3" />
-                <div class="dish-title">Kuzu Etli Enginar Yahni</div>
-            </div>
-            <div class="dish-item" id="sakiz-yahnisi" >
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/sakiz-yahnisi-de2ed74f-b4ae-48d9-be21-d72b047bf20a.jpg" alt="Yemek 3" />
-                <div class="dish-title">Sakız Yahnisi</div>
-            </div>
-            <div class="dish-item" id="karnabahar-kavurmasi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/karnabahar-kavurmasi-1edb2f9c-6618-4a2e-9084-07efeb24165e.jpg" alt="Yemek 3" />
-                <div class="dish-title">Karnabahar Kavurması</div>
-            </div>
-            <div class="dish-item" id="ciger-yahnisi">
+            <div class="dish-item" id="ciger-yahnisii">
                 <img src="https://img.piri.net/piri/upload/image/2019/2/13/fa6eae54-2_d0c7b44d.jpg" alt="Yemek 3" />
                 <div class="dish-title">Ciğer Yahnisi</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺500.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="ciger-yahnisii" data-dish-name="Ciğer Yahnisi" data-dish-price="₺500.00">Sepete Ekle</button>
+                </div>
             </div>
-            <div class="dish-item" id="cokertme-kebabi">
-                <img src="https://cdn.yemek.com/mnresize/1250/833/uploads/2024/03/cokertme-kebabi-yemekcom.jpg" alt="Yemek 3" />
-                <div class="dish-title">Çökertme Kebabı</div>
-            </div>
-            <div class="dish-item" id="bonfile-kavurma" >
+            <div class="dish-item" id="bonfile-kavurmaa" >
                 <img src="https://media-cdn.tripadvisor.com/media/photo-s/13/05/16/d2/bonfile-kavurma.jpg" alt="Yemek 3" />
                 <div class="dish-title">Bonfile Kavurma</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺450.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="bonfile-kavurmaa" data-dish-name="Bonfile Kavurma" data-dish-price="₺450.00">Sepete Ekle</button>
+                </div>
             </div>
             <div class="dish-item" id= "karnabahar-kavurmasi">
                 <img src="https://cdn.yemek.com/mnresize/1250/833/uploads/2021/02/karnabahar-yemegi-yemekcom.jpg" alt="Yemek 3" />
                 <div class="dish-title">Karnabahar Kavurması</div>
+                <div class="dish-footer">
+                    <div class="dish-price">₺200.00</div>
+                    <div class="separator"></div> <!-- Dikey çizgi -->
+                    <button class="add-to-cart" data-dish-id="karnabahar-kavurmasi" data-dish-name="Karnabahar Kavurması" data-dish-price="₺200.00">Sepete Ekle</button>
+                </div>
             </div>
-            <div class="dish-item" id= "kori-soslu-tavuk">
-                <img src="https://i.ytimg.com/vi/o7WEfQ7CSxw/maxresdefault.jpg" alt="Yemek 3" />
-                <div class="dish-title">Köri Soslu Tavuk</div>
-            </div>
-            <div class="dish-item"id= "Kisnis-Soslu-Somon-Baligi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/kisnis-soslu-somon-baligi-e0aba9d8-4d3c-4fbd-b59e-920936697186.jpg" alt="Yemek 3" />
-                <div class="dish-title">Kişniş Soslu Somon Balığı</div>
-            </div>
-           
+            
             
         </div>
     </div>

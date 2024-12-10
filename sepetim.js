@@ -1,9 +1,8 @@
-
-// Aydınlık ve Karanlık Mod Ayarı
-document.getElementById("light").addEventListener("click", function() {
+ // Tema değiştirme butonuna tıklama olayını dinleyin
+ document.getElementById("light").addEventListener("click", function() {
     const body = document.body;
     const themeIcon = document.getElementById("themeIcon");
-    const circle = document.querySelector("#light .circle");
+    const circle = document.querySelector(".light.circle");
 
     if (body.classList.contains("light-mode")) {
         // Karanlık moda geçiş
@@ -27,53 +26,6 @@ document.getElementById("light").addEventListener("click", function() {
         themeIcon.style.color = "black";
     }
 });
-
-// Filtreleme kutusunu göster/gizle
-function toggleFilterInput() {
-    const filterText = document.querySelector(".filter-icon .filter-text");
-    const filterBox = document.getElementById("filter-box"); // Filtre kutusunun ID'si
-
-    // Filtre kutusunu göster veya gizle
-    if (filterBox.style.display === "none" || filterBox.style.display === "") {
-        filterBox.style.display = "block"; // Filtre kutusunu göster
-        filterText.style.display = "none"; // "Filtrele" yazısını gizle
-        document.getElementById("filterInput").focus(); // Giriş kutusuna odaklan
-    } else {
-        filterBox.style.display = "none"; // Filtre kutusunu gizle
-        filterText.style.display = "inline"; // "Filtrele" yazısını göster
-    }
-}
-
-// Yemekleri filtreleme işlevi
-function filterDishes() {
-    const filterInput = document.getElementById("filterInput").value.toLowerCase(); // Filtreleme girişini al
-    const dishItems = document.querySelectorAll(".dish-item"); // Tüm yemek öğelerini al
-
-    dishItems.forEach(item => {
-        const title = item.querySelector(".dish-title").textContent.toLowerCase(); // Başlığı al
-        // Başlık, filtreleme girişine göre eşleşiyorsa göster, aksi takdirde gizle
-        item.style.display = title.includes(filterInput) ? "block" : "none";
-    });
-}
-
-// Sayfa yenilendiğinde varsayılan olarak "Filtrele" yazısını geri getir
-window.addEventListener("load", () => {
-    const filterText = document.querySelector(".filter-icon .filter-text");
-    const filterBox = document.getElementById("filter-box");
-
-    filterText.style.display = "inline";
-    filterBox.style.display = "none"; // Filtre kutusunu başlangıçta gizle
-});
-document.addEventListener('click', function(event) {
-    const filterBox = document.getElementById("filter-box");
-    const filterIcon = document.querySelector(".filter-icon");
-
-    if (!filterIcon.contains(event.target) && filterBox.style.display === "block") {
-        filterBox.style.display = "none"; // Eğer kutunun dışında tıklanırsa kutuyu gizle
-        document.querySelector(".filter-icon .filter-text").style.display = "inline"; // "Filtrele" yazısını göster
-    }
-});
-
 // Arama kutusunu açıp kapatma işlevi
 function toggleSearchInput() {
     const searchBox = document.getElementById("search-box");
@@ -115,7 +67,7 @@ const categories = {
             { name: "Sebze Çorbası", id: "sebze-corba" }
         ]
     },
-    "kuru yemekler": {
+    "karbonhidrat lezzetleri": {
         url: "kuru_yemekler.html",
         dishes: [
             { name: "Pilav Üstü Döner", id: "pilav-ustu-doner" },
@@ -158,47 +110,68 @@ function searchAndRedirect(query) {
     alert("Aradığınız yemek veya kategori bulunamadı.");
 }
 
+// Sepete yemek ekler
+document.addEventListener('DOMContentLoaded', function() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || []; // Sepeti al ya da yeni bir dizi oluştur
+    const cartMessage = document.getElementById('cart-message');
+    const cartItems = document.getElementById('cart-items');
 
-//Sepete ekleme işlemi
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', function(event) {
-        event.preventDefault(); // Varsayılan davranışı engelle
-
-        // Yemek bilgilerini al
-        const dishId = this.getAttribute('data-dish-id');
-        const dishName = this.getAttribute('data-dish-name');
-        const dishPrice = this.getAttribute('data-dish-price');
-
-        // Sepete ekleme işlemi
-        let cart = JSON.parse(localStorage.getItem('cart')) || []; // Sepeti al ya da yeni bir dizi oluştur
-        cart.push({ id: dishId, name: dishName, price: dishPrice }); // Yeni öğeyi ekle
-        localStorage.setItem('cart', JSON.stringify(cart)); // Sepeti güncelle
-
-        // Başarılı ekleme mesajı göster
-        showMessage(dishId);
-    });
+    // Sepet boşsa mesajı göster
+    if (cart.length === 0) {
+        cartMessage.style.display = 'block';
+        cartItems.style.display = 'none'; // Sepet öğelerini gizle
+    } else {
+        cartMessage.style.display = 'none'; // Mesajı gizle
+        cartItems.style.display = 'block'; // Sepet öğelerini göster
+        // Sepet öğelerini buraya ekleyebilirsiniz
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.textContent = `${item.name} - ${item.price}`;
+            cartItems.appendChild(itemElement);
+        });
+    }
 });
 
-// Mesajı göstermek için bir fonksiyon
-function showMessage(dishId) {
-    const dishItem = document.getElementById(dishId); // İlgili yemek öğesini al
-    const messageBox = document.createElement('div');
-    messageBox.textContent = 'Sepete Eklendi!';
-    messageBox.className = 'message-box'; // Mesaj kutusuna sınıf ekle
-    dishItem.appendChild(messageBox); // Mesaj kutusunu yemek öğesine ekle
-
-    // Mesajı 3 saniye sonra kaldır
-    setTimeout(() => {
-        messageBox.remove();
-    }, 3000);
-}
 
 
+// silme butonu ekledi
+document.addEventListener('DOMContentLoaded', function() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || []; // Sepeti al ya da yeni bir dizi oluştur
+    const cartMessage = document.getElementById('cart-message');
+    const cartItems = document.getElementById('cart-items');
 
+    // Sepet boşsa mesajı göster
+    if (cart.length === 0) {
+        cartMessage.style.display = 'block';
+        cartItems.style.display = 'none'; // Sepet öğelerini gizle
+    } else {
+        cartMessage.style.display = 'none'; // Mesajı gizle
+        cartItems.style.display = 'block'; // Sepet öğelerini göster
+        // Sepet öğelerini buraya ekleyebilirsiniz
+        cart.forEach((item, index) => {
+            const itemElement = document.createElement('div');
+            itemElement.textContent = `${item.name} - ${item.price}`;
+            itemElement.style.display = 'flex'; // Flex düzeni ile hizalamak için
+            itemElement.style.justifyContent = 'space-between'; // Elemanları yan yana yerleştir
+            itemElement.style.alignItems = 'center'; // Dikey hizalama
 
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Sil';
+            removeButton.classList.add('remove-button'); // Butona sınıf ekleyerek stil vermek için
+            removeButton.onclick = function() {
+                // Silme işlemi
+                cart.splice(index, 1); // Yemeği sepetten kaldır
+                localStorage.setItem('cart', JSON.stringify(cart)); // Sepeti güncelle
+                itemElement.remove(); // DOM'dan öğeyi kaldır
+                // Sepet boşsa mesajı tekrar göster
+                if (cart.length === 0) {
+                    cartMessage.style.display = 'block';
+                    cartItems.style.display = 'none';
+                }
+            };
 
-
-
-
-
-
+            itemElement.appendChild(removeButton); // Sil butonunu öğeye ekle
+            cartItems.appendChild(itemElement); // Öğeyi sepete ekle
+        });
+    }
+});

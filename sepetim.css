@@ -147,11 +147,6 @@ nav {
 #search-box input:focus {
     outline: none; /* Kenarlık dışında bir görünüm yok */
 }
-
-#noResultsMessage {
-    margin-top: 10px;
-    font-weight: bold;
-}
 /* Filtreleme ikonu ve metin */
 .filter-icon {
     display: flex;
@@ -160,7 +155,7 @@ nav {
     cursor: pointer;
     margin-right:800px;
     margin-left: 400px;
-    
+    z-index: 10;
     position: absolute;
     
 }
@@ -202,7 +197,7 @@ nav {
     position: absolute;
     top: 8px; /* İkonun konumuna göre ayarlayın */
     right: -170px; /* İkonun konumuna göre ayarlayın */
-    z-index: 10;
+    z-index: 20;
     background-color: white;
 }
 
@@ -256,62 +251,44 @@ ul.menu li a:hover {
     border-radius: 5px; 
     z-index: 10;
 }
-/* Yemek kategorileri */
-.main-dish-section {
-    padding: 100px; /* Ana yemek bölümüne iç boşluk ekle */
-    margin-top: 20px;
-    text-align: center;
-}
-.dish-gallery {
-    margin-top: 50px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Kutuları düzenle */
-    gap: 5px; /* Kutular arasındaki boşluk */
+
+/* sepete yemek eklemek için */
+.empty-cart-message {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-}
-
-.dish-item {
-    width: 250px; /* Kutu genişliği */
-    height: 260px; /* Kutu yüksekliği, resim ve başlık için yeterli alan sağlar */
-    overflow: hidden; /* Taşan kısmı gizle */
-    border: 1px solid #ddd; /* Kenar rengi ve kalınlığı */
-    border-radius: 8px; /* Kenar yuvarlama */
-    display: flex; /* Flexbox ile içeriği merkezleştir */
-    flex-direction: column; /* Dikey yönde düzenle */
-    text-align: center; /* Metni ortala */
-    position: relative; /* Metin ve resim konumlandırması için */
-}
-
-#no-results-message {
-    color: red;
-    font-weight: bold;
-    padding: 20px;
+    align-items: center;
+    padding-top: 250px;
     text-align: center;
-}
-.dish-item img {
-    width: 100%; /* Resim genişliği kutu genişliğine eşit */
-    height: 85%; /* Resim yüksekliği, başlığa göre ayarlanmış */
-    object-fit: cover; /* Resmi kutuyu dolduracak şekilde kes */
-    transition: transform 0.5s ease; /* Geçiş efekti */
-    display: block;
+    font-size: 18px;
+    color: #333;
+    margin: 20px 0;
 }
 
-.dish-item img:hover {
-    transform: scale(1.05); /* Hover olduğunda resmi büyüt */
+.add-dish-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
 }
 
-.dish-title {
-    
-    font-size: 16px; /* Yazı boyutu */
-    font-weight: bold;
-    color: black; /* Yazı rengi */
-    width: 100%; /* Başlığın kutu genişliğine eşit olmasını sağlar */
-    text-align: center; /* Başlığı ortala */
-    margin: 0; /* Üst ve alt boşlukları kaldır */
-    padding: 10px 0; /* Başlığın üst ve altındaki boşluk */
-    background-color: #f8f9fa; /* Başlığın arka plan rengi */
-    border-top: 2px solid #ddd; 
-    
+.add-dish-button:hover {
+    background-color: #e65c00;
 }
 
+/* Sepetten Silmek için */
+.remove-button {
+    padding: 5px 10px;
+    background-color: #ff4d4d; /* Kırmızı arka plan */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
+.remove-button:hover {
+    background-color: #ff1a1a; /* Hover rengini koyulaştır */
+}

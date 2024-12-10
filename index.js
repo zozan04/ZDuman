@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('scroll', checkVisibility);
 });
 
-// Arama kutusunu açıp kapatma işlevi
+
 // Arama kutusunu açıp kapatma işlevi
 function toggleSearchInput() {
     const searchBox = document.getElementById("search-box");
@@ -135,7 +135,7 @@ const categories = {
             { name: "Sebze Çorbası", id: "sebze-corba" }
         ]
     },
-    "kuru yemekler": {
+    "karbonhidrat lezzetleri": {
         url: "kuru_yemekler.html",
         dishes: [
             { name: "Pilav Üstü Döner", id: "pilav-ustu-doner" },
