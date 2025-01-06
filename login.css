@@ -105,6 +105,7 @@ button:hover {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
+    position: relative;
 }
 
 .form-toggle button {
@@ -115,15 +116,88 @@ button:hover {
     cursor: pointer;
     padding: 5px;
     font-size: 14px;
+    position: relative; /* Butonlar için konumlandırma */
 }
 
-.form-toggle button.active {
-    border-bottom: 2px solid #511212;
+/* Buton altında çizgi */
+.form-toggle button::after {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* Çizgiyi butonun altına yerleştir */
+    left: 0;
+    width: 0%; /* Başlangıçta çizgi görünmez */
+    height: 2px;
+    background-color: #511212;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+/* Aktif buton için çizgi animasyonu */
+.form-toggle button.active::after {
+    width: 50%; /* Aktif durumda çizgi tam genişlikte görünür */
+    left: 0;
+}
+
+/* Öğrenci ve kullanıcı geçişi için ortak stiller */
+#studentLoginBtn.active::after,
+#studentRegisterBtn.active::after {
+    width: 55%;
+    left: 38px;
+}
+
+#userLoginBtn.active::after,
+#userRegisterBtn.active::after {
+    width: 55%;
+    left: 38px;
 }
 
 .hidden {
     display: none;
 }
+.visible {
+    display: block;
+}
+
+.close {
+    cursor: pointer;
+}
+#errorMessage {
+    margin-top: 15px; /* Giriş butonunun biraz daha altına yerleştir */
+    font-size: 16px;
+    color: red;
+    text-align: center;
+    
+}
+.overlay-text{
+    opacity: 0.5; /* Yazıyı %50 opaklaştırır */
+    color: black; /* Yazının rengini korur */
+
+}
+
+/* Bilgilendirme mesajı */
+#confirmationMessage {
+    position: relative;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+   
+}
+
+#confirmationMessage.visible {
+    display: block;
+}
+
+#closeMessage {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
 
 /* Daha küçük ekranlar için duyarlılık */
 @media (max-width: 600px) {
