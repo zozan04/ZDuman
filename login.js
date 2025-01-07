@@ -18,8 +18,7 @@ const errorMessage = document.getElementById('errorMessage');
 const studentRegisterForm = document.getElementById('studentRegisterForm');
 const userRegisterForm = document.getElementById('userRegisterForm');
 
-// Belge yükleme formu
-const documentUploadForm = document.getElementById('documentUploadForm');
+
 
 // Doğru admin bilgileri
 const correctAdminEmail = 'zozanduman3030@gmail.com';
@@ -68,25 +67,12 @@ studentRegisterForm.addEventListener('submit', (event) => {
     const studentPassword = document.getElementById('studentRegPassword').value;
 
     console.log("Öğrenci Kayıt: ", studentName, studentEmail, studentPassword);
-    // Öğrenci kayıt formu başarıyla tamamlandığında, belge yükleme formunu göster
+   // Öğrenci kayıt formu başarıyla tamamlandığında, belge yükleme formunu göster
     studentRegisterForm.classList.add('hidden');  // Öğrenci kayıt formunu gizle
-    documentUploadForm.classList.remove('hidden');  // Belge yükleme formunu göster
+   
 });
 
-// Belge Yükleme Formu Gönderimi
-documentUploadForm.addEventListener('submit', (event) => {
-    event.preventDefault();
 
-    // Burada belge yükleme işlemi yapılabilir.
-
-    // Formu gizle
-    documentUploadForm.classList.add('hidden');
-
-    // Bilgilendirme mesajını göster
-    const confirmationMessage = document.getElementById('confirmationMessage');
-    confirmationMessage.classList.remove('hidden');
-    confirmationMessage.classList.add('visible');
-});
 
 document.addEventListener('DOMContentLoaded', () => {
     const closeMessageButton = document.getElementById('closeMessage');
@@ -110,17 +96,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Kullanıcı Kayıt Formu Gönderimi
-userRegisterForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const userName = document.getElementById('userName').value;
-    const userEmail = document.getElementById('userRegEmail').value;
-    const userPassword = document.getElementById('userRegPassword').value;
+document.getElementById('studentRegisterForm').addEventListener('submit', (event) => {
+    event.preventDefault();  // Sayfa yenilenmesini engeller
 
-    console.log("Kullanıcı Kayıt: ", userName, userEmail, userPassword);
-    // Burada kullanıcıyı kaydedebilir veya bir işlem yapabilirsiniz.
-    alert('Kullanıcı başarıyla kayıt oldu!');
+    // Form verilerini al
+    const studentName = document.getElementById('name').value;
+    const studentEmail = document.getElementById('email').value;
+    const studentPassword = document.getElementById('password').value;
+    const studentDocument = document.getElementById('studentDocument').files[0];  // Dosya nesnesini al
+
+    // FormData nesnesi oluştur
+    const formData = new FormData();
+    formData.append('name', studentName);
+    formData.append('email', studentEmail);
+    formData.append('password', studentPassword);
+    formData.append('studentDocument', studentDocument);  // Dosyayı ekle
+
+    // Formu gönder
+    fetch('uploads.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);  // Sunucudan gelen yanıtı logla
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+    });
 });
+
+
 
 // Form geçişlerini yönetme
 document.getElementById('studentLoginBtn').addEventListener('click', () => {

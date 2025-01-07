@@ -26,33 +26,30 @@
         </div>
 
         <!-- Öğrenci Giriş Formu -->
-        <form id="studentLoginForm" class="form" method="POST" action="uploads.php">
+        <form id="studentLoginForm" class="form">
             <h3>Öğrenci Giriş</h3>
             <input type="email" id="studentEmail" name="studentEmail" placeholder="Email" required>
             <input type="password" id="studentPassword" name="studentPassword" placeholder="Şifre" required>
             <button type="submit">Giriş Yap</button>
         </form>
 
-        <!-- Öğrenci Kayıt Formu -->
-        <form id="studentRegisterForm" class="form hidden" action="uploads.php" method="POST" enctype="multipart/form-data">
-            <h3>Öğrenci Kayıt</h3>
-            <input type="text" name="studentName" id="studentName" placeholder="Ad Soyad" required>
-            <input type="email" name="studentEmail" id="studentRegEmail" placeholder="Email" required>
-            <input type="password" name="studentPassword" id="studentRegPassword" placeholder="Şifre" required>            
-            <button type="submit" id="registerBtn">Kayıt Ol</button>
-        </form>
-        
-        <!-- Öğrenci Belge Yükleme Formu -->
-        <form action="uploads.php" method="POST" enctype="multipart/form-data">
-            <h3>Belge Yükleme</h3>
-            <h5 class="overlay-text">Öğrenci Belgenizi Yükleyin</h5>
-            <label for="studentDocument">Belge Seçin (PDF, JPG, PNG):</label>
-            <input type="file" name="studentDocument" id="studentDocument" required>
-            <br><br>
-            <input type="submit" value="Yükle">
-        </form>
+<!-- Öğrenci Kayıt Formu ve Belge Yükleme -->
+<form id="studentRegisterForm" method="POST" enctype="multipart/form-data">
+    <h3>Öğrenci Kayıt</h3>
+    <input type="text" id="name" name="name" placeholder="Ad Soyad" required>
+    <input type="email" id="email" name="email" placeholder="Email" required>
+    <input type="password" id="password" name="password" placeholder="Şifre" required>
 
-       
+    <h3>Belge Yükleme</h3>
+    <label for="studentDocument">Belge Seçin (PDF, JPG, PNG):</label>
+    <input type="file" name="studentDocument" id="studentDocument" required>
+
+    <button type="submit">Kayıt Ol ve Yükle</button>
+</form>
+
+
+        
+
         <!-- Bilgilendirme Mesajı -->
         <div id="confirmationMessage" class="hidden">
             <span id="closeMessage" class="close">&times;</span>
@@ -69,7 +66,7 @@
         </div>
 
         <!-- Kullanıcı Giriş Formu -->
-        <form id="userLoginForm" class="form" method="POST" action="uploads.php">
+        <form id="userLoginForm" class="form">
             <h3>Kullanıcı Giriş</h3>
             <input type="email" id="userEmail" name="userEmail" placeholder="Email" required>
             <input type="password" id="userPassword" name="userPassword" placeholder="Şifre" required>
@@ -77,7 +74,7 @@
         </form>
 
         <!-- Kullanıcı Kayıt Formu -->
-        <form id="userRegisterForm" class="form hidden" method="POST" action="uploads.php">
+        <form id="userRegisterForm" class="form hidden">
             <h3>Kullanıcı Kayıt</h3>
             <input type="text" id="userName" name="userName" placeholder="Kullanıcı Adı" required>
             <input type="email" id="userRegEmail" name="userRegEmail" placeholder="Email" required>
@@ -89,7 +86,7 @@
     <!-- Admin Portalı -->
     <div id="adminPortal" class="portal hidden">
         <h2>Admin Portalı</h2>
-        <form id="adminLoginForm" class="form" method="POST" action="uploads.php">
+        <form id="adminLoginForm" class="form">
             <h3>Admin Giriş</h3>
             <input type="email" id="adminEmail" name="adminEmail" placeholder="Email" required>
             <input type="password" id="adminPassword" name="adminPassword" placeholder="Şifre" required>
@@ -99,14 +96,30 @@
     </div>
 
     <script>
-        // URL'den mesajı al ve ekrana yazdır
-        const urlParams = new URLSearchParams(window.location.search);
-        const message = urlParams.get('message');
-        if (message) {
-            const messageDiv = document.getElementById("confirmationMessage");
-            messageDiv.classList.remove('hidden');
-            messageDiv.querySelector('p').textContent = message;
-        }
+        // Portal geçişleri
+        document.getElementById('studentPortalBtn').addEventListener('click', function() {
+            document.getElementById('studentPortal').classList.remove('hidden');
+            document.getElementById('userPortal').classList.add('hidden');
+            document.getElementById('adminPortal').classList.add('hidden');
+        });
+
+        document.getElementById('userPortalBtn').addEventListener('click', function() {
+            document.getElementById('userPortal').classList.remove('hidden');
+            document.getElementById('studentPortal').classList.add('hidden');
+            document.getElementById('adminPortal').classList.add('hidden');
+        });
+
+        document.getElementById('adminPortalBtn').addEventListener('click', function() {
+            document.getElementById('adminPortal').classList.remove('hidden');
+            document.getElementById('studentPortal').classList.add('hidden');
+            document.getElementById('userPortal').classList.add('hidden');
+        });
+
+        // Öğrenci kaydından sonra belge yükleme formunu göster
+        document.getElementById('studentRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('documentUploadForm').style.display = 'block';
+        });
     </script>
 
     <script src="login.js"></script>
