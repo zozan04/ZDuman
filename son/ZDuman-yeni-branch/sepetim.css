@@ -1,0 +1,294 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+body.light-mode {
+    background-color: white;
+    color: black;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: white;
+}
+html {
+    overflow-y: scroll; /* Her zaman sabit bir kaydırma çubuğu gösterir */
+}
+/* Ana ekran başlığı */
+.main-header {
+    display: flex;
+    justify-content: space-between; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    background-color: rgba(74, 11, 11, 0.8); /* Navbar background color */
+    padding: 20px 0; /* Top and bottom padding to create space */
+    z-index: 1000;
+    width: 100%;
+    position: fixed;
+    top: 0;
+}
+
+.logo img {
+    width: 70px;
+    height: auto;
+    margin-top: -5px;
+    margin-left: 10px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: var(--max-width); /* Ensure this variable is defined in your CSS */
+    margin: auto;
+    text-decoration: none;
+    
+}
+
+.nav_bar {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    width: 100%;
+    position: relative;
+    z-index: 150;
+}
+
+/* İkonlar */
+.icons-container {
+    display: flex; /* İkonları yan yana diz */
+    align-items: center; /* Dikey olarak ortala */
+    gap: 15px;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+}
+
+.login-icon {
+    position: absolute;
+    top: 25px;
+    right: 70px;
+    display: flex;
+}
+
+.light {
+    position: absolute;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    margin-left: 900px;
+    top: 25px;
+    right: 18px;
+}
+
+.cart-icon {
+    position: absolute;
+    top: 25px;
+    left: 1355px;
+    display: flex;
+ 
+}
+
+/* Arama çubuğu */
+.search-icon {
+    position: relative;
+    align-items: center;
+    display: flex;
+    margin-left: 20px; 
+    z-index: 1;
+    top: 4px;
+    left: 150px;
+}
+.search-icon .circle i {
+    color: black;
+    font-size: 20px;
+    margin-top: -4px;
+    margin-left: -295px;
+}
+
+
+/* search kutusu */
+#search-box {
+    display: none; /* Başlangıçta gizli */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+    position: absolute;
+    top: 8px; /* İkonun konumuna göre ayarlayın */
+    right: -170px; /* İkonun konumuna göre ayarlayın */
+    z-index: 10;
+    background-color: white;
+}
+
+#search-box input {
+    width: 100%; /* Kutunun içinde tam genişlik */
+    border: none; /* Kenarlık yok */
+    border-radius: 4px; /* Köşe yuvarlama */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+#search-box input:focus {
+    outline: none; /* Kenarlık dışında bir görünüm yok */
+}
+/* Filtreleme ikonu ve metin */
+.filter-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Çember ile yazı arasındaki boşluk */
+    cursor: pointer;
+    margin-right:800px;
+    margin-left: 400px;
+    z-index: 10;
+    position: absolute;
+    
+}
+.filter-icon .circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    transform: translateY(3px); /* İkonu aşağı çekmek için bu değeri ayarlayın */
+}
+
+.filter-icon .circle i {
+    color: black;
+    font-size: 20px;
+    margin-top: 4px;
+}
+
+.filter-icon .filter-text {
+    transform: translateY(3px);
+    color: white;
+    font-weight: bold;
+    max-width: 100px;
+    position: relative;
+}
+
+/* Filtre kutusu */
+#filter-box {
+    display: none; /* Başlangıçta gizli */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+    position: absolute;
+    top: 8px; /* İkonun konumuna göre ayarlayın */
+    right: -170px; /* İkonun konumuna göre ayarlayın */
+    z-index: 20;
+    background-color: white;
+}
+
+#filter-box input {
+    width: 100%; /* Kutunun içinde tam genişlik */
+    
+    border: none; /* Kenarlık yok */
+    border-radius: 4px; /* Köşe yuvarlama */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+#filter-box input:focus {
+    outline: none; /* Kenarlık dışında bir görünüm yok */
+}
+
+/* Navbar menü stilleri */
+ul.menu {
+    position:absolute;
+    flex-grow: 0;
+    right: 300px;
+    justify-content: center;
+    list-style-type: none; 
+    margin: 0;
+    padding: 0;
+    display: flex; 
+    gap: 20px; 
+    isolation: isolate;
+    margin-top: 5px;
+}
+
+ul.menu li {
+    display: inline; /* Menüyü yan yana diz */
+    isolation: isolate;
+    display: flex;
+    
+}
+
+ul.menu li a {
+    color: white; 
+    text-decoration: none; 
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    isolation: isolate;
+    display: flex;
+
+}
+
+ul.menu li a:hover {
+    background-color: #e0a4a4; 
+    border-radius: 5px; 
+    z-index: 10;
+}
+
+/* sepete yemek eklemek için */
+.empty-cart-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 250px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    margin: 20px 0;
+}
+
+.add-dish-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.add-dish-button:hover {
+    background-color: #e65c00;
+}
+
+/* Sepetten Silmek için */
+.remove-button {
+    padding: 5px 10px;
+    background-color: #ff4d4d; /* Kırmızı arka plan */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.remove-button:hover {
+    background-color: #ff1a1a; /* Hover rengini koyulaştır */
+}

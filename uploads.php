@@ -3,9 +3,6 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Dosyayı kaydedeceğimiz dizin
-$uploadDir = 'uploads/'; // Yükleme yapılacak dizin
-
 // Form gönderildiğinde işlem yap
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Formdan gelen verileri al
@@ -14,41 +11,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = htmlspecialchars($_POST['password']);
     $studentDocument = $_FILES['studentDocument'] ?? null;
 
+    // Dosyaların kaydedileceği dizin
+    $uploadDir = "uploads/" . $email;
+    
+    // Eğer klasör yoksa oluştur
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true); // 0777 izinleri ile klasörü oluştur
+    }
 
-        // Eğer dosya var ve yüklendiyse
-        if (isset($studentDocument) && $studentDocument['error'] == UPLOAD_ERR_OK) {
-            // Dosya türü kontrolü
-            $fileExtension = strtolower(pathinfo($studentDocument["name"], PATHINFO_EXTENSION));
-            $allowedTypes = ["pdf", "jpg", "png"];
+    // Eğer dosya var ve yüklendiyse
+    if (isset($studentDocument) && $studentDocument['error'] == UPLOAD_ERR_OK) {
+        // Dosya türü kontrolü
+        $fileExtension = strtolower(pathinfo($studentDocument["name"], PATHINFO_EXTENSION));
+        $allowedTypes = ["pdf", "jpg", "png"];
 
-            // Geçerli dosya türü kontrolü
-            if (in_array($fileExtension, $allowedTypes)) {
-                // Yükleme dizini ve dosya adı
-                $targetFile = $uploadDir . basename($studentDocument["name"]);
+        // Geçerli dosya türü kontrolü
+        if (in_array($fileExtension, $allowedTypes)) {
+            // Dosyanın benzersiz adını oluşturmak için zaman damgası ekleyelim
+            $newFileName = time() . "_" . basename($studentDocument["name"]);
+            $targetFile = $uploadDir . "/" . $newFileName;
 
-                // Dosyayı belirtilen dizine kaydetme
-                if (move_uploaded_file($studentDocument["tmp_name"], $targetFile)) {
-                    $confirmationMessage = "Belge başarıyla yüklendi!";
-                } else {
-                    $confirmationMessage = "Dosya yüklenirken bir hata oluştu!";
-                }
+            // Dosyayı belirtilen dizine kaydetme
+            if (move_uploaded_file($studentDocument["tmp_name"], $targetFile)) {
+                $confirmationMessage = "Belge başarıyla yüklendi!";
             } else {
-                $confirmationMessage = "Geçersiz dosya türü! Yalnızca PDF, JPG veya PNG dosyaları yüklenebilir.";
+                $confirmationMessage = "Dosya yüklenirken bir hata oluştu!";
             }
         } else {
-            // Dosya yüklenirken hata oluşmuşsa
-            $confirmationMessage = "Dosya yüklenirken bir hata oluştu. Hata kodu: " . ($studentDocument['error'] ?? 'Bilinmeyen hata');
+            $confirmationMessage = "Geçersiz dosya türü! Yalnızca PDF, JPG veya PNG dosyaları yüklenebilir.";
         }
+    } else {
+        // Dosya yüklenirken hata oluşmuşsa
+        $confirmationMessage = "Dosya yüklenirken bir hata oluştu. Hata kodu: " . ($studentDocument['error'] ?? 'Bilinmeyen hata');
+    }
 
     // Form verilerini .txt dosyasına kaydetme
-    // Öğrenci adı ve emaili de dahil et
     $data = "Öğrenci Adı: " . $name . "\n" .
             "Öğrenci Email: " . $email . "\n" .
-            "Öğrenci Şifresi: " . $password . "\n".
-            "Yüklenen Belge: " . $studentDocument['name'] . "\n" .
+            "Öğrenci Şifresi: " . $password . "\n" .
+            "Yüklenen Belge: " . $newFileName . "\n" . // Yüklenen dosyanın adını kaydediyoruz
             "-------------------------\n";
-
-    $file = 'uploads/data.txt'; // Verilerin kaydedileceği dosya
+   
+    $file = $uploadDir . "/data.txt"; // Verilerin kaydedileceği dosya
     file_put_contents($file, $data, FILE_APPEND);
 
     // Form verilerini işledikten sonra bildirim mesajını göndermek için yönlendirme
