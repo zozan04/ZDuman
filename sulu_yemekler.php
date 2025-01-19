@@ -1,3 +1,11 @@
+<?php
+include('db_connection.php');
+
+// Sulu Yemekler kategorisindeki yemekleri sorgulamak
+$sql = "SELECT * FROM meals WHERE category = 'Sulu Yemekler' ORDER BY name";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -5,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghibli Yemek Platformu</title>
     <link rel="icon" href="resimler/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
-    <link rel="stylesheet" href="ana_yemekler.css">
+    <link rel="stylesheet" href="sulu_yemekler.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://unpkg.com/scrollreveal"></script>
 
@@ -22,13 +30,10 @@
                 <ul class="menu">
                     <li><a href="index.html">Anasayfa</a></li>
                     <li><a href="#hakkimizda">Hakkımızda</a></li>
-                    <li><a href="#yemekler">Yemekler</a></li>
+                    <li><a href="ana_yemekler.php">Ana Yemekler</a></li>
                     <li><a href="#iletisim">İletişim</a></li>
-                    
                 </ul>
-                
             </div>
-           
         </nav>
         
         <div class="icons-container"> 
@@ -42,10 +47,9 @@
                     <input type="text" id="searchInput"  placeholder="Yemek arayın...">
                 </div>
             </div>
-            </div>
             
-             <!-- Filtreleme İkonu -->
-             <div class="filter-icon">
+            <!-- Filtreleme İkonu -->
+            <div class="filter-icon">
                 <div class="circle" onclick="toggleFilterInput()">
                     <i class="fas fa-filter"></i>
                 </div>
@@ -55,7 +59,6 @@
                 </div>
             </div>
             
-   
             <!-- Sepetim İkonu -->
             <a href="sepetim.html" class="cart-icon" title="Sepetim">
                 <div class="circle">
@@ -75,61 +78,37 @@
                 </div>
             </div>
         </div>
-
     </header>
-   
-
+    
     <!-- Yemek bölümü -->
     <div class="main-dish-section">
-        <h2>Ana Yemekler</h2>
+        <h2>Sulu Yemekler</h2>
         <div class="dish-gallery">
-            <div class="dish-item" id="ciger-yahnisi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/ciger-yahnisi-f30e2b30-25d1-49de-8a02-cdcd80c13c45.jpg" alt="Yemek 1" />
-                <div class="dish-title">Ciğer Yahnisi</div>
-            </div>
-            <div class="dish-item" id="baharatli-pilic-kulbasti">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv5.jpg" alt="Yemek 2" />
-                <div class="dish-title">Baharatlı Piliç Külbastı
-                </div>
-            </div>
-            <div class="dish-item" id="bonfile-kavurma" >
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e1.jpg" alt="Yemek 3" />
-                <div class="dish-title">Bonfile Kavurma</div>
-            </div>
-            <div class="dish-item" id="kori-soslu-tavuk">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv4-768x764.jpg" alt="Yemek 3" />
-                <div class="dish-title">Köri Soslu Tavuk</div>
-            </div>
-            <div class="dish-item" id="cokertme-kebabi">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e3.jpg" alt="Yemek 3" />
-                <div class="dish-title">Çökertme Kebabı</div>
-            </div>
-            
-            <div class="dish-item" id="karnabahar-kavurmasi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/karnabahar-kavurmasi-1edb2f9c-6618-4a2e-9084-07efeb24165e.jpg" alt="Yemek 3" />
-                <div class="dish-title">Karnabahar Kavurması</div>
-            </div>
-            <div class="dish-item" id="ciger-yahnisi">
-                <img src="https://img.piri.net/piri/upload/image/2019/2/13/fa6eae54-2_d0c7b44d.jpg" alt="Yemek 3" />
-                <div class="dish-title">Ciğer Yahnisi</div>
-            </div>
-            <div class="dish-item" id="bonfile-kavurma" >
-                <img src="https://media-cdn.tripadvisor.com/media/photo-s/13/05/16/d2/bonfile-kavurma.jpg" alt="Yemek 3" />
-                <div class="dish-title">Bonfile Kavurma</div>
-            </div>
-            <div class="dish-item" id= "karnabahar-kavurmasi">
-                <img src="https://cdn.yemek.com/mnresize/1250/833/uploads/2021/02/karnabahar-yemegi-yemekcom.jpg" alt="Yemek 3" />
-                <div class="dish-title">Karnabahar Kavurması</div>
-            </div>
-            <div class="dish-item" id= "kori-soslu-tavuk">
-                <img src="https://i.ytimg.com/vi/o7WEfQ7CSxw/maxresdefault.jpg" alt="Yemek 3" />
-                <div class="dish-title">Köri Soslu Tavuk</div>
-            </div>
+            <?php
+            // Yemekleri veritabanından getir
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    echo "<div class='dish-item'>";
+                    echo "<img src='" . $row['image_path'] . "' alt='" . $row['name'] . "' />";
+                    echo "<div class='dish-title'>" . $row['name'] . "</div>";
+                    echo "<div class='dish-footer'>";
+                    echo "<div class='dish-price'>₺" . number_format($row['price'], 3) . "</div>";
+                    echo "<div class='separator'></div>"; // Dikey çizgi
+                    echo "<button class='add-to-cart' data-dish-id='" . $row['id'] . "' data-dish-name='" . $row['name'] . "' data-dish-price='₺" . number_format($row['price'], 3) . "'>Sepete Ekle</button>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>Bu kategoride yemek bulunmamaktadır.</p>";
+            }
+            // Bağlantıyı kapat
+            $conn->close();
+            ?>
             
         </div>
     </div>
 
-    <script src="ana_yemekler.js"></script>
+    <script src="sulu_yemekler.js"></script>
     <script>
         // Sayfa yüklendiğinde URL'den yemeği kontrol et ve yalnızca o yemeği göster
         window.onload = function() {

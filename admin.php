@@ -4,80 +4,127 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 $uploadsDir = 'uploads'; // uploads dizininin yolu
 $folders = array_filter(glob($uploadsDir . '/*'), 'is_dir'); // Sadece dizinleri al
 
 $studentData = [];
 
+// Tüm klasörleri ve data.txt dosyalarını oku
 foreach ($folders as $folder) {
-    $folderName = basename($folder); 
     $dataTxtPath = $folder . '/data.txt'; // Klasördeki data.txt dosyasının yolu
 
-    // Data.txt dosyasını oku
     if (file_exists($dataTxtPath)) {
-        $data = file_get_contents($dataTxtPath); // data.txt içeriğini oku
-        $dataLines = explode("\n", $data); // Data.txt içeriğini satırlara ayıralım
-        
-        $currentStudent = [];
-        foreach ($dataLines as $line) {
-            if (strpos($line, 'Öğrenci Adı:') === 0) {
-                if (!empty($currentStudent)) {
-                    $studentData[] = $currentStudent;
-                }
-                $currentStudent = ['name' => trim(substr($line, 14))];
-            } elseif (strpos($line, 'Öğrenci Email:') === 0) {
-                $currentStudent['email'] = trim(substr($line, 15));
-            } elseif (strpos($line, 'Öğrenci Şifresi:') === 0) {
-                $currentStudent['password'] = trim(substr($line, 18));
-            } elseif (strpos($line, 'Yüklenen Belge:') === 0) {
-                $currentStudent['document'] = trim(substr($line, 17));
-            }
-        }
+        $data = file($dataTxtPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES); // Satırları oku
+        $chunkedData = array_chunk($data, 4); // Her 4 satır bir öğrenciye ait
 
-        if (!empty($currentStudent)) {
-            $studentData[] = $currentStudent; // Son öğrenci verisini ekle
+        foreach ($chunkedData as $chunk) {
+            if (count($chunk) === 4) {
+                $studentData[] = [
+                    'name' => $chunk[0],
+                    'email' => $chunk[1],
+                    'password' => $chunk[2],
+                    'document' => $chunk[3],
+                    'dataPath' => $dataTxtPath, // data.txt dosya yolunu ekle
+                    'folderPath' => $folder,   // Klasör yolunu ekle
+                ];
+            }
         }
     }
 }
 
-// Onayla işlemi ile veriyi ekleme
+
+    
+// Onayla işlemi ile veriyi ekleme ve klasörü temizleme
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'approve') {
     $fileToProcess = $_POST['fileToProcess'];
-    $currentStudent = [];
-    
-    // Veritabanına veri ekleme
+
     foreach ($studentData as $student) {
         if ($student['document'] === $fileToProcess) {
             $name = $student['name'];
             $email = $student['email'];
             $password = $student['password'];
             $document = $student['document'];
-            
+            $dataTxtPath = $student['dataPath'];
+            $folderPath = $student['folderPath'];
+
             // Veritabanına veri ekleme
             $sql = "INSERT INTO students (name, email, password, document)
                     VALUES ('$name', '$email', '$password', '$document')";
             
             if ($conn->query($sql) === TRUE) {
-                // Data.txt dosyasından silme
+                // data.txt dosyasından silme işlemi
                 $newData = "";
                 foreach ($studentData as $remainingStudent) {
                     if ($remainingStudent['document'] !== $fileToProcess) {
-                        $newData .= "Öğrenci Adı: " . $remainingStudent['name'] . "\n" .
-                                    "Öğrenci Email: " . $remainingStudent['email'] . "\n" .
-                                    "Öğrenci Şifresi: " . $remainingStudent['password'] . "\n" .
-                                    "Yüklenen Belge: " . $remainingStudent['document'] . "\n" .
-                                    "-------------------------\n";
+                        $newData .= $remainingStudent['name'] . "\n" .
+                                    $remainingStudent['email'] . "\n" .
+                                    $remainingStudent['password'] . "\n" .
+                                    $remainingStudent['document'] . "\n";
+                    }
+                }
+                file_put_contents($dataTxtPath, $newData);
+
+                // Klasördeki tüm dosyaları silme
+                $files = glob($folderPath . '/*'); // Klasördeki tüm dosyaları listele
+                foreach ($files as $file) {
+                    if (is_file($file)) {
+                        unlink($file); // Dosyayı sil
                     }
                 }
 
-                // Yeni veriyi data.txt'ye yaz
-                file_put_contents($dataTxtPath, $newData);
-                
-                echo "Veri başarıyla veritabanına kaydedildi!";
+                // Boş klasörü silme
+                if (is_dir($folderPath)) {
+                    if (rmdir($folderPath)) {
+                        echo "Klasör başarıyla silindi!";
+                    } else {
+                        echo "Klasör silinemedi. Lütfen izinleri kontrol edin.";
+                    }
+                }
+
+                echo "Veri başarıyla veritabanına kaydedildi, data.txt dosyasından silindi ve klasör temizlendi!";
+                header("Location: admin.php"); // admin.php sayfasına yönlendirme
+                exit; // Yönlendirmeden sonra scriptin çalışmaya devam etmesini engelle
             } else {
                 echo "Veri eklenirken bir hata oluştu: " . $conn->error;
             }
+        }
+    }
+}
+
+
+// Reddet işlemi ile dosyayı silme
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
+    $fileToProcess = $_POST['fileToProcess'];
+
+    foreach ($studentData as $student) {
+        if ($student['document'] === $fileToProcess) {
+            $dataTxtPath = $student['dataPath'];
+            $folderPath = $student['folderPath'];
+            $documentPath = $folderPath . '/' . $student['document'];
+
+                        // Klasördeki tüm dosyaları silme
+                        $files = glob($folderPath . '/*'); // Klasördeki tüm dosyaları listele
+                        foreach ($files as $file) {
+                            if (is_file($file)) {
+                                unlink($file); // Dosyayı sil
+                            }
+                        }
+            
+                        // Boş klasörü silme
+                        if (is_dir($folderPath)) {
+                            if (rmdir($folderPath)) {
+                                echo "Klasör başarıyla silindi!";
+                            } else {
+                                echo "Klasör silinemedi. Lütfen izinleri kontrol edin.";
+                            }
+                        } else {
+                            echo "Belirtilen klasör mevcut değil.";
+                        }
+            
+
+            
+
+            echo "Dosya başarıyla silindi ve data.txt dosyasından kaldırıldı!";
         }
     }
 }
@@ -108,31 +155,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'approve') {
                 </tr>
             </thead>
             <tbody>
-                <?php 
-                // Her belgeden gelen tüm öğrenci verilerini yazdır
-                foreach ($studentData as $student): 
-                    ?>
+                <?php foreach ($studentData as $student): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($student['name']); ?></td>
                         <td><?php echo htmlspecialchars($student['email']); ?></td>
                         <td><?php echo htmlspecialchars($student['password']); ?></td>
                         <td><a href="uploads/<?php echo htmlspecialchars($student['email']); ?>/<?php echo htmlspecialchars($student['document']); ?>" target="_blank"><?php echo htmlspecialchars($student['document']); ?></a></td>
                         <td>
-                            <form method="POST">
+                            <form method="POST" style="display: inline;">
                                 <input type="hidden" name="fileToProcess" value="<?php echo htmlspecialchars($student['document']); ?>">
                                 <button type="submit" name="action" value="approve">Onayla</button>
+                            </form>
+                            <form method="POST" style="display: inline;">
+                                <input type="hidden" name="fileToProcess" value="<?php echo htmlspecialchars($student['document']); ?>">
                                 <button type="submit" name="action" value="reject">Reddet</button>
                             </form>
                         </td>
                     </tr>
-                    <?php
-                endforeach; 
-                ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     <?php else: ?>
-        <p>Henüz bir belge yüklenmedi.</p>
+        Henüz bir belge yüklenmedi.
     <?php endif; ?>
-
 </body>
 </html>

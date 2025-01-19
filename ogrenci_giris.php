@@ -1,19 +1,8 @@
 <?php
-// Veritabanı bağlantısı
-$servername = "127.0.0.1";
-$username = "ghibli";  
-$password = "";  // Veritabanı şifrenizi buraya girin
-$dbname = "ghibli_yemek_platformu";  
-
-// MySQLi ile bağlantı
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Bağlantı kontrolü
-if ($conn->connect_error) {
-    echo "Bağlantı hatası: " . $conn->connect_error;
-    die();  // Bağlantı hatası varsa, işlemi sonlandırır.
-}
-?>
+include_once("db_connection.php");
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Formdan gelen veriler
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['studentPassword'];
 
     // SQL Sorgusu - email ve password ile veritabanı kontrolü
-    $sql = "SELECT * FROM students WHERE email = ? AND password = ?";
+    $sql = "SELECT id, email, password FROM students WHERE email = ? AND password = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $email, $password);
     $stmt->execute();
@@ -30,11 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Kullanıcıyı bulduysa, öğrenci sayfasına yönlendir
     if ($result->num_rows > 0) {
         // Kullanıcı bulundu, öğrenci sayfasına yönlendir
+        $row = $result->fetch_assoc();
+        session_start();
+        $_SESSION['student_id'] = $row['id']; // Öğrencinin ID'sini session'a kaydet
         header("Location: student.php");
         exit();
     } else {
         // Kullanıcı bulunamadı, hata mesajı göster
-        $error_message = "Önce kayıt olmanız gerekiyor.";
+        $error_message = "E-posta veya şifre hatalı. Lütfen tekrar deneyin.";
     }
 }
 ?>
@@ -50,13 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="portal-selection">
         <h1>Öğrenci Giriş</h1>
-        <form action="ogrenci_giris.php" method="POST">
-            <label for="studentEmail">E-posta:</label>
-            <input type="email" id="studentEmail" name="studentEmail" required><br>
-    
-            <label for="studentPassword">Şifre:</label>
-            <input type="password" id="studentPassword" name="studentPassword" required><br>
-    
+        <form id="studentLoginForm" class="form" method="POST" action="ogrenci_giris.php">
+            <h3>Öğrenci Giriş</h3>
+            <input type="email" id="studentEmail" name="studentEmail" placeholder="Email" required>
+            <input type="password" id="studentPassword" name="studentPassword" placeholder="Şifre" required>
             <button type="submit">Giriş Yap</button>
         </form>
 

@@ -1,3 +1,10 @@
+<?php
+include('db_connection.php');
+
+// Sulu Yemekler kategorisindeki yemekleri sorgulamak
+$sql = "SELECT * FROM meals WHERE category = 'Tatlı Çeşitleri' ORDER BY name";
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -83,48 +90,26 @@
     <div class="main-dish-section">
         <h2>Ana Yemekler</h2>
         <div class="dish-gallery">
-            <div class="dish-item" id="ciger-yahnisi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/ciger-yahnisi-f30e2b30-25d1-49de-8a02-cdcd80c13c45.jpg" alt="Yemek 1" />
-                <div class="dish-title">Ciğer Yahnisi</div>
-            </div>
-            <div class="dish-item" id="baharatli-pilic-kulbasti">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv5.jpg" alt="Yemek 2" />
-                <div class="dish-title">Baharatlı Piliç Külbastı
-                </div>
-            </div>
-            <div class="dish-item" id="bonfile-kavurma" >
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e1.jpg" alt="Yemek 3" />
-                <div class="dish-title">Bonfile Kavurma</div>
-            </div>
-            <div class="dish-item" id="kori-soslu-tavuk">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/tv4-768x764.jpg" alt="Yemek 3" />
-                <div class="dish-title">Köri Soslu Tavuk</div>
-            </div>
-            <div class="dish-item" id="cokertme-kebabi">
-                <img src="https://elizinn.com.tr/wp-content/uploads/2022/11/e3.jpg" alt="Yemek 3" />
-                <div class="dish-title">Çökertme Kebabı</div>
-            </div>
-            
-            <div class="dish-item" id="karnabahar-kavurmasi">
-                <img src="https://i.lezzet.com.tr/images-xxlarge-recipe/karnabahar-kavurmasi-1edb2f9c-6618-4a2e-9084-07efeb24165e.jpg" alt="Yemek 3" />
-                <div class="dish-title">Karnabahar Kavurması</div>
-            </div>
-            <div class="dish-item" id="ciger-yahnisi">
-                <img src="https://img.piri.net/piri/upload/image/2019/2/13/fa6eae54-2_d0c7b44d.jpg" alt="Yemek 3" />
-                <div class="dish-title">Ciğer Yahnisi</div>
-            </div>
-            <div class="dish-item" id="bonfile-kavurma" >
-                <img src="https://media-cdn.tripadvisor.com/media/photo-s/13/05/16/d2/bonfile-kavurma.jpg" alt="Yemek 3" />
-                <div class="dish-title">Bonfile Kavurma</div>
-            </div>
-            <div class="dish-item" id= "karnabahar-kavurmasi">
-                <img src="https://cdn.yemek.com/mnresize/1250/833/uploads/2021/02/karnabahar-yemegi-yemekcom.jpg" alt="Yemek 3" />
-                <div class="dish-title">Karnabahar Kavurması</div>
-            </div>
-            <div class="dish-item" id= "kori-soslu-tavuk">
-                <img src="https://i.ytimg.com/vi/o7WEfQ7CSxw/maxresdefault.jpg" alt="Yemek 3" />
-                <div class="dish-title">Köri Soslu Tavuk</div>
-            </div>
+            <?php
+            // Yemekleri veritabanından getir
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    echo "<div class='dish-item'>";
+                    echo "<img src='" . $row['image_path'] . "' alt='" . $row['name'] . "' />";
+                    echo "<div class='dish-title'>" . $row['name'] . "</div>";
+                    echo "<div class='dish-footer'>";
+                    echo "<div class='dish-price'>₺" . number_format($row['price'], 3) . "</div>";
+                    echo "<div class='separator'></div>"; // Dikey çizgi
+                    echo "<button class='add-to-cart' data-dish-id='" . $row['id'] . "' data-dish-name='" . $row['name'] . "' data-dish-price='₺" . number_format($row['price'], 3) . "'>Sepete Ekle</button>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>Bu kategoride yemek bulunmamaktadır.</p>";
+            }
+            // Bağlantıyı kapat
+            $conn->close();
+            ?>
             
         </div>
     </div>

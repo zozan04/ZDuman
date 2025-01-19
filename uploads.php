@@ -42,15 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } else {
         // Dosya yüklenirken hata oluşmuşsa
-        $confirmationMessage = "Dosya yüklenirken bir hata oluştu. Hata kodu: " . ($studentDocument['error'] ?? 'Bilinmeyen hata');
+        $confirmationMessage = "Dosya yüklenirken bir hata oluştu. Hata kodu" . ($studentDocument['error'] ?? 'Bilinmeyen hata');
     }
 
     // Form verilerini .txt dosyasına kaydetme
-    $data = "Öğrenci Adı: " . $name . "\n" .
-            "Öğrenci Email: " . $email . "\n" .
-            "Öğrenci Şifresi: " . $password . "\n" .
-            "Yüklenen Belge: " . $newFileName . "\n" . // Yüklenen dosyanın adını kaydediyoruz
-            "-------------------------\n";
+    $data =  $name . "\n" .
+             $email . "\n" .
+             $password . "\n" .
+             $newFileName . "\n" ; // Yüklenen dosyanın adını kaydediyoruz
+           
    
     $file = $uploadDir . "/data.txt"; // Verilerin kaydedileceği dosya
     file_put_contents($file, $data, FILE_APPEND);
@@ -59,4 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: index.html?message=" . urlencode($confirmationMessage));
     exit();
 }
+
+
+
 ?>
