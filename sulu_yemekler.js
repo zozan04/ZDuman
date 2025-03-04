@@ -93,7 +93,7 @@ document.getElementById("searchInput").addEventListener("keypress", function (ev
 // Kategorilerin bulunduğu sayfanın URL'si
 const categories = {
     "ana yemekler": {
-        url: "ana_yemekler.html",
+        url: "ana_yemekler.php",
         dishes: [
             { name: "Ciğer Yahnisi", id: "ciger-yahnisi" },
             { name: "Baharatlı Piliç Külbastı", id: "baharatli-pilic-kulbasti" },
@@ -108,15 +108,15 @@ const categories = {
         ]
     },
     "sulu yemekler": {
-        url: "sulu_yemekler.html",
+        url: "sulu_yemekler.php",
         dishes: [
             { name: "Tarator", id: "tarator" },
             { name: "Mercimek Çorbası", id: "mercimek-corba" },
             { name: "Sebze Çorbası", id: "sebze-corba" }
         ]
     },
-    "kuru yemekler": {
-        url: "kuru_yemekler.html",
+    "karbonhidrat lezzetleri": {
+        url: "karbonhidrat_lezzetleri.php",
         dishes: [
             { name: "Pilav Üstü Döner", id: "pilav-ustu-doner" },
             { name: "Simit Kebabı", id: "simit-kebabi" },
@@ -124,15 +124,15 @@ const categories = {
         ]
     },
     "aperatifler": {
-        url: "aperatifler.html",
+        url: "aperatifler.php",
         dishes: [
             { name: "Zeytinyağlı Enginar", id: "zeytinyagli-enginar" },
             { name: "Humus", id: "humus" },
             { name: "Bruschetta", id: "bruschetta" }
         ]
     },
-    "tatlilar": {
-        url: "tatlilar.html",
+    "tatlı çeşitleri": {
+        url: "tatli_cesitleri.php",
         dishes: [
             { name: "Cheesecake", id: "cheesecake" },
             { name: "Baklava", id: "baklava" },
@@ -157,6 +157,42 @@ function searchAndRedirect(query) {
     }
     alert("Aradığınız yemek veya kategori bulunamadı.");
 }
+
+
+//Sepete ekleme işlemi
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault(); // Varsayılan davranışı engelle
+
+        // Yemek bilgilerini al
+        const dishId = this.getAttribute('data-dish-id');
+        const dishName = this.getAttribute('data-dish-name');
+        const dishPrice = this.getAttribute('data-dish-price');
+
+        // Sepete ekleme işlemi
+        let cart = JSON.parse(localStorage.getItem('cart')) || []; // Sepeti al ya da yeni bir dizi oluştur
+        cart.push({ id: dishId, name: dishName, price: dishPrice }); // Yeni öğeyi ekle
+        localStorage.setItem('cart', JSON.stringify(cart)); // Sepeti güncelle
+
+        // Başarılı ekleme mesajı göster
+        showMessage(dishId);
+    });
+});
+
+// Mesajı göstermek için bir fonksiyon
+function showMessage(dishId) {
+    const dishItem = document.getElementById(dishId); // İlgili yemek öğesini al
+    const messageBox = document.createElement('div');
+    messageBox.textContent = 'Sepete Eklendi!';
+    messageBox.className = 'message-box'; // Mesaj kutusuna sınıf ekle
+    dishItem.appendChild(messageBox); // Mesaj kutusunu yemek öğesine ekle
+
+    // Mesajı 3 saniye sonra kaldır
+    setTimeout(() => {
+        messageBox.remove();
+    }, 3000);
+}
+
 
 
 

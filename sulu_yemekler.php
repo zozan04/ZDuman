@@ -12,11 +12,10 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghibli Yemek Platformu</title>
-    <link rel="icon" href="resimler/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
-    <link rel="stylesheet" href="sulu_yemekler.css">
+    <link rel="icon" href="resim/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
+    <link rel="stylesheet" href="ana_yemekler.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://unpkg.com/scrollreveal"></script>
-
 </head>
 <body>
     <!-- Ana Ekran -->
@@ -24,13 +23,13 @@ $result = $conn->query($sql);
         <nav>
             <div class="nav_bar">
                 <div class="logo">
-                    <img src="resimler/A7.jpg" alt="GYP Logo">
+                    <img src="resim/A7.jpg" alt="GYP Logo">
                 </div>
                 <!-- Menüleri ekliyoruz -->
                 <ul class="menu">
                     <li><a href="index.html">Anasayfa</a></li>
                     <li><a href="#hakkimizda">Hakkımızda</a></li>
-                    <li><a href="ana_yemekler.php">Ana Yemekler</a></li>
+                    <li><a href="#yemekler">Yemekler</a></li>
                     <li><a href="#iletisim">İletişim</a></li>
                 </ul>
             </div>
@@ -58,7 +57,7 @@ $result = $conn->query($sql);
                     <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
                 </div>
             </div>
-            
+   
             <!-- Sepetim İkonu -->
             <a href="sepetim.html" class="cart-icon" title="Sepetim">
                 <div class="circle">
@@ -66,7 +65,7 @@ $result = $conn->query($sql);
                 </div>
             </a>
             <!-- Giriş İkonu -->
-            <a href="login/login.html" class="login-icon" title="Giriş Yap">
+            <a href="login.html" class="login-icon" title="Giriş Yap">
                 <div class="circle">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
@@ -78,8 +77,9 @@ $result = $conn->query($sql);
                 </div>
             </div>
         </div>
+
     </header>
-    
+
     <!-- Yemek bölümü -->
     <div class="main-dish-section">
         <h2>Sulu Yemekler</h2>
@@ -92,9 +92,9 @@ $result = $conn->query($sql);
                     echo "<img src='" . $row['image_path'] . "' alt='" . $row['name'] . "' />";
                     echo "<div class='dish-title'>" . $row['name'] . "</div>";
                     echo "<div class='dish-footer'>";
-                    echo "<div class='dish-price'>₺" . number_format($row['price'], 3) . "</div>";
+                    echo "<div class='dish-price'>₺" . number_format($row['price'], 2) . "</div>";
                     echo "<div class='separator'></div>"; // Dikey çizgi
-                    echo "<button class='add-to-cart' data-dish-id='" . $row['id'] . "' data-dish-name='" . $row['name'] . "' data-dish-price='₺" . number_format($row['price'], 3) . "'>Sepete Ekle</button>";
+                    echo "<button class='add-to-cart' data-dish-id='" . $row['id'] . "' data-dish-name='" . $row['name'] . "' data-dish-price='₺" . number_format($row['price'], 2) . "'>Sepete Ekle</button>";
                     echo "</div>";
                     echo "</div>";
                 }
@@ -104,11 +104,10 @@ $result = $conn->query($sql);
             // Bağlantıyı kapat
             $conn->close();
             ?>
-            
         </div>
     </div>
 
-    <script src="sulu_yemekler.js"></script>
+    <script src="ana_yemekler.js"></script>
     <script>
         // Sayfa yüklendiğinde URL'den yemeği kontrol et ve yalnızca o yemeği göster
         window.onload = function() {

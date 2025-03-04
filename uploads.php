@@ -11,9 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = htmlspecialchars($_POST['password']);
     $studentDocument = $_FILES['studentDocument'] ?? null;
 
+    // Şifreyi hashle
+    $password = hash('sha256', $password);
+
     // Dosyaların kaydedileceği dizin
     $uploadDir = "uploads/" . $email;
-    
+
     // Eğer klasör yoksa oluştur
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true); // 0777 izinleri ile klasörü oluştur
@@ -42,24 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } else {
         // Dosya yüklenirken hata oluşmuşsa
-        $confirmationMessage = "Dosya yüklenirken bir hata oluştu. Hata kodu" . ($studentDocument['error'] ?? 'Bilinmeyen hata');
+        $confirmationMessage = "Dosya yüklenirken bir hata oluştu. Hata kodu: " . ($studentDocument['error'] ?? 'Bilinmeyen hata');
     }
 
     // Form verilerini .txt dosyasına kaydetme
     $data =  $name . "\n" .
              $email . "\n" .
              $password . "\n" .
-             $newFileName . "\n" ; // Yüklenen dosyanın adını kaydediyoruz
-           
-   
+             ($newFileName ?? '') . "\n"; // Yüklenen dosyanın adını kaydediyoruz
+
     $file = $uploadDir . "/data.txt"; // Verilerin kaydedileceği dosya
     file_put_contents($file, $data, FILE_APPEND);
 
     // Form verilerini işledikten sonra bildirim mesajını göndermek için yönlendirme
     header("Location: index.html?message=" . urlencode($confirmationMessage));
-    exit();
+    exit();
 }
-
-
-
 ?>

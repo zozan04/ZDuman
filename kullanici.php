@@ -1,0 +1,1 @@
+<colsole class="log">hoşgeldiniz</colsole>

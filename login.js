@@ -96,6 +96,77 @@ studentRegisterForm.addEventListener('submit', (event) => {
     });
 });
 
+// Kullanıcı kayıt formu gönderimi
+document.getElementById('userRegisterForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Sayfanın yenilenmesini engelle
+
+    // Form verilerini al
+    const userName = document.getElementById('userName').value;
+    const userEmail = document.getElementById('userRegEmail').value;
+    const userPassword = document.getElementById('userRegPassword').value;
+
+    // FormData nesnesi oluştur
+    const formData = new FormData();
+    formData.append('userName', userName);
+    formData.append('userEmail', userEmail);
+    formData.append('userPassword', userPassword);
+
+    // Sunucuya istek gönder
+    fetch('kullanici_kayit.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data); // Sunucudan gelen yanıtı logla
+
+        // Başarı mesajı göster
+        showNotification("Kayıt işlemi başarılı! Giriş yapabilirsiniz.");
+        
+        // Formu temizle
+        document.getElementById('userRegisterForm').reset();
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        showNotification("Kayıt sırasında bir hata oluştu!", true);
+    });
+});
+
+// kullanıcı giriş işlemleri
+document.getElementById('userLoginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Sayfanın yenilenmesini engelle
+
+    const userEmail = document.getElementById('userEmail').value;
+    const userPassword = document.getElementById('userPassword').value;
+
+    // Form verilerini al
+    const formData = new FormData();
+    formData.append('userEmail', userEmail);
+    formData.append('userPassword', userPassword);
+
+    // AJAX ile sunucuya istek gönder
+    fetch('kullanici_giris.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json()) // JSON yanıtını al
+    .then(data => {
+        // Başarı durumunda yönlendir
+        if (data.status === "success") {
+            window.location.href = data.redirect; // Yönlendirme yapılır
+        } else {
+            alert(data.message); // Hata mesajını göster
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert("Giriş sırasında bir hata oluştu!");
+    });
+});
+
+
+
+
 // Portalı gizleyen fonksiyon
 // Portalı kaldıran fonksiyon
 function hidePortal() {

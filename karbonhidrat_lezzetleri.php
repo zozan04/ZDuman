@@ -11,7 +11,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghibli Yemek Platformu</title>
-    <link rel="icon" href="resimler/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
+    <link rel="icon" href="resim/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
     <link rel="stylesheet" href="ana_yemekler.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://unpkg.com/scrollreveal"></script>
@@ -23,7 +23,7 @@ $result = $conn->query($sql);
         <nav>
             <div class="nav_bar">
                 <div class="logo">
-                    <img src="resimler/A7.jpg" alt="GYP Logo">
+                    <img src="resim/A7.jpg" alt="GYP Logo">
                 </div>
                 <!-- Menüleri ekliyoruz -->
                 <ul class="menu">
@@ -70,7 +70,7 @@ $result = $conn->query($sql);
                 </div>
             </a>
             <!-- Giriş İkonu -->
-            <a href="login/login.html" class="login-icon" title="Giriş Yap">
+            <a href="login.html" class="login-icon" title="Giriş Yap">
                 <div class="circle">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
@@ -88,7 +88,7 @@ $result = $conn->query($sql);
 
     <!-- Yemek bölümü -->
     <div class="main-dish-section">
-        <h2>Ana Yemekler</h2>
+        <h2>Karbonhidrat Lezzetleri</h2>
         <div class="dish-gallery">
             <?php
             // Yemekleri veritabanından getir

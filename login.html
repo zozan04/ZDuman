@@ -48,7 +48,16 @@
     <button type="submit">Kayıt Ol ve Yükle</button>
 </form>
 
+<script>
+    document.getElementById('studentRegisterForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Formun sayfayı yenilemesini engeller
 
+        // Form gönderildikten sonra sayfa yenilenmesi için:
+        setTimeout(function() {
+            location.reload(); // Sayfa yenilenir
+        }, 2000); // 2 saniye bekleyip sayfa yenileniyor
+    });
+</script>
 
         
 
@@ -74,6 +83,17 @@
             <input type="password" id="userPassword" name="userPassword" placeholder="Şifre" required>
             <button type="submit">Giriş Yap</button>
         </form>
+
+        <script>
+            document.getElementById('userLoginForm').addEventListener('submit', function(e) {
+                e.preventDefault(); // Formun sayfayı yenilemesini engeller
+        
+                // Form gönderildikten sonra sayfa yenilenmesi için:
+                setTimeout(function() {
+                    location.reload(); // Sayfa yenilenir
+                }, 2000); // 2 saniye bekleyip sayfa yenileniyor
+            });
+        </script>
 
         <!-- Kullanıcı Kayıt Formu -->
         <form id="userRegisterForm" class="form hidden">

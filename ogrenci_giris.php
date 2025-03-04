@@ -9,6 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['studentEmail'];
     $password = $_POST['studentPassword'];
 
+    $password = hash('sha256', $password);
+
+
     // SQL Sorgusu - email ve password ile veritabanı kontrolü
     $sql = "SELECT id, email, password FROM students WHERE email = ? AND password = ?";
     $stmt = $conn->prepare($sql);
