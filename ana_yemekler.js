@@ -193,6 +193,33 @@ function showMessage(dishId) {
     }, 3000);
 }
 
+// Favori ikonlarına tıklandığında renk değiştirme işlevi
+document.querySelectorAll('.favorite-icon').forEach(icon => {
+    icon.addEventListener('click', function() {
+        // Tıklandığında aktif hale getirme (veya kaldırma)
+        this.classList.toggle('active');
+    });
+});
+
+
+// Favori ekleme işlevi
+function addToFavorites(mealId) {
+    fetch('favoriler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'mealId=' + mealId
+    })
+    .then(response => response.json())
+    
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+
 
 
 

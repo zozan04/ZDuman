@@ -1,0 +1,89 @@
+h2{
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: px;
+    text-align: center;
+}
+#favorite-dishes {
+    display: flex;
+    flex-wrap: wrap; /* Yatay sıralama ve yer kalmadığında alt satıra geçme */
+    max-height: 600px; /* Konteynerin maksimum yüksekliği */
+    gap: 10px; /* Kartlar arasında boşluk */
+    padding: 5px;
+}
+
+
+.dish-item {
+    width: 250px;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+    padding: 5px; /* Daha az boşluk */
+    background: #fff;
+}
+
+.dish-item img {
+    width: 250px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block; /* Varsayılan boşlukları kaldırır */
+    margin: 0 auto; /* Ortalamaya devam etmek için */
+}
+
+
+.dish-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.dish-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.dish-price {
+    font-size: 12px;
+    color: #e67e22;
+    font-weight: bold;
+}
+
+.add-to-cart {
+    background: #e67e22;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-to-cart:hover {
+    background: #d35400;
+}
+/* Resmin sağ üst köşesine silme ikonu eklemek için */
+        .dish-item {
+            position: relative;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .delete-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .delete-icon:hover {
+            background-color: red;
+        }

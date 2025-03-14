@@ -81,6 +81,12 @@ $result = $conn->query($sql);
                     <i class="fas fa-sun" id="themeIcon" style="color: black; font-size: 20px;"></i>
                 </div>
             </div>
+            <!-- Favoriler İkonu -->
+        <a href="favoriler.php" class="favorites-icon" title="Favorilerim">
+            <div class="circle">
+                <i class="fas fa-heart" style="color: black; font-size: 20px;"></i>
+            </div>
+        </a>
         </div>
 
     </header>
@@ -96,6 +102,10 @@ $result = $conn->query($sql);
                 while($row = $result->fetch_assoc()) {
                     echo "<div class='dish-item'>";
                     echo "<img src='" . $row['image_path'] . "' alt='" . $row['name'] . "' />";
+                     // Favori ikonunu buraya ekledim
+                     echo "<div class='favorite-icon' onclick='addToFavorites(" . $row['id'] . ")'>";
+                     echo "<i class='fas fa-heart'></i>"; // Favori ikonu
+                     echo "</div>";
                     echo "<div class='dish-title'>" . $row['name'] . "</div>";
                     echo "<div class='dish-footer'>";
                     echo "<div class='dish-price'>₺" . number_format($row['price'], 3) . "</div>";

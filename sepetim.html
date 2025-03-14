@@ -44,16 +44,7 @@
             </div>
             </div>
             
-             <!-- Filtreleme İkonu -->
-             <div class="filter-icon">
-                <div class="circle" onclick="toggleFilterInput()">
-                    <i class="fas fa-filter"></i>
-                </div>
-                <span class="filter-text">Filtrele</span>
-                <div id="filter-box"> <!-- Filtre kutusu -->
-                    <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
-                </div>
-            </div>
+             
             
    
             <!-- Sepetim İkonu -->
@@ -62,18 +53,26 @@
                     <i class="fas fa-shopping-cart" style="color: black; font-size: 20px;"></i>
                 </div>
             </a>
-            <!-- Giriş İkonu -->
-            <a href="login.html" class="login-icon" title="Giriş Yap">
-                <div class="circle">
+            <!-- Giriş İkonu (Oturum Açma ve Çıkış Menüsü) -->
+            <div class="login-container">
+                <div class="circle login-icon" onclick="toggleLogoutMenu()">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
-            </a>
+                <div id="logout-menu" class="logout-menu">
+                    <a href="kullanici_cikis.php">Çıkış Yap</a>
+                </div>
+            </div>
             <!-- Tema Değiştir İkonu -->
             <div class="light" id="light" title="Tema Değiştir">
                 <div class="circle">
                     <i class="fas fa-sun" id="themeIcon" style="color: black; font-size: 20px;"></i>
                 </div>
             </div>
+            <a href="favoriler.php" class="favorites-icon" title="Favorilerim">
+                <div class="circle">
+                    <i class="fas fa-heart" style="color: black; font-size: 20px;"></i>
+                </div>
+            </a>
         </div>
 
     </header>

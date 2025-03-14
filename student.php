@@ -379,7 +379,7 @@ $result_get_meals = $conn->query($sql_get_meals);
             </ul>
 
         <!-- Giriş İkonu -->
-        <a href="login.html" class="login-icon" title="Çıkış Yap">
+        <a href="index.html" class="login-icon" title="Çıkış Yap">
     <div class="circle">
         <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
     </div>

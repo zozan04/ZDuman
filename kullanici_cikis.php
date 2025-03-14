@@ -1,6 +1,6 @@
 <?php
 session_start();
 session_destroy();
-header("Location: index.php"); // Ana sayfaya yönlendir
+header("Location: index.html"); // Ana sayfaya yönlendir
 exit();
 ?>

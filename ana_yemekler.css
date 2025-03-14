@@ -218,11 +218,38 @@ nav {
     outline: none; /* Kenarlık dışında bir görünüm yok */
 }
 
+.favorite-icon {
+    position: absolute;
+    top: 19px; /* Üstten mesafe */
+    right: 8px; /* Sağdan mesafe */
+    background-color: #fff; /* Başlangıçta beyaz arka plan */
+    border-radius: 50%; /* Yuvarlak yapmak için */
+    padding: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Renk değişimi için geçiş ekledik */
+}
+
+.favorite-icon i {
+    color: #000; /* Başlangıçta siyah ikon */
+    font-size: 24px; /* İkon boyutu */
+}
+
+.favorite-icon.active i {
+    color: #f00; /* Favori ikonuna tıklandığında kırmızı */
+}
+
+.favorites-icon{
+    position: absolute;
+    top: 25px;
+    right: 174px;
+    display: flex;
+}
+
 /* Navbar menü stilleri */
 ul.menu {
     position:absolute;
     flex-grow: 0;
-    right: 300px;
+    right: 350px;
     justify-content: center;
     list-style-type: none; 
     margin: 0;
@@ -364,5 +391,4 @@ ul.menu li a:hover {
     font-size: 14px; /* Yazı boyutu */
     z-index: 1000; /* Diğer öğelerin üzerinde görünmesi için */
 }
-
 
