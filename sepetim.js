@@ -128,71 +128,7 @@ function searchAndRedirect(query) {
     alert("Aradığınız yemek veya kategori bulunamadı.");
 }
 
-// Sepete yemek ekler
-document.addEventListener('DOMContentLoaded', function() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || []; // Sepeti al ya da yeni bir dizi oluştur
-    const cartMessage = document.getElementById('cart-message');
-    const cartItems = document.getElementById('cart-items');
 
-    // Sepet boşsa mesajı göster
-    if (cart.length === 0) {
-        cartMessage.style.display = 'block';
-        cartItems.style.display = 'none'; // Sepet öğelerini gizle
-    } else {
-        cartMessage.style.display = 'none'; // Mesajı gizle
-        cartItems.style.display = 'block'; // Sepet öğelerini göster
-        // Sepet öğelerini buraya ekleyebilirsiniz
-        cart.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.textContent = `${item.name} - ${item.price}`;
-            cartItems.appendChild(itemElement);
-        });
-    }
-});
-
-
-
-// silme butonu ekledi
-document.addEventListener('DOMContentLoaded', function() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || []; // Sepeti al ya da yeni bir dizi oluştur
-    const cartMessage = document.getElementById('cart-message');
-    const cartItems = document.getElementById('cart-items');
-
-    // Sepet boşsa mesajı göster
-    if (cart.length === 0) {
-        cartMessage.style.display = 'block';
-        cartItems.style.display = 'none'; // Sepet öğelerini gizle
-    } else {
-        cartMessage.style.display = 'none'; // Mesajı gizle
-        cartItems.style.display = 'block'; // Sepet öğelerini göster
-        // Sepet öğelerini buraya ekleyebilirsiniz
-        cart.forEach((item, index) => {
-            const itemElement = document.createElement('div');
-            itemElement.textContent = `${item.name} - ${item.price}`;
-            itemElement.style.display = 'flex'; // Flex düzeni ile hizalamak için
-            itemElement.style.justifyContent = 'space-between'; // Elemanları yan yana yerleştir
-            itemElement.style.alignItems = 'center'; // Dikey hizalama
-
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Sil';
-            removeButton.classList.add('remove-button'); // Butona sınıf ekleyerek stil vermek için
-            removeButton.onclick = function() {
-                // Silme işlemi
-                cart.splice(index, 1); // Yemeği sepetten kaldır
-                localStorage.setItem('cart', JSON.stringify(cart)); // Sepeti güncelle
-                itemElement.remove(); // DOM'dan öğeyi kaldır
-                // Sepet boşsa mesajı tekrar göster
-                if (cart.length === 0) {
-                    cartMessage.style.display = 'block';
-                    cartItems.style.display = 'none';
-                }
-            };
-
-            itemElement.appendChild(removeButton); // Sil butonunu öğeye ekle
-            cartItems.appendChild(itemElement); // Öğeyi sepete ekle
-        });
-    }
-});
 function toggleLogoutMenu() {
     var menu = document.getElementById("logout-menu");
     if (menu.style.display === "none" || menu.style.display === "") {
@@ -211,3 +147,4 @@ document.addEventListener("click", function (event) {
         menu.style.display = "none";
     }
 });
+

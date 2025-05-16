@@ -1,8 +1,8 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
     background-color: #f7f7f7;
+    padding-top: 90px;
 }
 
 body.light-mode {
@@ -140,18 +140,18 @@ nav {
     display: flex;
  
 }
+
 .add-to-cart {
     padding: 10px 30px;
-    background-color:  rgba(74, 11, 11, 0.8);
+    background-color: rgba(74, 11, 11, 0.8);
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
 }
 
 .add-to-cart:hover {
-    background-color: #b30000;;
+    background-color:rgba(74, 11, 11, 1);
 }
 .separator {
     width: 1.5px; /* Çizginin genişliği */
@@ -290,7 +290,7 @@ nav {
 }
 
 .favorite-icon.active i {
-    color:#b30000; /* Favori ikonuna tıklandığında kırmızı */
+    color: #f00; /* Favori ikonuna tıklandığında kırmızı */
 }
 
 .favorites-icon{
@@ -330,6 +330,7 @@ ul.menu li a {
     padding: 10px 20px;
     isolation: isolate;
     display: flex;
+    margin-bottom: -5px;
 
 }
 
@@ -339,32 +340,10 @@ ul.menu li a:hover {
     z-index: 10;
 }
 
-h2{
-    font-size: 36px;
-    font-weight: bold;
-    margin-top: 150px;
-    text-align: center;
-    z-index: 1;
-    position: fixed;
-    width: 100%;
-    height: 50px;
-    background-color: #f7f7f7; /* Arka plan rengi */
-    text-align: center;
-    left: 0;
-    padding: 20px 0;
-    top: -68px;
-    
-}
-/* Yemek kategorileri */
-.main-dish-section {
-    padding: 100px; /* Ana yemek bölümüne iç boşluk ekle */
-    margin-top: 40px;
-    text-align: center;
-}
 .dish-gallery {
-    margin-top: 50px;
-    margin-left: -40px;
-    margin-right: -40px;
+    
+    margin-left: 60px;
+    margin-right: 60px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap:3.25px;
@@ -373,6 +352,20 @@ h2{
     left: 20px;
     right: 50px;
    
+}
+h2{
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 150px;
+    text-align: center;
+    z-index: 1;
+    position: fixed;
+    width: 100%;
+    background-color: #f7f7f7; /* Arka plan rengi */
+    text-align: center;
+    left: 0;
+    padding: 20px 0;
+    top: -68px;
 }
 
 .dish-item {
@@ -392,27 +385,6 @@ h2{
     margin-bottom: 50px;
 }
 
-.cart-notification {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(0, 128, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    animation: fadeInOut 1s ease-in-out;
-    z-index: 10;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(-5px); }
-    20% { opacity: 1; transform: translateY(0); }
-    80% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-5px); }
-}
-
 .dish-item img {
     width: 100%; /* Resim genişliği kutu genişliğine eşit */
     height: 310px; /* Resim yüksekliğini sabitle */
@@ -420,9 +392,8 @@ h2{
     transition: transform 0.5s ease;
     display: block;
     border-radius: 8px;
-    
+    margin-bottom: 5px;
 }
-
 .dish-item img:hover {
     transform: scale(1.05); /* Hover olduğunda resmi büyüt */
 }
@@ -439,6 +410,7 @@ h2{
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     box-sizing: border-box;
+  
 }
 
 .dish-footer {
@@ -453,51 +425,13 @@ h2{
     box-sizing: border-box;
     height: 50px;
     position: relative;
-   
     
+  
 }
-
 
 .dish-price {
     font-size: 16px;
     font-weight: bold;
     color: rgba(74, 11, 11, 0.8);
 }
-
-.dish-user {
-    margin-top: 5px; /* Kullanıcı adı ile resim arasında boşluk */
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    box-sizing: border-box;
-    background-color: #f8f9fa;
-   
-}
-
-.username {
-    color: #800000; /* Bordo renk */
-    text-decoration: none; /* Alt çizgiyi kaldır */
-    font-weight: bold; /* Kalın yazı */
-    padding-top: 10px; /* Üst boşluk */
-    padding-bottom: 10px; /* Alt boşluk */
-    display: block; /* Bağlantıyı blok yaparak boşluk eklemek için */
-    margin-bottom: 10px; /* Kullanıcı adı altındaki boşluk */
-}
-
-.username:hover {
-    color: #b30000; /* Hoverda daha koyu bordo renk */
-    text-decoration: none; /* Hoverda da alt çizgi olmasın */
-}
-
-
-
-.dish-title {
-    font-size: 18px; /* Yemek adı için yazı boyutu */
-    font-weight: bold; /* Kalın yazı */
-}
-
-
-
-
-
-
 

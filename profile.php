@@ -1,14 +1,81 @@
 <?php
 include('db_connection.php');
 
-// Sulu Yemekler kategorisindeki yemekleri sorgulamak
-$sql = "SELECT meals.*, students.name AS username 
-        FROM meals 
-        JOIN students ON meals.user_id = students.id
-        WHERE meals.category = 'Aperatifler' 
-        ORDER BY meals.name";
-$result = $conn->query($sql);
+// Öğrencinin ID'sini al
+$student_id = $_GET['id'];
+
+// Öğrencinin bilgilerini al
+$sql = "SELECT * FROM students WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $student_id);
+$stmt->execute();
+$student_result = $stmt->get_result();
+
+if ($student_result->num_rows > 0) {
+    $student = $student_result->fetch_assoc();
+    echo "<h2>" . $student['name'] . "</h2>";
+    
+} 
+// Öğrencinin yemeklerini al
+$sql_meals = "SELECT * FROM meals WHERE user_id = ? ORDER BY name";
+$stmt_meals = $conn->prepare($sql_meals);
+$stmt_meals->bind_param("i", $student_id);
+$stmt_meals->execute();
+$meals_result = $stmt_meals->get_result();
+
+if ($meals_result->num_rows > 0) {
+   
+    echo "<div class='dish-gallery'>";
+    while ($meal = $meals_result->fetch_assoc()) {
+        echo "<div class='dish-item'>";
+        echo "<img src='" . $meal['image_path'] . "' alt='" . $meal['name'] . "' />";
+
+        // Favori ikonunu buraya ekledim
+        echo "<div class='favorite-icon' onclick='addToFavorites(" . $meal['id'] . ")'>";
+        echo "<i class='fas fa-heart'></i>"; // Favori ikonu
+        echo "</div>";
+
+        echo "<p class='dish-title'>" . $meal['name'] . "</p>";
+        echo "<div class='dish-footer'>";
+        echo "<div class='dish-price'>₺" . number_format($meal['price'], 2) . "</div>";
+        echo "<div class='separator'></div>"; // Dikey çizgi
+        echo "<button class='add-to-cart' data-dish-id='" . $meal['id'] . "'>Sepete Ekle</button>";
+        echo "</div>";
+        echo "</div>";
+    }
+    echo "</div>";
+} else {
+    echo "<p>Bu öğrenci henüz yemek eklemedi.</p>";
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mealId'])) {
+    $mealId = $_POST['mealId'];
+
+    // Favori yemek kontrolü (kullanıcı daha önce bu yemeği favorilemiş mi?)
+    $checkFavorite = $conn->prepare("SELECT id FROM favorites WHERE user_id = ? AND meal_id = ?");
+    $checkFavorite->bind_param("ii", $userId, $mealId);
+    $checkFavorite->execute();
+    $result = $checkFavorite->get_result();
+
+    if ($result->num_rows > 0) {
+        echo json_encode(["status" => "error", "message" => "Bu yemek zaten favorilerinizde."]);
+    } else {
+        // Favori yemek ekle
+        $stmt = $conn->prepare("INSERT INTO favorites (user_id, meal_id) VALUES (?, ?)");
+        $stmt->bind_param("ii", $userId, $mealId);
+
+        if ($stmt->execute()) {
+            echo json_encode(["status" => "success", "message" => "Yemek favorilere eklendi."]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Favorilere eklerken bir hata oluştu."]);
+        }
+
+        $stmt->close();
+    }
+}
+
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -16,10 +83,9 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghibli Yemek Platformu</title>
     <link rel="icon" href="resim/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
-    <link rel="stylesheet" href="ana_yemekler.css">
+    <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://unpkg.com/scrollreveal"></script>
-
 </head>
 <body>
     <!-- Ana Ekran -->
@@ -35,11 +101,8 @@ $result = $conn->query($sql);
                     <li><a href="#hakkimizda">Hakkımızda</a></li>
                     <li><a href="#yemekler">Yemekler</a></li>
                     <li><a href="#iletisim">İletişim</a></li>
-                    
                 </ul>
-                
             </div>
-           
         </nav>
         
         <div class="icons-container"> 
@@ -53,10 +116,9 @@ $result = $conn->query($sql);
                     <input type="text" id="searchInput"  placeholder="Yemek arayın...">
                 </div>
             </div>
-            </div>
             
-             <!-- Filtreleme İkonu -->
-             <div class="filter-icon">
+            <!-- Filtreleme İkonu -->
+            <div class="filter-icon">
                 <div class="circle" onclick="toggleFilterInput()">
                     <i class="fas fa-filter"></i>
                 </div>
@@ -65,7 +127,6 @@ $result = $conn->query($sql);
                     <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
                 </div>
             </div>
-            
    
             <!-- Sepetim İkonu -->
             <a href="sepetim.php" class="cart-icon" title="Sepetim">
@@ -73,8 +134,8 @@ $result = $conn->query($sql);
                     <i class="fas fa-shopping-cart" style="color: black; font-size: 20px;"></i>
                 </div>
             </a>
-            <!-- Giriş İkonu ve çıkış ikonu -->
-            <div class="login-containers">
+            <!-- Giriş İkonu ve çıkış ikon -->
+            <div class="login-container">
                 <div class="circle login-icon" onclick="toggleLogoutMenu()">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
@@ -88,6 +149,7 @@ $result = $conn->query($sql);
                     <i class="fas fa-sun" id="themeIcon" style="color: black; font-size: 20px;"></i>
                 </div>
             </div>
+
             <!-- Favoriler İkonu -->
         <a href="favoriler.php" class="favorites-icon" title="Favorilerim">
             <div class="circle">
@@ -97,45 +159,6 @@ $result = $conn->query($sql);
         </div>
 
     </header>
-   
-
-    <!-- Yemek bölümü -->
-    <div class="main-dish-section">
-        <h2>Aperatifler</h2>
-        <div class="dish-gallery">
-            <?php
-            // Yemekleri veritabanından getir
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo "<div class='dish-item'>";
-                    echo "<img src='" . $row['image_path'] . "' alt='" . $row['name'] . "' />";
-                      // Favori ikonunu buraya ekledim
-                      echo "<div class='favorite-icon' onclick='addToFavorites(" . $row['id'] . ")'>";
-                      echo "<i class='fas fa-heart'></i>"; // Favori ikonu
-                      echo "</div>";
-                     
-                      echo "<div class='dish-user'>";
-                      echo "<a href='profile.php?id=" . $row['user_id'] . "' class='username'>" . $row['username'] . "</a>"; // Kullanıcı adı bağlantı
-                      echo "</div>";
-                     
-                     
-                      echo "<p class='dish-title'>" . $row['name'] . "</p>"; // Yemek adı
-
-                    echo "<div class='dish-footer'>";
-                    echo "<div class='dish-price'>₺" . number_format($row['price'], 2) . "</div>";
-                    echo "<div class='separator'></div>"; // Dikey çizgi
-                    echo "<button class='add-to-cart' data-dish-id='" . $row['id'] . "' data-dish-name='" . $row['name'] . "' data-dish-price='₺" . number_format($row['price'], 2) . "'>Sepete Ekle</button>";
-                    echo "</div>";
-                    echo "</div>";
-                }
-            } else {
-                echo "<p>Bu kategoride yemek bulunmamaktadır.</p>";
-            }
-            // Bağlantıyı kapat
-            $conn->close();
-            ?>
-        </div>
-    </div>
 
     <script src="ana_yemekler.js"></script>
     <script>
@@ -152,5 +175,5 @@ $result = $conn->query($sql);
             }
         };
     </script>
-</body>
+    </body>
 </html>

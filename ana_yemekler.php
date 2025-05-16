@@ -1,11 +1,14 @@
 <?php
 include('db_connection.php');
 
-// Ana Yemekler kategorisindeki yemekleri sorgulamak
-$sql = "SELECT * FROM meals WHERE category = 'Ana Yemekler' ORDER BY name";
+// Sulu Yemekler kategorisindeki yemekleri sorgulamak
+$sql = "SELECT meals.*, students.name AS username 
+        FROM meals 
+        JOIN students ON meals.user_id = students.id
+        WHERE meals.category = 'Ana Yemekler' 
+        ORDER BY meals.name";
 $result = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -16,6 +19,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="ana_yemekler.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://unpkg.com/scrollreveal"></script>
+
 </head>
 <body>
     <!-- Ana Ekran -->
@@ -31,8 +35,11 @@ $result = $conn->query($sql);
                     <li><a href="#hakkimizda">Hakkımızda</a></li>
                     <li><a href="#yemekler">Yemekler</a></li>
                     <li><a href="#iletisim">İletişim</a></li>
+                    
                 </ul>
+                
             </div>
+           
         </nav>
         
         <div class="icons-container"> 
@@ -46,9 +53,10 @@ $result = $conn->query($sql);
                     <input type="text" id="searchInput"  placeholder="Yemek arayın...">
                 </div>
             </div>
+            </div>
             
-            <!-- Filtreleme İkonu -->
-            <div class="filter-icon">
+             <!-- Filtreleme İkonu -->
+             <div class="filter-icon">
                 <div class="circle" onclick="toggleFilterInput()">
                     <i class="fas fa-filter"></i>
                 </div>
@@ -57,26 +65,29 @@ $result = $conn->query($sql);
                     <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
                 </div>
             </div>
+            
    
             <!-- Sepetim İkonu -->
-            <a href="sepetim.html" class="cart-icon" title="Sepetim">
+            <a href="sepetim.php" class="cart-icon" title="Sepetim">
                 <div class="circle">
                     <i class="fas fa-shopping-cart" style="color: black; font-size: 20px;"></i>
                 </div>
             </a>
-            <!-- Giriş İkonu -->
-            <a href="login.html" class="login-icon" title="Giriş Yap">
-                <div class="circle">
+            <!-- Giriş İkonu ve çıkış ikonu -->
+            <div class="login-containers">
+                <div class="circle login-icon" onclick="toggleLogoutMenu()">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
-            </a>
+                <div id="logout-menu" class="logout-menu">
+                    <a href="kullanici_cikis.php">Çıkış Yap</a>
+                </div>
+            </div>
             <!-- Tema Değiştir İkonu -->
             <div class="light" id="light" title="Tema Değiştir">
                 <div class="circle">
                     <i class="fas fa-sun" id="themeIcon" style="color: black; font-size: 20px;"></i>
                 </div>
             </div>
-
             <!-- Favoriler İkonu -->
         <a href="favoriler.php" class="favorites-icon" title="Favorilerim">
             <div class="circle">
@@ -86,6 +97,7 @@ $result = $conn->query($sql);
         </div>
 
     </header>
+   
 
     <!-- Yemek bölümü -->
     <div class="main-dish-section">
@@ -102,7 +114,13 @@ $result = $conn->query($sql);
                       echo "<i class='fas fa-heart'></i>"; // Favori ikonu
                       echo "</div>";
                      
-                    echo "<div class='dish-title'>" . $row['name'] . "</div>";
+                      echo "<div class='dish-user'>";
+                      echo "<a href='profile.php?id=" . $row['user_id'] . "' class='username'>" . $row['username'] . "</a>"; // Kullanıcı adı bağlantı
+                      echo "</div>";
+                     
+                     
+                      echo "<p class='dish-title'>" . $row['name'] . "</p>"; // Yemek adı
+
                     echo "<div class='dish-footer'>";
                     echo "<div class='dish-price'>₺" . number_format($row['price'], 2) . "</div>";
                     echo "<div class='separator'></div>"; // Dikey çizgi

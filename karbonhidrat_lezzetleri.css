@@ -84,6 +84,39 @@ nav {
     right: 70px;
     display: flex;
 }
+.login-container {
+    position: absolute;
+    display: inline-block;
+    top: -42px;
+    right: 70px;
+}
+
+.logout-menu {
+    position: absolute;
+    top: 70px;
+    
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.logout-menu a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.logout-menu a:hover {
+    background: #f5f5f5;
+}
+
 
 .light {
     position: absolute;

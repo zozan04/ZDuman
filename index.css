@@ -84,16 +84,17 @@ nav {
     right: 70px;
     display: flex;
 }
-.login-container {
+.login-containerss {
     position: relative;
     display: inline-block;
     top: -42px;
+    
 }
 
 .logout-menu {
     position: absolute;
     top: 70px;
-    right: 18px;
+    right: 17px;
     transform: translateX(-50%);
     background: white;
     border: 1px solid #ccc;
@@ -117,6 +118,7 @@ nav {
 }
 
 
+
 .light {
     position: absolute;
     cursor: pointer;
@@ -132,8 +134,9 @@ nav {
 .cart-icon {
     position: absolute;
     top: 25px;
-    left: 1355px;
+    left: 1218px;
     display: flex;
+   
  
 }
 

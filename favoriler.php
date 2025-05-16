@@ -60,9 +60,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteMealId'])) {
 }
 
 // Favori yemekleri getir
-$sql = "SELECT meals.* FROM meals 
+$sql = "SELECT meals.*, students.name AS username 
+        FROM meals 
         INNER JOIN favorites ON meals.id = favorites.meal_id 
+        INNER JOIN students ON meals.user_id = students.id
         WHERE favorites.user_id = ?";
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $userId);
@@ -83,36 +86,83 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghibli Yemek Platformu</title>
+    <link rel="icon" href="resim/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
+    <link rel="stylesheet" href="favoriler.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://unpkg.com/scrollreveal"></script>
     <title>Favori Yemekler</title>
     <link rel="stylesheet" href="favoriler.css">
     <style>
-        /* Resmin sağ üst köşesine silme ikonu eklemek için */
-        .dish-item {
-            position: relative;
-            display: inline-block;
-            margin: 10px;
-        }
-
-        .delete-icon {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            cursor: pointer;
-            background-color: rgba(255, 0, 0, 0.7);
-            color: white;
-            padding: 5px;
-            border-radius: 50%;
-        }
-
-        .delete-icon:hover {
-            background-color: red;
-        }
+       
     </style>
 </head>
 <body>
 
+<!-- Ana Ekran -->
+<header class="main-header">
+        <nav>
+            <div class="nav_bar">
+                <div class="logo">
+                    <img src="resim/A7.jpg" alt="GYP Logo">
+                </div>
+                <!-- Menüleri ekliyoruz -->
+                <ul class="menu">
+                    <li><a href="index.html">Anasayfa</a></li>
+                    <li><a href="#hakkimizda">Hakkımızda</a></li>
+                    <li><a href="#yemekler">Yemekler</a></li>
+                    <li><a href="#iletisim">İletişim</a></li>
+                    
+                </ul>
+                
+            </div>
+           
+        </nav>
+        
+        <div class="icons-container"> 
+            <!-- Arama İkonu -->
+            <div class="search-icon">
+                <div class="circle" onclick="toggleSearchInput()">
+                    <i class="fas fa-search search-icon" style="color: black; font-size: 20px;"></i>
+                </div>
+                
+                <div id="search-box" style="display: none;"> <!-- Filtre kutusu -->
+                    <input type="text" id="searchInput"  placeholder="Yemek arayın...">
+                </div>
+            </div>
+            </div>
+            <!-- Sepetim İkonu -->
+            <a href="sepetim.php" class="cart-icon" title="Sepetim">
+                <div class="circle">
+                    <i class="fas fa-shopping-cart" style="color: black; font-size: 20px;"></i>
+                </div>
+            </a>
+            <!-- Giriş İkonu (Oturum Açma ve Çıkış Menüsü) -->
+            <div class="login-container">
+                <div class="circle login-icon" onclick="toggleLogoutMenu()">
+                    <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
+                </div>
+                <div id="logout-menu" class="logout-menu">
+                    <a href="kullanici_cikis.php">Çıkış Yap</a>
+                </div>
+            </div>
+            <!-- Tema Değiştir İkonu -->
+            <div class="light" id="light" title="Tema Değiştir">
+                <div class="circle">
+                    <i class="fas fa-sun" id="themeIcon" style="color: black; font-size: 20px;"></i>
+                </div>
+            </div>
+            <a href="favoriler.php" class="favorites-icon" title="Favorilerim">
+                <div class="circle">
+                    <i class="fas fa-heart" style="color: black; font-size: 20px;"></i>
+                </div>
+            </a>
+        </div>
+
+    </header>
+<div class="main-dish-section">
 <h2>Favori Yemekler</h2>
-<div id="favorite-dishes">
+<div class="favorite-dishes">
     <?php
     if (empty($favoriteMeals)) {
         echo "<p>Henüz favori yemek eklenmedi.</p>";
@@ -120,9 +170,14 @@ $conn->close();
         foreach ($favoriteMeals as $meal) {
             echo "<div class='dish-item'>";
             echo "<img src='" . $meal['image_path'] . "' alt='" . $meal['name'] . "' />";
-            echo "<div class='dish-title'>" . $meal['name'] . "</div>";
+            echo "<div class='dish-user'>";
+            echo "<a href='profile.php?id=" . $meal['user_id'] . "' class='username'>" . $meal['username'] . "</a>"; // Kullanıcı adı bağlantı
+            echo "</div>";
+            echo "<p class='dish-title'>" . $meal['name'] . "</p>"; // Yemek 
             echo "<div class='dish-footer'>";
             echo "<div class='dish-price'>₺" . number_format($meal['price'], 2) . "</div>";
+            echo "<div class='separator'></div>"; // Dikey çizgi
+
             echo "<button class='add-to-cart' data-dish-id='" . $meal['id'] . "'>Sepete Ekle</button>";
             echo "</div>";
             // Silme ikonu
@@ -132,8 +187,23 @@ $conn->close();
     }
     ?>
 </div>
-<script src="favoriler.js"></script>
+</div>
 
+<script src="favoriler.js"></script>
+<script>
+        // Sayfa yüklendiğinde URL'den yemeği kontrol et ve yalnızca o yemeği göster
+        window.onload = function() {
+            const hash = window.location.hash.substring(1); // URL'deki hash kısmını al
+            if (hash) {
+                const items = document.querySelectorAll('.dish-item');
+                items.forEach(item => {
+                    if (item.id !== hash) {
+                        item.style.display = 'none'; // Diğer yemekleri gizle
+                    }
+                });
+            }
+        };
+    </script>
 
 </body>
 </html>

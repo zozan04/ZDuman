@@ -41,13 +41,13 @@
             </div>
           
             <!-- Sepetim İkonu -->
-            <a href="sepetim.html" class="cart-icon" title="Sepetim">
+            <a href="sepetim.php" class="cart-icon" title="Sepetim">
                 <div class="circle">
                     <i class="fas fa-shopping-cart" style="color: black; font-size: 20px;"></i>
                 </div>
             </a>
            <!-- Giriş İkonu (Oturum Açma ve Çıkış Menüsü) -->
-            <div class="login-container">
+            <div class="login-containerss">
                 <div class="circle login-icon" onclick="toggleLogoutMenu()">
                     <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
                 </div>
@@ -118,7 +118,7 @@
                 <h4>Aperatifler</h4>
             </a>
             <a href="tatli_cesitleri.php" class="category">
-                <img src="https://www.serangah.com/upload/urun/8/serangah_cheesecake.jpg" alt="Tatlılar">
+                <img src="resim/tatli.jpg" alt="Tatlılar">
                 <h4>Tatlı Çeşitleri</h4>
             </a>
         </div>

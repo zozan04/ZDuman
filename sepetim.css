@@ -130,10 +130,11 @@ nav {
 .cart-icon {
     position: absolute;
     top: 25px;
-    left: 1355px;
+    left: 1218px;
     display: flex;
  
 }
+
 
 /* Arama çubuğu */
 .search-icon {
@@ -223,43 +224,68 @@ ul.menu li a:hover {
     z-index: 10;
 }
 
-/* sepete yemek eklemek için */
-.empty-cart-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 250px;
+.cart-section {
+    max-width: 800px;
+    margin: 100px auto 20px auto; /* Üstte navbar sabit olduğu için boşluk bırak */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.cart-item-details {
+    flex: 1;
+    text-align: left;
+    margin-left: 15px;
+}
+
+.cart-item-name {
     font-size: 18px;
+    font-weight: bold;
+    color: #4a0b0b;
+}
+
+.cart-item-price {
+    font-size: 16px;
     color: #333;
-    margin: 20px 0;
+}
+
+.cart-item-quantity {
+    font-size: 14px;
+    color: #777;
+}
+
+.empty-cart-message {
+    font-size: 18px;
+    color: #555;
 }
 
 .add-dish-button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #ff6600;
-    color: white;
-    border-radius: 5px;
+    background-color: #4a0b0b;
+    color: #fff;
     text-decoration: none;
-    margin-top: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
 }
 
 .add-dish-button:hover {
-    background-color: #e65c00;
-}
-
-/* Sepetten Silmek için */
-.remove-button {
-    padding: 5px 10px;
-    background-color: #ff4d4d; /* Kırmızı arka plan */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.remove-button:hover {
-    background-color: #ff1a1a; /* Hover rengini koyulaştır */
+    background-color: #711313;
 }
