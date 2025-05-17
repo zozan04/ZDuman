@@ -255,23 +255,89 @@ nav {
     border-radius: 5px;
     width: 150px;
     position: absolute;
-    top: 8px; /* İkonun konumuna göre ayarlayın */
     right: -170px; /* İkonun konumuna göre ayarlayın */
     z-index: 20;
     background-color: white;
 }
 
+/* Arama inputu */
 #filter-box input {
-    width: 100%; /* Kutunun içinde tam genişlik */
-    
-    border: none; /* Kenarlık yok */
-    border-radius: 4px; /* Köşe yuvarlama */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    width: 150px; 
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 #filter-box input:focus {
-    outline: none; /* Kenarlık dışında bir görünüm yok */
+    outline: none;
 }
+
+/* Select versiyonu */
+.city-filter-select {
+    width: 150px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 8px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.city-filter-select:focus {
+    outline: none;
+    border-color: #555;
+    background-color: #fff;
+}
+
+/* Custom dropdown */
+.custom-dropdown {
+    position: relative;
+    width: 150px;
+    user-select: none;
+    margin-top: 8px;
+}
+
+.custom-dropdown .selected {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.custom-dropdown .dropdown-options {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: -10px;
+    width: 170px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 99;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+    padding-left: 0; /* 🔹 Soldaki boşluğu kaldırır */
+}
+
+.custom-dropdown .dropdown-options li {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    list-style: none; 
+    margin-left: 0;  /* 🔹 Ekstra boşluk varsa kaldırır */
+}
+
+.custom-dropdown .dropdown-options li:hover,
+.custom-dropdown .dropdown-options li.active {
+   background-color:  rgba(74, 11, 11, 0.8);
+   color: white;
+}
+
 
 .favorite-icon {
     position: absolute;
@@ -353,6 +419,7 @@ h2{
     left: 0;
     padding: 20px 0;
     top: -68px;
+    color: black ;
     
 }
 /* Yemek kategorileri */
@@ -396,7 +463,7 @@ h2{
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: rgba(0, 128, 0, 0.8);
+    background-color: #b30000;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -470,8 +537,29 @@ h2{
     border-bottom: 1px solid #ddd;
     box-sizing: border-box;
     background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px; /* iç boşluk */
    
 }
+
+.dish-city {
+    font-size: 0.9rem;
+    color: rgb(92, 89, 89);
+    margin-top: 5px;
+    margin-right: 10px;
+   font-weight: bold;
+}
+
+.dish-cityy {
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #444;
+    margin-top: 4px;
+  right: 900px;
+}
+
 
 .username {
     color: #800000; /* Bordo renk */
@@ -481,6 +569,7 @@ h2{
     padding-bottom: 10px; /* Alt boşluk */
     display: block; /* Bağlantıyı blok yaparak boşluk eklemek için */
     margin-bottom: 10px; /* Kullanıcı adı altındaki boşluk */
+     margin-left: 10px;
 }
 
 .username:hover {
@@ -495,6 +584,130 @@ h2{
     font-weight: bold; /* Kalın yazı */
 }
 
+
+
+/* Modal için stil */
+.modal {
+    display: none; /* Başlangıçta gizli */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 12%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal içeriği */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    display: flex;
+    border-radius: 10px;
+    align-items: stretch; /* Sol ve sağ taraf aynı yükseklikte */
+}
+
+/* Sol taraf */
+.modal-left {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Görsel */
+.modal-left img {
+    height: 200px;         /* Sağ tarafla aynı yükseklik */
+    max-height: 200px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Sağ taraf */
+.modal-right {
+    flex: 2;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Başlık üstte, buton altta */
+}
+
+/* Kapatma butonu */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: #aaa;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* Sepete Ekle butonu */
+
+.add-to-carts {
+    width: fit-content; /* İçeriğe göre genişlik */
+    padding: 10px 20px;
+    background-color:  rgba(74, 11, 11, 0.8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-carts:hover {
+    background-color: #b30000;;;
+}
+
+
+
+
+/* Bildirim kutusunun stilizasyonu */
+.cart-notification {
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    transform: translateX(-50%);
+    background-color: #b30000;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    opacity: 0;
+    animation: slide-up 0.5s forwards, fade-out 0.5s 1s forwards;
+    z-index: 1000;
+}
+
+@keyframes slide-up {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 10px;
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
 
 
 

@@ -53,6 +53,7 @@
                 </div>
                 <div id="logout-menu" class="logout-menu">
                     <a href="kullanici_cikis.php">Çıkış Yap</a>
+                    <a href="user_settings.php">Ayarlar</a> <!-- Yeni "Ayarlar" menüsü -->
                 </div>
             </div>
             <!-- Tema Değiştir İkonu -->
@@ -102,7 +103,7 @@
     <section class="food-categories">
         <div class="categories-container">
             <a href="ana_yemekler.php" class="category">
-                <img src="https://iasbh.tmgrup.com.tr/5bfb4f/754/640/83/0/653/483?u=https://isbh.tmgrup.com.tr/sbh/2023/10/07/1696660626651.jpg" alt="Ana Yemekler">
+                <img src="resim/cokertme kebabi.jpg" alt="Ana Yemekler">
                 <h4>Ana Yemekler</h4>
             </a>
             <a href="sulu_yemekler.php" class="category">

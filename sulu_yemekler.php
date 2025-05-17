@@ -51,16 +51,38 @@ $result = $conn->query($sql);
                 </div>
             </div>
             
-            <!-- Filtreleme İkonu -->
-            <div class="filter-icon">
-                <div class="circle" onclick="toggleFilterInput()">
-                    <i class="fas fa-filter"></i>
-                </div>
-                <span class="filter-text">Filtrele</span>
-                <div id="filter-box"> <!-- Filtre kutusu -->
-                    <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
-                </div>
-            </div>
+               <!-- Filtreleme İkonu -->
+<div class="filter-icon">
+    <div class="circle" onclick="toggleFilterInput()">
+        <i class="fas fa-filter"></i>
+    </div>
+    <span class="filter-text">Filtrele</span>
+
+    <div id="filter-box"> <!-- Filtre kutusu -->
+        <!-- Yemek adıyla filtreleme -->
+        <input type="text" id="filterInput" oninput="filterDishes()" placeholder="Yemek adını girin">
+
+        <!-- Özel şehir filtresi -->
+        <div class="custom-dropdown">
+            <div class="selected" onclick="toggleDropdown()">Tüm Şehirler</div>
+            <ul class="dropdown-options" id="cityList">
+                <li onclick="selectCity('', this)">Tüm Şehirler</li>
+                <?php
+                $city_query = "SELECT DISTINCT city FROM meals ORDER BY city ASC";
+                $city_result = $conn->query($city_query);
+                while ($row = $city_result->fetch_assoc()) {
+                    $city = trim(htmlspecialchars($row['city']));
+                    echo "<li onclick=\"selectCity('$city', this)\">$city</li>";
+                }
+                ?>
+            </ul>
+        </div>
+
+        <!-- Gizli input -->
+        <input type="hidden" id="selectedCity" value="">
+    </div>
+</div>
+
    
             <!-- Sepetim İkonu -->
             <a href="sepetim.php" class="cart-icon" title="Sepetim">
@@ -75,6 +97,7 @@ $result = $conn->query($sql);
                 </div>
                 <div id="logout-menu" class="logout-menu">
                     <a href="kullanici_cikis.php">Çıkış Yap</a>
+                    <a href="user_settings.php">Ayarlar</a> <!-- Yeni "Ayarlar" menüsü -->
                 </div>
             </div>
             <!-- Tema Değiştir İkonu -->
@@ -93,43 +116,72 @@ $result = $conn->query($sql);
 
     </header>
 
-    <!-- Yemek bölümü -->
-    <div class="main-dish-section">
-        <h2>Sulu Yemekler</h2>
-        <div class="dish-gallery">
-            <?php
-            // Yemekleri veritabanından getir
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo "<div class='dish-item'>";
-                    echo "<img src='" . $row['image_path'] . "' alt='" . $row['name'] . "' />";
-                      // Favori ikonunu buraya ekledim
-                      echo "<div class='favorite-icon' onclick='addToFavorites(" . $row['id'] . ")'>";
-                      echo "<i class='fas fa-heart'></i>"; // Favori ikonu
-                      echo "</div>";
+   <!-- Yemek bölümü -->
+<div class="main-dish-section">
+    <h2>Sulu Yemekler</h2>
+    <div class="dish-gallery">
+        <?php
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo "<div class='dish-item' data-city='" . htmlspecialchars($row['city']) . "'>";
+                
+                echo "<img src='" . $row['image_path'] . "' 
+                        alt='" . $row['name'] . "' 
+                        onclick='openModal(" . $row['id'] . ", \"" . $row['name'] . "\", \"" . $row['image_path'] . "\", `" . $row['content'] . "`, \"" . number_format($row['price'], 2) . "\")'>";
 
-                      echo "<div class='dish-user'>";
-                      echo "<a href='profile.php?id=" . $row['user_id'] . "' class='username'>" . $row['username'] . "</a>"; // Kullanıcı adı bağlantı
-                      echo "</div>";
-                     
-                     
-                      echo "<p class='dish-title'>" . $row['name'] . "</p>"; // Yemek adı
+                echo "<div class='favorite-icon' onclick='addToFavorites(" . $row['id'] . ")'>
+                        <i class='fas fa-heart'></i>
+                      </div>";
 
-                    echo "<div class='dish-footer'>";
-                    echo "<div class='dish-price'>₺" . number_format($row['price'], 2) . "</div>";
-                    echo "<div class='separator'></div>"; // Dikey çizgi
-                    echo "<button class='add-to-cart' data-dish-id='" . $row['id'] . "' data-dish-name='" . $row['name'] . "' data-dish-price='₺" . number_format($row['price'], 2) . "'>Sepete Ekle</button>";
-                    echo "</div>";
-                    echo "</div>";
-                }
-            } else {
-                echo "<p>Bu kategoride yemek bulunmamaktadır.</p>";
+                echo "<div class='dish-user'>
+                        <a href='profile.php?id=" . $row['user_id'] . "' class='username'>" . $row['username'] . "</a>
+                        <p class='dish-city'>" . $row['city'] . "</p>
+                      </div>";
+
+                echo "<p class='dish-title'>" . $row['name'] . "</p>";
+
+                echo "<div class='dish-footer'>
+                        <div class='dish-price'>₺" . number_format($row['price'], 2) . "</div>
+                        <div class='separator'></div>
+                        <button class='add-to-cart'
+                                data-dish-id='" . $row['id'] . "'
+                                data-dish-name='" . $row['name'] . "'
+                                data-dish-price='₺" . number_format($row['price'], 2) . "'>
+                                Sepete Ekle
+                        </button>
+                      </div>";
+
+                echo "</div>"; // .dish-item
             }
-            // Bağlantıyı kapat
-            $conn->close();
-            ?>
-        </div>
+        } else {
+            echo "<p>Bu kategoride yemek bulunmamaktadır.</p>";
+        }
+
+        $conn->close();
+        ?>
     </div>
+</div>
+     <!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-left">
+            <img id="modal-img" src="" alt="Yemek Görseli" />
+        </div>
+        <div class="modal-right">
+            <h1 id="modal-title">Yemek Adı</h1>
+            <p id="modal-content-text"><strong>İçindekiler:</strong> <span id="modal-content"></span></p>
+            <p id="modal-price">₺<span>0.00</span></p>
+            <button class="add-to-carts" id="add-to-cart-modal">Sepete Ekle</button>
+
+            <!-- Modal içindeki Bildirim Kutusu -->
+            <div id="notification" class="cart-notification" style="display: none;">Sepete eklendi</div>
+        </div>
+        
+        <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+</div>
+
+
 
     <script src="ana_yemekler.js"></script>
     <script>

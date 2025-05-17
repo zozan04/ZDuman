@@ -46,15 +46,59 @@ function toggleFilterInput() {
 
 // Yemekleri filtreleme işlevi
 function filterDishes() {
-    const filterInput = document.getElementById("filterInput").value.toLowerCase(); // Filtreleme girişini al
-    const dishItems = document.querySelectorAll(".dish-item"); // Tüm yemek öğelerini al
+    const nameInput = document.getElementById("filterInput").value.toLowerCase();
+    const selectedCity = document.getElementById("selectedCity").value.toLowerCase();
+    const dishItems = document.querySelectorAll(".dish-item");
 
     dishItems.forEach(item => {
-        const title = item.querySelector(".dish-title").textContent.toLowerCase(); // Başlığı al
-        // Başlık, filtreleme girişine göre eşleşiyorsa göster, aksi takdirde gizle
-        item.style.display = title.includes(filterInput) ? "block" : "none";
+        const title = item.querySelector(".dish-title").textContent.toLowerCase();
+        const city = item.getAttribute("data-city")?.toLowerCase() || "";
+
+        const matchName = title.includes(nameInput);
+        const matchCity = selectedCity === "" || city === selectedCity;
+
+        item.style.display = (matchName && matchCity) ? "block" : "none";
     });
 }
+
+
+function toggleDropdown() {
+    const dropdown = document.querySelector(".dropdown-options");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function selectCity(city, element) {
+    // Şehri gizli input'a yaz
+    document.getElementById("selectedCity").value = city;
+
+    // Seçilen şehir adını "selected" alana yaz
+    const selectedDiv = document.querySelector(".custom-dropdown .selected");
+    selectedDiv.textContent = city === "" ? "Tüm Şehirler" : city;
+
+    // Aktif seçilen li'yi belirle
+    document.querySelectorAll(".dropdown-options li").forEach(li => {
+        li.classList.remove("active");
+    });
+    element.classList.add("active");
+
+    // Dropdown'ı kapat
+    document.querySelector(".dropdown-options").style.display = "none";
+
+    // Yemekleri filtrele
+    filterDishes();
+}
+
+document.addEventListener('click', function(event) {
+    const dropdown = document.querySelector(".custom-dropdown");
+    const options = document.querySelector(".dropdown-options");
+
+    if (!dropdown.contains(event.target)) {
+        options.style.display = "none";
+    }
+});
+
+
+
 
 // Sayfa yenilendiğinde varsayılan olarak "Filtrele" yazısını geri getir
 window.addEventListener("load", () => {
@@ -221,7 +265,7 @@ function addToFavorites(mealId) {
         console.error('Error:', error);
     });
 }
-
+// çıkış yapma işlevi
 function toggleLogoutMenu() {
     var menu = document.getElementById("logout-menu");
     if (menu.style.display === "none" || menu.style.display === "") {
@@ -242,8 +286,87 @@ document.addEventListener("click", function (event) {
 });
 
 
+// Modal'ı açma fonksiyonu
+function openModal(dishId, dishName, dishImage, dishDescription, dishPrice) {
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("modal-img");
+    var modalTitle = document.getElementById("modal-title");
+    var modalDescription = document.getElementById("modal-content");
+    var modalPrice = document.getElementById("modal-price").getElementsByTagName("span")[0];
+    var addToCartBtn = document.getElementById("add-to-cart-modal");
 
+    // Modal içeriğini güncelle
+    modalImg.src = dishImage;
+    modalTitle.textContent = dishName;  // Yalnızca modal içindeki yemek adı değişir
+    modalDescription.textContent = dishDescription;
+    modalPrice.textContent = dishPrice;
+    addToCartBtn.setAttribute('data-dish-id', dishId);
+    addToCartBtn.setAttribute('data-dish-name', dishName);
+    addToCartBtn.setAttribute('data-dish-price', dishPrice);
 
+    modal.style.display = "block"; // Modal'ı aç
+}
+
+// Modal'ı kapatma fonksiyonu
+var closeModal = document.getElementsByClassName("close")[0];
+closeModal.onclick = function() {
+    document.getElementById("myModal").style.display = "none";
+}
+
+// Sayfa dışında tıklanırsa modal'ı kapatma
+window.onclick = function(event) {
+    if (event.target == document.getElementById("myModal")) {
+        document.getElementById("myModal").style.display = "none";
+    }
+}
+
+// Modal içindeki Sepete Ekle butonuna tıklanınca bildirimi göster
+document.getElementById("add-to-cart-modal").onclick = function () {
+    // Modal içindeki bildirim
+    var notification = document.getElementById("notification");
+    
+    // Bildirimi göster
+    notification.style.display = "block";
+
+    // 2 saniye sonra bildirimi gizle
+    setTimeout(function () {
+        notification.style.display = "none";
+    }, 2000);
+}
+//modalda Sepete ekleme işlemi
+document.querySelectorAll(".add-to-carts").forEach(button => {
+    button.addEventListener("click", function () {
+        let mealId = this.getAttribute("data-dish-id");
+        let mealCard = this.closest(".dish-item"); // Yemek kartını bul
+
+        fetch("sepetim.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "meal_id=" + mealId
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Eğer bildirim zaten varsa, tekrar ekleme
+            if (mealCard.querySelector(".cart-notification")) return;
+
+            // Bildirim oluştur
+            let notification = document.createElement("div");
+            notification.innerText = "Sepete eklendi";
+            notification.classList.add("cart-notification");
+
+            // Yemek kartına ekle
+            mealCard.appendChild(notification);
+
+            // 1 saniye sonra kaybolsun
+            setTimeout(() => {
+                notification.remove();
+            }, 1000);
+        })
+        .catch(error => console.error("Hata:", error));
+    });
+});
 
 
 

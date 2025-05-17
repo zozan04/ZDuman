@@ -96,6 +96,17 @@ studentRegisterForm.addEventListener('submit', (event) => {
     });
 });
 
+
+    // Sayfa yüklendikten sonra hata mesajını 2 saniye sonra kaybetmesini sağlayan JavaScript kodu
+        window.onload = function() {
+            const errorMessage = document.getElementById("error-message");
+            if (errorMessage) {
+                setTimeout(function() {
+                    errorMessage.style.display = "none";
+                }, 2000); // 2 saniye sonra kaybolacak
+            }
+        }
+
 // Kullanıcı kayıt formu gönderimi
 document.getElementById('userRegisterForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Sayfanın yenilenmesini engelle

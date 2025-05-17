@@ -1,36 +1,33 @@
 <?php
 include_once("db_connection.php");
+session_start();
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Formdan gelen veriler
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['studentEmail'];
     $password = $_POST['studentPassword'];
 
-    $password = hash('sha256', $password);
-
-
-    // SQL Sorgusu - email ve password ile veritabanı kontrolü
-    $sql = "SELECT id, email, password FROM students WHERE email = ? AND password = ?";
+    $sql = "SELECT id, email, password FROM students WHERE email = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $email, $password);
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Kullanıcıyı bulduysa, öğrenci sayfasına yönlendir
+    // Şifre kontrolü
     if ($result->num_rows > 0) {
-        // Kullanıcı bulundu, öğrenci sayfasına yönlendir
         $row = $result->fetch_assoc();
-        session_start();
-        $_SESSION['student_id'] = $row['id']; // Öğrencinin ID'sini session'a kaydet
-        header("Location: student.php");
-        exit();
-    } else {
-        // Kullanıcı bulunamadı, hata mesajı göster
-        $error_message = "E-posta veya şifre hatalı. Lütfen tekrar deneyin.";
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['student_id'] = $row['id'];
+            header("Location: student.php");
+            exit();
+        }
     }
+
+    // Giriş başarısızsa hata mesajını session ile gönder
+    $_SESSION['login_error'] = "E-posta veya şifre hatalı. Lütfen tekrar deneyin.";
+    header("Location: login.php");
+    exit();
 }
 ?>
 

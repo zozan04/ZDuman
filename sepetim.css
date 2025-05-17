@@ -224,15 +224,32 @@ ul.menu li a:hover {
     z-index: 10;
 }
 
+
 .cart-section {
-    max-width: 800px;
-    margin: 100px auto 20px auto; /* Üstte navbar sabit olduğu için boşluk bırak */
-    padding: 20px;
+    flex: 1;
     background-color: #fff;
     border-radius: 10px;
+    padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    min-width: 300px;
     text-align: center;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 40px); /* Sepet bölümü ekranın yüksekliği kadar yer kaplasın */
 }
+.cart-section p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+    color: black;
+}
+
 
 .cart-item {
     display: flex;
@@ -240,6 +257,7 @@ ul.menu li a:hover {
     justify-content: space-between;
     padding: 15px;
     border-bottom: 1px solid #ddd;
+    
 }
 
 .cart-item img {
@@ -288,4 +306,358 @@ ul.menu li a:hover {
 
 .add-dish-button:hover {
     background-color: #711313;
+}
+
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cart-item img {
+    width: 110px; /* Eskiden 80px'di */
+    height: 110px; /* Eskiden 80px'di */
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+
+.cart-item-details {
+    flex-grow: 1;
+}
+/* not ayarları */
+
+.meal-note-section {
+    display: block; /* Flex yerine block düzeni kullanıyoruz */
+    position: relative; /* Butonları alana sabitlemek için */
+    margin-top: 10px;
+    height: 200px; /* Alanın yüksekliği */
+    
+}
+
+.meal-note {
+    width: 100%;  /* Alanı genişlettik */
+    height: 80px;  /* Yüksekliği artırdık */
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    
+}
+
+.add-note-btn,
+.update-note-btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 48%;  /* Butonlar alanın genişliğinin %48'ini kapsar */
+    position: absolute; /* Butonları alana sabitler */
+    bottom: 10px; /* Alanın altına yerleştirir */
+}
+
+.add-note-btn {
+    background-color: #4a0b0b;
+    color: white;
+    border: none;
+    left: 0; /* Sol tarafta yer alacak */
+}
+
+.add-note-btn:hover {
+    background-color: #711313;
+}
+
+.update-note-btn {
+    background-color: #4a0b0b; /* Güncelle butonuna farklı renk */
+    color: white;
+    border: none;
+    right: 0; /* Sağ tarafta yer alacak */
+}
+
+.update-note-btn:hover {
+    background-color: #711313;
+}
+
+.note-success-message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #4a0b0b;
+}
+
+/* sipariş işlmeleri */
+.cart-and-order-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px; /* İki alan arası boşluk */
+    margin-top: 120px;
+    padding: 20px;
+    flex-wrap: wrap; /* Ekran daralırsa alta geçsin */
+}
+.order-summary {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    min-width: 250px;
+    text-align: center;
+    height: calc(100vh - 40px); /* Sipariş özeti bölümü ekranın yüksekliği kadar yer kaplasın */
+    overflow-y: auto;
+    top: 142px;
+    position: -webkit-sticky;
+    position: sticky;
+    
+}
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+    color: black;
+}
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+    color: black;
+
+}
+
+
+.complete-order-btn {
+    background-color: #4a0b0b;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.complete-order-btn:hover {
+    background-color: #711313;
+}
+
+/* Adres ve Ödeme Bilgileri Bölümü */
+#address-payment-info {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+}
+/* Kayıtlı Adresler Seçim Kutusu */
+#saved-address {
+    padding: 12px;
+    font-size: 1em;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    resize: vertical; /* Yalnızca dikey boyutlandırma */
+    box-sizing: border-box;
+    word-wrap: break-word; /* Uzun kelimelerin taşmaması için satır sonlarına kaymalarını sağla */
+    overflow-wrap: break-word; /* Kelimelerin taşmasını engellemek için */
+}
+
+/* Seçim kutusuna focus olduğunda renk değişikliği */
+#saved-address:focus {
+    border-color: #4a0b0b;
+    outline: none;
+}
+
+/* Kayıtlı Adresler Etiketini Düzenleme */
+#address-form label[for="saved-address"] {
+    font-size: 1.1em;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Kayıtlı Adresler Başlığı (h3) */
+h3 {
+    font-size: 1.8em;
+    color: #4a0b0b;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+
+#address-payment-info h3 {
+    font-size: 1.5em;
+    color:black;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+#address-payment-info form {
+    display: flex;
+    flex-direction: column;
+
+}
+
+#address-payment-info label {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: black;
+    padding-top: 15px;
+
+    
+}
+
+#address-payment-info input {
+    font-size: 1em;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#address-payment-info input[type="text"],
+#address-payment-info input[type="month"] {
+    margin-bottom: 20px;
+
+}
+
+/* Success message div */
+#success-message {
+    color: #4a0b0b;
+    font-weight: bold;
+    display: none; /* Başlangıçta gizli */
+}
+
+/* Adres alanını daha geniş yapmak için min-height ve resize kullan */
+#address {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.complete-order-btn{
+    padding: 10px 20px;
+    background-color: #4a0b0b;
+    color: #fff;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#address-payment-info button:hover {
+    background-color: #711313;
+}
+
+/* Şehir ve Posta Kodu aynı satırda */
+#address-form label[for="city"],
+#address-form label[for="postal-code"],
+#payment-form label[for="expiry-date"],
+#payment-form label[for="cvv"] {
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#address-form input#city,
+#address-form input#postal-code {
+    width: 95%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+#address-form input#city {
+    margin-right: 4%;
+}
+
+#address-form input#postal-code {
+    margin-right: 0;
+}
+
+/* Son Kullanma Tarihi ve CVV aynı satırda */
+#payment-form input#expiry-date,
+#payment-form input#cvv {
+    width: 95%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+#payment-form input#expiry-date {
+    margin-right: 4%;
+}
+
+#payment-form input#cvv {
+    margin-right: 0;
+}
+
+
+#address-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px; /* Butonlar arasına 10px boşluk */
+    margin-bottom: 40px;
+}
+/* Sil butonunun sağ ve sol padding'ini arttır */
+#add-address-btn {
+    padding: 10px 20px;
+    background-color: #4a0b0b;
+    color: #fff;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+}
+/* Sil butonunun sağ ve sol padding'ini arttır */
+#delete-address-btn {
+    padding: 10px 60px; /* Üst ve alt padding 10px, sağ ve sol padding 30px */
+    background-color: #4a0b0b;
+    color: #fff;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    /* Buton içindeki yazıyı ortalamak için */
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: auto; /* Buton genişliğini içeriğe göre ayarlayacak */
+}
+
+.complete-payment{
+    padding: 10px 20px;
+    background-color: #4a0b0b;
+    color: #fff;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }

@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
 $uploadsDir = 'uploads'; // uploads dizininin yolu
 $folders = array_filter(glob($uploadsDir . '/*'), 'is_dir'); // Sadece dizinleri al
 
@@ -36,7 +37,7 @@ $successMessage = '';  // Success message initialization
 $errorMessage = '';    // Error message initialization
     
 // Onayla işlemi ile veriyi ekleme ve klasörü temizleme
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'approve') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'approve') {
     $fileToProcess = $_POST['fileToProcess'];
 
     foreach ($studentData as $student) {
@@ -93,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'approve') {
 }
 
 // Reddet işlemi ile dosyayı silme
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'reject') {
     $fileToProcess = $_POST['fileToProcess'];
 
     foreach ($studentData as $student) {
@@ -123,6 +124,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
     }
 }
 
+
+// Durum güncelleme
+if (isset($_POST['update_order_status'])) {
+    $order_id = intval($_POST['order_id']);
+    $meal_id = intval($_POST['meal_id']);
+    $is_guest = ($_POST['is_guest'] === '1');
+
+    if ($is_guest) {
+        $update_stmt = $conn->prepare("UPDATE guest_order_items SET status = 'Teslim Edildi' WHERE guest_order_id = ? AND meal_id = ?");
+    } else {
+        $update_stmt = $conn->prepare("UPDATE order_items SET status = 'Teslim Edildi' WHERE order_id = ? AND meal_id = ?");
+    }
+
+    $update_stmt->bind_param("ii", $order_id, $meal_id);
+    $update_stmt->execute();
+
+    $update_stmt->close();
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Sipariş ve öğeleri çekme
+$sql_orders = "
+SELECT o.id AS order_id, 'user' AS order_type, oi.meal_id, oi.status,
+u.name AS customer_name, o.address, o.city, o.postal_code, o.phone
+FROM orders o
+JOIN order_items oi ON o.id = oi.order_id
+JOIN users u ON o.user_id = u.id
+WHERE oi.status = 'Kargoya Verildi'
+";
+
+$sql_guest_orders = "
+SELECT go.id AS order_id, 'guest' AS order_type, goi.meal_id, goi.status,
+g.full_name AS customer_name, go.address, go.city, go.postal_code, g.phone
+FROM guest_orders go
+JOIN guest_order_items goi ON go.id = goi.guest_order_id
+JOIN guests g ON go.guest_id = g.id
+WHERE goi.status = 'Kargoya Verildi'
+";
+
+$sql = "(" . $sql_orders . ") UNION ALL (" . $sql_guest_orders . ") ORDER BY order_id";
+
+$result = $conn->query($sql);
+
+$orders = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $orders[] = $row;
+    }
+} else {
+    die("Sorgu hatası: " . $conn->error);
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -130,100 +187,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="resim/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
+
     <title>Admin Paneli</title>
     <style>
-        body {
-            background-image: url('https://www.floryabasakyemek.com/wp-content/uploads/2018/06/florya-basak-yemek-header-1600x925.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            margin-top: 150px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            padding: 20px;
-            padding-right:50px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .navbar {
-            background-color: #511212;
-            overflow: hidden;
-            padding: 10px 0;
-            z-index: 2;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-        }
-        h2 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        .table th {
-            background-color: #511212;
-            color: white;
-        }
-        .table td a {
-            color: #511212;
-            text-decoration: none;
-        }
-        .table td a:hover {
-            text-decoration: underline;
-        }
-        .btn {
-            padding: 8px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 5px;
-            border: none;
-        }
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        .alert {
-            padding: 15px;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .alert-info {
-            background-color: #511212;
-            color: white;
-        }
+        
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="navbar">
-            <h2>Admin Yönetim Sistemi</h2>
+
+    <div class="navbar">
+        <h2>Admin Yönetim Sistemi</h2>
+        <div class="icons-container"> 
+            <div class="login-containers">
+                <div class="circle login-icon" onclick="toggleLogoutMenu()">
+                    <i class="fas fa-user" style="color: black; font-size: 20px;"></i>
+                </div>
+                <div id="logout-menu" class="logout-menu">
+                    <a href="admin_cikis.php">Çıkış Yap</a>
+                </div>
+            </div>
         </div>
+    </div>
+
+
+    <!-- profil işlemleri -->
+   
+
+
+        
         <div class="card-body">
             <!-- Success or error message -->
             <?php if ($successMessage || $errorMessage): ?>
@@ -255,7 +250,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
                         <tr>
                             <th>Adı</th>
                             <th>Email</th>
-                            <th>Şifre</th>
                             <th>Belge</th>
                             <th>İşlem</th>
                         </tr>
@@ -265,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
                             <tr>
                                 <td><?= htmlspecialchars($student['name']) ?></td>
                                 <td><?= htmlspecialchars($student['email']) ?></td>
-                                <td><?= htmlspecialchars($student['password']) ?></td>
+                                
                                 <td><a href="<?= $uploadsDir . '/' . htmlspecialchars($student['email']) . '/' . htmlspecialchars($student['document']) ?>" target="_blank"><?= htmlspecialchars($student['document']) ?></a></td>
                                 <td>
                                     <form method="POST" class="d-inline">
@@ -286,5 +280,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'reject') {
             <?php endif; ?>
         </div>
     </div>
+
+
+ <div class="cargo-container">
+<h1>Kargo Takip Paneli</h1>
+
+<?php if (!empty($message)): ?>
+    <div class="message"><?= htmlspecialchars($message) ?></div>
+<?php endif; ?>
+
+<?php if (empty($orders)): ?>
+    <p>Henüz kargo takibi için sipariş yok.</p>
+<?php else: ?>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sipariş ID</th>
+                <th>Ad Soyad</th>
+                <th>Telefon</th>
+                <th>Adres</th>
+                <th>Şehir</th>
+                <th>Posta Kodu</th>
+                <th>Meal ID</th>
+                <th>Durum</th>
+                <th>Durumu Güncelle</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($orders as $order): ?>
+            <tr class="<?= $order['status'] === 'Teslim Edildi' ? 'delivered' : 'pending' ?>">
+                <td><?= htmlspecialchars($order['order_id']) ?></td>
+                <td><?= htmlspecialchars($order['customer_name']) ?></td>
+                <td><?= htmlspecialchars($order['phone']) ?></td>
+                <td><?= nl2br(htmlspecialchars($order['address'])) ?></td>
+                <td><?= htmlspecialchars($order['city']) ?></td>
+                <td><?= htmlspecialchars($order['postal_code']) ?></td>
+                <td><?= htmlspecialchars($order['meal_id']) ?></td>
+                <td><?= htmlspecialchars($order['status']) ?></td>
+                <td>
+                    <?php if ($order['status'] !== 'Teslim Edildi'): ?>
+                        <form method="POST">
+                            <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>" />
+                            <input type="hidden" name="meal_id" value="<?= $order['meal_id'] ?>" />
+                            <input type="hidden" name="is_guest" value="<?= $order['order_type'] === 'guest' ? '1' : '0' ?>" />
+                            <button type="submit" name="update_order_status">Teslim Edildi Olarak İşaretle</button>
+                        </form>
+                    <?php else: ?>
+                        <em>Teslim Edildi</em>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+<?php endif; ?>
+
+</div>
+
+
+
+    <script src="admin.js"></script>
 </body>
 </html>

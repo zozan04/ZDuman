@@ -4,11 +4,29 @@ session_start();
 
 // Kullanıcı oturum açmış mı kontrol et
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html");
+    header("Location: login.php");
     exit();
 }
 
 $userId = $_SESSION['user_id'];
+// Silme işlemi
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteMealId'])) {
+    $mealId = $_POST['deleteMealId'];
+
+    // Favoriler tablosundan yemeği sil
+    $stmt = $conn->prepare("DELETE FROM favorites WHERE user_id = ? AND meal_id = ?");
+    $stmt->bind_param("ii", $userId, $mealId);
+
+    if ($stmt->execute()) {
+        echo json_encode(["status" => "success", "message" => "Yemek favorilerden silindi."]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Favorilerden silme sırasında bir hata oluştu."]);
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit();
+}
 
 // Favorilere ekleme işlemi
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mealId'])) {
@@ -40,24 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['mealId'])) {
     exit();
 }
 
-// Silme işlemi
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteMealId'])) {
-    $mealId = $_POST['deleteMealId'];
 
-    // Favoriden yemeği sil
-    $stmt = $conn->prepare("DELETE FROM favorites WHERE user_id = ? AND meal_id = ?");
-    $stmt->bind_param("ii", $userId, $mealId);
-
-    if ($stmt->execute()) {
-        echo json_encode(["status" => "success", "message" => "Yemek favorilerden silindi."]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Yemek silinirken bir hata oluştu."]);
-    }
-
-    $stmt->close();
-    $conn->close();
-    exit();
-}
 
 // Favori yemekleri getir
 $sql = "SELECT meals.*, students.name AS username 
@@ -144,6 +145,7 @@ $conn->close();
                 </div>
                 <div id="logout-menu" class="logout-menu">
                     <a href="kullanici_cikis.php">Çıkış Yap</a>
+                    <a href="user_settings.php">Ayarlar</a> <!-- Yeni "Ayarlar" menüsü -->
                 </div>
             </div>
             <!-- Tema Değiştir İkonu -->
@@ -169,10 +171,13 @@ $conn->close();
     } else {
         foreach ($favoriteMeals as $meal) {
             echo "<div class='dish-item'>";
-            echo "<img src='" . $meal['image_path'] . "' alt='" . $meal['name'] . "' />";
-            echo "<div class='dish-user'>";
-            echo "<a href='profile.php?id=" . $meal['user_id'] . "' class='username'>" . $meal['username'] . "</a>"; // Kullanıcı adı bağlantı
-            echo "</div>";
+            echo "<img src='" . $meal['image_path'] . "' 
+            alt='" . $meal['name'] . "' 
+            onclick='openModal(" . $meal['id'] . ", \"" . $meal['name'] . "\", \"" . $meal['image_path'] . "\", `" . $meal['content'] . "`, \"" . number_format($meal['price'], 2) . "\")'>";
+           echo "<div class='dish-user'>
+                        <a href='profile.php?id=" . $meal['user_id'] . "' class='username'>" . $meal['username'] . "</a>
+                        <p class='dish-city'>" . $meal['city'] . "</p>
+                      </div>";
             echo "<p class='dish-title'>" . $meal['name'] . "</p>"; // Yemek 
             echo "<div class='dish-footer'>";
             echo "<div class='dish-price'>₺" . number_format($meal['price'], 2) . "</div>";
@@ -187,6 +192,26 @@ $conn->close();
     }
     ?>
 </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-left">
+            <img id="modal-img" src="" alt="Yemek Görseli" />
+        </div>
+        <div class="modal-right">
+            <h1 id="modal-title">Yemek Adı</h1>
+            <p id="modal-content-text"><strong>İçindekiler:</strong> <span id="modal-content"></span></p>
+            <p id="modal-price">₺<span>0.00</span></p>
+          <button class="add-to-carts" id="add-to-cart-modal">Sepete Ekle</button>
+
+            <!-- Modal içindeki Bildirim Kutusu -->
+            <div id="notification" class="cart-notification" style="display: none;">Sepete eklendi</div>
+        </div>
+        
+        <span class="close" onclick="closeModal()">&times;</span>
+    </div>
 </div>
 
 <script src="favoriler.js"></script>

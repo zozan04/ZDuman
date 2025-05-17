@@ -157,70 +157,16 @@ function searchAndRedirect(query) {
     alert("Aradığınız yemek veya kategori bulunamadı.");
 }
 
-//Sepete ekleme işlemi
-document.querySelectorAll(".add-to-cart").forEach(button => {
-    button.addEventListener("click", function () {
-        let mealId = this.getAttribute("data-dish-id");
-        let mealCard = this.closest(".dish-item"); // Yemek kartını bul
 
-        fetch("sepetim.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "meal_id=" + mealId
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Eğer bildirim zaten varsa, tekrar ekleme
-            if (mealCard.querySelector(".cart-notification")) return;
-
-            // Bildirim oluştur
-            let notification = document.createElement("div");
-            notification.innerText = "Sepete eklendi";
-            notification.classList.add("cart-notification");
-
-            // Yemek kartına ekle
-            mealCard.appendChild(notification);
-
-            // 1 saniye sonra kaybolsun
-            setTimeout(() => {
-                notification.remove();
-            }, 1000);
-        })
-        .catch(error => console.error("Hata:", error));
-    });
-});
-
-
-
-
-// Favori ikonlarına tıklandığında renk değiştirme işlevi
-document.querySelectorAll('.favorite-icon').forEach(icon => {
-    icon.addEventListener('click', function() {
-        // Tıklandığında aktif hale getirme (veya kaldırma)
-        this.classList.toggle('active');
-    });
-});
-
-
-// Favori ekleme işlevi
-function addToFavorites(mealId) {
-    fetch('favoriler.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'mealId=' + mealId
-    })
-    .then(response => response.json())
-    
-    .catch(error => {
-        console.error('Error:', error);
-    });
+// çıkış yapma işlevi
+function toggleLogoutMenu() {
+    var menu = document.getElementById("logout-menu");
+    if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
 }
-
-
 
 // Sayfanın herhangi bir yerine tıklanınca menüyü kapatma
 document.addEventListener("click", function (event) {
@@ -231,81 +177,3 @@ document.addEventListener("click", function (event) {
         menu.style.display = "none";
     }
 });
-
-// Modal'ı açma fonksiyonu
-function openModal(id, imgPath, title, content, price) {
-    document.getElementById("modal-img").src = imgPath;
-    document.getElementById("modal-title").textContent = title;
-    document.getElementById("modal-content").textContent = content;
-    document.getElementById("modal-price").innerHTML = `₺<span>${price.toFixed(2)}</span>`;
-    document.getElementById("myModal").style.display = "block";
-
-    // Sepete ekle butonuna id ve price ekle
-    const modalButton = document.getElementById("add-to-cart-modal");
-    modalButton.setAttribute("data-dish-id", id);
-    modalButton.setAttribute("data-dish-price", price);
-}
-
-// Sepete ekleme işlemi
-document.getElementById("add-to-cart-modal").addEventListener("click", function () {
-    const dishId = this.getAttribute("data-dish-id");
-    const price = parseFloat(this.getAttribute("data-dish-price"));
-
-    addToCart(dishId, price);
-    addToServer(dishId);
-});
-
-// Local Storage'a ekleme
-function addToCart(dishId, price) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const dish = {
-        id: dishId,
-        price: price,
-        quantity: 1
-    };
-
-    const existingDishIndex = cart.findIndex(item => item.id == dishId);
-    if (existingDishIndex > -1) {
-        cart[existingDishIndex].quantity += 1;
-    } else {
-        cart.push(dish);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // Kullanıcıya bilgi verme
-    const notification = document.getElementById("notification");
-    notification.style.display = "block";
-    setTimeout(() => {
-        notification.style.display = "none";
-    }, 2000);
-}
-
-// Server'a ekleme (fetch ile)
-function addToServer(dishId) {
-    fetch("sepetim.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "meal_id=" + encodeURIComponent(dishId)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message); // İstersen burada alert(data.message) yapabilirsin
-    })
-    .catch(error => console.error("Hata:", error));
-}
-
-// Modal kapatma
-function closeModal() {
-    document.getElementById("myModal").style.display = "none";
-}
-
-window.onclick = function(event) {
-    const modal = document.getElementById("myModal");
-    if (event.target === modal) {
-        closeModal();
-    }
-};

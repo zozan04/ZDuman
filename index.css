@@ -267,7 +267,7 @@ ul.menu li a:hover {
     z-index: 1; /* Ensure it stays above the background */
 }
 .main_text h2 {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     margin: 0;
 }
 
@@ -357,7 +357,7 @@ ul.menu li a:hover {
 .about-description {
     text-align: left; /* Metni sola hizala */
     margin: 0; /* Varsayılan margin'leri kaldır */
-    padding: 0; /* Varsayılan padding'leri kaldır */
+    padding-top: 80px; /* Varsayılan padding'leri kaldır */
     max-width: 600px;
     font-size: 20px;
     opacity: 0; /* Başlangıçta görünmez */

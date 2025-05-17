@@ -1,0 +1,421 @@
+body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  
+    flex-direction: row;
+}
+
+body.light-mode {
+    background-color: white;
+    color: black;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: white;
+}
+html {
+    height: 100%;
+    margin: 0;
+    overflow-y: scroll; /* Her zaman sabit bir kaydırma çubuğu gösterir */
+}
+/* Ana ekran başlığı */
+.main-header {
+    display: flex;
+    justify-content: space-between; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    background-color: rgba(74, 11, 11, 1); /* Navbar background color */
+    padding: 20px 0; /* Top and bottom padding to create space */
+    z-index: 1000;
+    width: 100%;
+    position: fixed;
+    top: 0;
+}
+
+.logo img {
+    width: 70px;
+    height: auto;
+    margin-top: -5px;
+    margin-left: 10px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: var(--max-width); /* Ensure this variable is defined in your CSS */
+    margin: auto;
+    text-decoration: none;
+    
+}
+
+.nav_bar {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    width: 100%;
+    position: relative;
+    z-index: 150;
+}
+
+/* İkonlar */
+.icons-container {
+    display: flex; /* İkonları yan yana diz */
+    align-items: center; /* Dikey olarak ortala */
+    gap: 15px;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+}
+
+.login-icon {
+    position: absolute;
+    top: 25px;
+    right: 70px;
+    display: flex;
+}
+.login-container {
+    position: relative;
+    display: inline-block;
+    top: -42px;
+    
+}
+.login-containers {
+    position: relative;
+    display: inline-block;
+    top: -42px;
+    right: 113px;
+}
+
+.logout-menu {
+    position: absolute;
+    top: 70px;
+    right: 17px;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.logout-menu a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.logout-menu a:hover {
+    background: #f5f5f5;
+}
+
+
+
+.light {
+    position: absolute;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    margin-left: 900px;
+    top: 25px;
+    right: 18px;
+}
+
+.cart-icon {
+    position: absolute;
+    top: 25px;
+    left: 1218px;
+    display: flex;
+   
+ 
+}
+.add-to-cart {
+    padding: 10px 30px;
+    background-color:  rgba(74, 11, 11, 0.8);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    isolation: isolate;
+}
+
+.add-to-cart:hover {
+    background-color: #b30000;;
+}
+.separator {
+    width: 1.5px; /* Çizginin genişliği */
+    height: 50px; /* Çizginin yüksekliği */
+    background-color: #ddd; /* Çizginin rengi */
+    margin: 0 -60px 0 5px;  /* Çizgi ile diğer öğeler arasındaki boşluk */
+}
+
+
+/* Arama çubuğu */
+.search-icon {
+    position: relative;
+    align-items: center;
+    display: flex;
+    margin-left: 20px; 
+    z-index: 1;
+    top: 4px;
+    left: 150px;
+}
+.search-icon .circle i {
+    color: black;
+    font-size: 20px;
+    margin-top: -4px;
+    margin-left: -295px;
+}
+
+
+/* search kutusu */
+#search-box {
+    display: none; /* Başlangıçta gizli */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+    position: absolute;
+    top: 8px; /* İkonun konumuna göre ayarlayın */
+    right: -170px; /* İkonun konumuna göre ayarlayın */
+    z-index: 10;
+    background-color: white;
+}
+
+#search-box input {
+    width: 100%; /* Kutunun içinde tam genişlik */
+    border: none; /* Kenarlık yok */
+    border-radius: 4px; /* Köşe yuvarlama */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+#search-box input:focus {
+    outline: none; /* Kenarlık dışında bir görünüm yok */
+}
+
+#noResultsMessage {
+    margin-top: 10px;
+    font-weight: bold;
+}
+.favorites-icon{
+    position: absolute;
+    top: 25px;
+    right: 174px;
+    display: flex;
+}
+
+
+/* Navbar menü stilleri */
+ul.menu {
+    position:absolute;
+    flex-grow: 0;
+    right: 350px;
+    justify-content: center;
+    list-style-type: none; 
+    margin: 0;
+    padding: 0;
+    display: flex; 
+    gap: 20px; 
+    isolation: isolate;
+    margin-top: 5px;
+}
+
+ul.menu li {
+    display: inline; /* Menüyü yan yana diz */
+    isolation: isolate;
+    display: flex;
+    
+}
+
+ul.menu li a {
+    color: white; 
+    text-decoration: none; 
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    isolation: isolate;
+    display: flex;
+
+}
+
+ul.menu li a:hover {
+    background-color: #e0a4a4; 
+    border-radius: 5px; 
+    z-index: 10;
+}
+
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 13px 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+button {
+    background-color: rgba(74, 11, 11, 1);
+    color: #fff;
+    padding: 12px 0; /* Yukarı-aşağı boşluk, yatayda sıfır */
+    width: 100%; /* Genişliği tam yapsın */
+    max-width: 300px; /* İstersen max bir genişlik sınırı koyabilirsin */
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px auto 0 auto; /* Üstten boşluk + ortalama */
+    display: block; /* margin: auto için gerekli */
+}
+
+button:hover {
+    background-color: #b30000;
+}
+
+/* Sipariş Geçmişi */
+.container-orders {
+    margin-top: 130px;
+    flex: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    max-width: 700px;
+    min-width: 300px;
+    text-align: center;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 40px); /* Sepet bölümü ekranın yüksekliği kadar yer kaplasın */
+    margin-right: 10px;
+}
+.container{
+    margin-top: 130px;
+    margin-left: 10px;
+    flex: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    min-width: 300px;
+    margin-right: 2%; /* Arada boşluk bırak */
+    height: calc(100vh - 40px); /* Sipariş özeti bölümü ekranın yüksekliği kadar yer kaplasın */
+    overflow-y: auto;
+    position: -webkit-sticky;
+    position: sticky;
+    box-sizing: border-box;
+}
+.order-box {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.order-address p {
+    margin: 10px 0;
+    color: black;
+}
+
+.order-items {
+    margin-top: 10px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.order-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.item-info h4 {
+    margin: 0;
+    color: black;
+    font-size: 18px;
+}
+
+.item-info p {
+    margin: 5px 0;
+    color: black;
+}
+
+.order-box p {
+    font-size: 14px;
+}
+
+.order-item p em {
+    font-style: italic;
+}
+
+/* Hiza düzeni ve mesaj */
+.no-orders-message {
+    text-align: center;
+    font-size: 18px;
+    color: black;
+}
+
+/* Flex düzeni ile alanı kullanma */
+.form-container, .orders-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2%;
+}

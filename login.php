@@ -1,10 +1,49 @@
+<?php
+include_once("db_connection.php");
+session_start();
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+$error_message = '';  // Hata mesajı
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['studentEmail'];
+    $password = $_POST['studentPassword'];
+
+    // E-posta ve şifre kontrolü
+    $sql = "SELECT id, email, password FROM students WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Şifre doğrulama
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['student_id'] = $row['id'];
+            // Başarılı girişte yönlendirme yapıyoruz
+            header("Location: student.php");
+            exit();
+        } else {
+            // Şifre hatalı ise hata mesajı
+            $error_message = "E-posta veya şifre hatalı. Lütfen tekrar deneyin.";
+        }
+    } else {
+        // Kullanıcı bulunamadı ise hata mesajı
+        $error_message = "E-posta veya şifre hatalı. Lütfen tekrar deneyin.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Seçimi</title>
+  <title>Ghibli Yemek Platformu</title>
+   <link rel="icon" href="resim/A7.jpg" type="image/png"> <!-- PNG formatında favicon -->
     <link rel="stylesheet" href="login.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
@@ -26,11 +65,15 @@
         </div>
 
        <!-- Öğrenci Giriş Formu -->
-<form id="studentLoginForm" class="form" method="POST" action="ogrenci_giris.php">
+<form id="studentLoginForm" class="form" method="POST">
     <h3>Öğrenci Giriş</h3>
     <input type="email" id="studentEmail" name="studentEmail" placeholder="Email" required>
     <input type="password" id="studentPassword" name="studentPassword" placeholder="Şifre" required>
     <button type="submit">Giriş Yap</button>
+
+        <?php if (!empty($error_message)) { ?>
+                <p id="error-message" style="color:red; margin-top:10px;"><?php echo $error_message; ?></p>
+            <?php } ?>
 </form>
 
 

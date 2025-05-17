@@ -132,6 +132,8 @@ function deleteMeal(mealId) {
         console.error('Error:', error);
     });
 }
+
+//çıkış
 function toggleLogoutMenu() {
     var menu = document.getElementById("logout-menu");
     if (menu.style.display === "none" || menu.style.display === "") {
@@ -187,3 +189,84 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
     });
 });
 
+// Modal'ı açma fonksiyonu
+function openModal(dishId, dishName, dishImage, dishDescription, dishPrice) {
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("modal-img");
+    var modalTitle = document.getElementById("modal-title");
+    var modalDescription = document.getElementById("modal-content");
+    var modalPrice = document.getElementById("modal-price").getElementsByTagName("span")[0];
+    var addToCartBtn = document.getElementById("add-to-cart-modal");
+
+    // Modal içeriğini güncelle
+    modalImg.src = dishImage;
+    modalTitle.textContent = dishName;  // Yalnızca modal içindeki yemek adı değişir
+    modalDescription.textContent = dishDescription;
+    modalPrice.textContent = dishPrice;
+    addToCartBtn.setAttribute('data-dish-id', dishId);
+    addToCartBtn.setAttribute('data-dish-name', dishName);
+    addToCartBtn.setAttribute('data-dish-price', dishPrice);
+
+    modal.style.display = "block"; // Modal'ı aç
+}
+
+// Modal'ı kapatma fonksiyonu
+var closeModal = document.getElementsByClassName("close")[0];
+closeModal.onclick = function() {
+    document.getElementById("myModal").style.display = "none";
+}
+
+// Sayfa dışında tıklanırsa modal'ı kapatma
+window.onclick = function(event) {
+    if (event.target == document.getElementById("myModal")) {
+        document.getElementById("myModal").style.display = "none";
+    }
+}
+
+// Modal içindeki Sepete Ekle butonuna tıklanınca bildirimi göster
+document.getElementById("add-to-cart-modal").onclick = function () {
+    // Modal içindeki bildirim
+    var notification = document.getElementById("notification");
+    
+    // Bildirimi göster
+    notification.style.display = "block";
+
+    // 2 saniye sonra bildirimi gizle
+    setTimeout(function () {
+        notification.style.display = "none";
+    }, 2000);
+}
+//modalda Sepete ekleme işlemi
+document.querySelectorAll(".add-to-carts").forEach(button => {
+    button.addEventListener("click", function () {
+        let mealId = this.getAttribute("data-dish-id");
+        let mealCard = this.closest(".dish-item"); // Yemek kartını bul
+
+        fetch("sepetim.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "meal_id=" + mealId
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Eğer bildirim zaten varsa, tekrar ekleme
+            if (mealCard.querySelector(".cart-notification")) return;
+
+            // Bildirim oluştur
+            let notification = document.createElement("div");
+            notification.innerText = "Sepete eklendi";
+            notification.classList.add("cart-notification");
+
+            // Yemek kartına ekle
+            mealCard.appendChild(notification);
+
+            // 1 saniye sonra kaybolsun
+            setTimeout(() => {
+                notification.remove();
+            }, 1000);
+        })
+        .catch(error => console.error("Hata:", error));
+    });
+});

@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $studentDocument = $_FILES['studentDocument'] ?? null;
 
     // Şifreyi hashle
-    $password = hash('sha256', $password);
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
 
     // Dosyaların kaydedileceği dizin
     $uploadDir = "uploads/" . $email;
