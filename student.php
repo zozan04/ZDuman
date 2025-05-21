@@ -40,19 +40,40 @@ $student_id = $_SESSION['student_id']; // Get the logged-in student's ID
 
 /// Yemek ekleme işlemi
 $message = "";
+$edit_mode = false;
+$edit_meal = [
+    'id' => '',
+    'category' => '',
+    'name' => '',
+    'price' => '',
+    'city' => '',
+    'content' => '',
+    'image_path' => ''
+];
+
+// Düzenlenecek yemeğin bilgilerini al
+if (isset($_GET['edit'])) {
+    $edit_id = $_GET['edit'];
+    $sql_edit = "SELECT * FROM meals WHERE id = '$edit_id' AND user_id = '$student_id'";
+    $result_edit = $conn->query($sql_edit);
+
+    if ($result_edit->num_rows > 0) {
+        $edit_mode = true;
+        $edit_meal = $result_edit->fetch_assoc();
+    }
+}
+
+// Yemek ekleme
 if (isset($_POST['submit'])) {
     $kategori = $_POST['kategori'];
     $yemek_adi = $_POST['yemek_adi'];
     $fiyat = $_POST['fiyat'];
     $icerik = preg_replace('/\s+/', ' ', trim($_POST['icerik']));
-    $sehir = $_POST['city']; //  Şehir bilgisi alındı
-    
+    $sehir = $_POST['city'];
 
-    // Dosya kontrolü
     if (!isset($_FILES['resim']) || $_FILES['resim']['error'] !== UPLOAD_ERR_OK) {
         $message = "<div class='error'>Lütfen bir dosya seçin!</div>";
     } else {
-        // Görsel yükleme işlemi
         $resim_name = $_FILES['resim']['name'];
         $resim_tmp_name = $_FILES['resim']['tmp_name'];
         $upload_dir = 'resimler/';
@@ -61,12 +82,10 @@ if (isset($_POST['submit'])) {
         if (!move_uploaded_file($resim_tmp_name, $upload_path)) {
             $message = "<div class='error'>Görsel yüklenirken bir hata oluştu.</div>";
         } else {
-            // Yemek ekleme SQL sorgusu
             $sql = "INSERT INTO meals (user_id, name, category, image_path, price, content, city) 
                     VALUES ('$student_id', '$yemek_adi', '$kategori', '$upload_path', '$fiyat', '$icerik', '$sehir')";
 
             if ($conn->query($sql) === TRUE) {
-                $message = "<div class='success'>Yemek başarıyla eklendi.</div>";
                 header("Location: student.php");
                 exit();
             } else {
@@ -76,50 +95,16 @@ if (isset($_POST['submit'])) {
     }
 }
 
-// Silme işlemi
-if (isset($_GET['delete'])) {
-    $meal_id = $_GET['delete'];
-    
-    // Öğrencinin sadece kendi yemeklerini silebilmesi için kontrol
-    $sql_check_ownership = "SELECT * FROM meals WHERE id = '$meal_id' AND user_id = '$student_id'";
-    $result_check_ownership = $conn->query($sql_check_ownership);
-    
-    if ($result_check_ownership->num_rows > 0) {
-        // Yemek mevcut ve öğrenciye aitse silme işlemi yap
-        $sql_delete = "DELETE FROM meals WHERE id = '$meal_id' AND user_id = '$student_id'";
-        
-        if ($conn->query($sql_delete) === TRUE) {
-            $message = "<div class='success'>Yemek başarıyla silindi.</div>";
-        } else {
-            $message = "<div class='error'>Silme işlemi sırasında bir hata oluştu.</div>";
-        }
-    } else {
-        $message = "<div class='error'>Bu yemeği silme yetkiniz yok.</div>";
-    }
-}
-
-
-// Oturum açmış öğrencinin yemeklerini getiren SQL sorgusu
-$sql_get_meals = "SELECT * FROM meals WHERE user_id = '$student_id'";
-$result_get_meals = $conn->query($sql_get_meals);
-
-
-
-
-
-
-// Eğer POST isteği yapılmışsa
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-  // Yemek güncelleme işlemi
+// Yemek güncelleme
 if (isset($_POST['update'])) {
-    $id = $_POST['id'];
+    $meal_id = $_POST['id'];
     $kategori = $_POST['kategori'];
     $yemek_adi = $_POST['yemek_adi'];
     $fiyat = $_POST['fiyat'];
+    $sehir = $_POST['city'];
     $icerik = preg_replace('/\s+/', ' ', trim($_POST['icerik']));
 
-    // Görsel güncelleme
+    // Görsel yüklenmişse güncelle
     if (isset($_FILES['resim']) && $_FILES['resim']['error'] === UPLOAD_ERR_OK) {
         $resim_name = $_FILES['resim']['name'];
         $resim_tmp_name = $_FILES['resim']['tmp_name'];
@@ -127,29 +112,42 @@ if (isset($_POST['update'])) {
         $upload_path = $upload_dir . basename($resim_name);
 
         if (move_uploaded_file($resim_tmp_name, $upload_path)) {
-            $image_sql = ", image_path='$upload_path'";
-        } else {
-            $image_sql = "";
+            $sql_update = "UPDATE meals SET name='$yemek_adi', category='$kategori', price='$fiyat', content='$icerik', city='$sehir', image_path='$upload_path' WHERE id='$meal_id' AND user_id='$student_id'";
         }
     } else {
-        $image_sql = "";
+        $sql_update = "UPDATE meals SET name='$yemek_adi', category='$kategori', price='$fiyat', content='$icerik', city='$sehir' WHERE id='$meal_id' AND user_id='$student_id'";
     }
 
-    // Yemek güncelleme SQL sorgusu
-    $sql = "UPDATE meals SET name='$yemek_adi', category='$kategori', price='$fiyat', content='$icerik' $image_sql WHERE id='$id' AND user_id='$student_id'";
-
-    if ($conn->query($sql) === TRUE) {
+    if ($conn->query($sql_update) === TRUE) {
         $message = "<div class='success'>Yemek başarıyla güncellendi.</div>";
         header("Location: student.php");
         exit();
     } else {
-        $message = "<div class='error'>Hata: " . $conn->error . "</div>";
+        $message = "<div class='error'>Güncelleme hatası: " . $conn->error . "</div>";
     }
 }
+
+// Silme işlemi
+if (isset($_GET['delete'])) {
+    $meal_id = $_GET['delete'];
+    $sql_check = "SELECT * FROM meals WHERE id = '$meal_id' AND user_id = '$student_id'";
+    $check = $conn->query($sql_check);
+
+    if ($check->num_rows > 0) {
+        $sql_delete = "DELETE FROM meals WHERE id = '$meal_id'";
+        if ($conn->query($sql_delete) === TRUE) {
+            $message = "<div class='success'>Yemek başarıyla silindi.</div>";
+        } else {
+            $message = "<div class='error'>Silme hatası.</div>";
+        }
+    } else {
+        $message = "<div class='error'>Bu yemeği silme yetkiniz yok.</div>";
+    }
 }
 
-
-
+// Oturum açmış öğrencinin yemeklerini getiren SQL sorgusu
+$sql_get_meals = "SELECT * FROM meals WHERE user_id = '$student_id'";
+$result_get_meals = $conn->query($sql_get_meals);
 
 
 
@@ -334,48 +332,53 @@ foreach ($orders as $order) {
 
 <!-- Yemek Ekleme ve Güncelleme Formu -->
 
+<?= $message ?>
+
+<!-- Form -->
 <div class="form-container">
-        <h3>Yemek Ekle / Güncelle</h3>
-        <form action="student.php" method="POST" enctype="multipart/form-data" class="form-grid">
-            <!-- Sol Sütun -->
-            <div class="form-left">
-                <label for="kategori">Yemek Kategorisi:</label>
-                <select name="kategori" required>
-                    <option value="Ana Yemekler">Ana Yemekler</option>
-                    <option value="Sulu Yemekler">Sulu Yemekler</option>
-                    <option value="Karbonhidrat Lezzetleri">Karbonhidrat Lezzetleri</option>
-                    <option value="Aperatifler">Aperatifler</option>
-                    <option value="Tatlı Çeşitleri">Tatlı Çeşitleri</option>
-                </select><br>
+    <h3><?= $edit_mode ? "Yemeği Güncelle" : "Yemek Ekle" ?></h3>
+    <form action="student.php" method="POST" enctype="multipart/form-data" class="form-grid">
+        <div class="form-left">
+            <label>Yemek Kategorisi:</label>
+            <select name="kategori" required>
+                <?php
+                $kategoriler = ['Ana Yemekler', 'Sulu Yemekler', 'Karbonhidrat Lezzetleri', 'Aperatifler', 'Tatlı Çeşitleri'];
+                foreach ($kategoriler as $k) {
+                    $selected = ($edit_meal['category'] == $k) ? 'selected' : '';
+                    echo "<option value='$k' $selected>$k</option>";
+                }
+                ?>
+            </select><br>
 
-                <label for="yemek_adi">Yemek Adı:</label>
-                <input type="text" name="yemek_adi" required><br>
+            <label>Yemek Adı:</label>
+            <input type="text" name="yemek_adi" value="<?= htmlspecialchars($edit_meal['name']) ?>" required><br>
 
-                <label for="fiyat">Fiyat:</label>
-                <input type="number" name="fiyat" step="0.01" required><br>
+            <label>Fiyat:</label>
+            <input type="number" name="fiyat" step="0.01" value="<?= htmlspecialchars($edit_meal['price']) ?>" required><br>
 
-                <label for="city">Şehir:</label>
-                <input type="text" name="city" required><br>
+            <label>Şehir:</label>
+            <input type="text" name="city" value="<?= htmlspecialchars($edit_meal['city']) ?>" required><br>
+        </div>
+
+        <div class="form-right">
+            <label>İçerik:</label>
+            <textarea name="icerik" rows="6" cols="60" required><?= htmlspecialchars($edit_meal['content']) ?></textarea><br>
+
+            <label>Görsel:</label>
+            <input type="file" name="resim" accept="image/*"><br>
+            <?php if ($edit_mode): ?>
+                <img src="<?= $edit_meal['image_path'] ?>" alt="Yemek Resmi" width="100"><br>
+            <?php endif; ?>
+
+            <input type="hidden" name="id" value="<?= $edit_meal['id'] ?>">
+
+            <div class="button-container">
+                <input type="submit" name="submit" value="Yemek Ekle" <?= $edit_mode ? 'disabled' : '' ?>>
+                <input type="submit" name="update" value="Yemek Güncelle" <?= !$edit_mode ? 'disabled' : '' ?>>
             </div>
-
-            <!-- Sağ Sütun -->
-            <div class="form-right">
-                <label for="icerik">Yemek İçeriği:</label>
-                <textarea name="icerik" rows="6" cols="60" required></textarea><br>
-
-                <label for="resim">Yemek Görseli:</label>
-                <input type="file" name="resim" accept="image/*"><br>
-
-                <input type="hidden" name="id" value="">
-
-                <div class="button-container">
-                    <input type="submit" name="submit" value="Yemek Ekle">
-                    <input type="submit" name="update" value="Yemek Güncelle">
-                </div>
-            </div>
-        </form>
-    </div>
-
+        </div>
+    </form>
+</div>
     
 <div class="container-status">
     <h2>Gelen Siparişler</h2>
@@ -447,64 +450,12 @@ foreach ($orders as $order) {
     <?php endif; ?>
 </div>
 
-
-
-
-        <!-- Başarı veya hata mesajı -->
-        <?php
-        // Mesaj değişkeni
-        $message = "";
-
-        if (isset($_POST['submit'])) {
-            $kategori = $_POST['kategori'];
-            $yemek_adi = $_POST['yemek_adi'];
-            $fiyat = $_POST['fiyat'];
-
-           
-
-            // Dosya kontrolü
-            if (!isset($_FILES['resim']) || $_FILES['resim']['error'] !== UPLOAD_ERR_OK) {
-                $message = "<div class='error'>Lütfen bir dosya seçin!</div>";
-            } else {
-                // Görsel yükleme işlemi
-                $resim_name = $_FILES['resim']['name'];
-                $resim_tmp_name = $_FILES['resim']['tmp_name'];
-                $upload_dir = 'resimler/';
-                $upload_path = $upload_dir . basename($resim_name);
-
-                if (!move_uploaded_file($resim_tmp_name, $upload_path)) {
-                    $message = "<div class='error'></div>";
-                } else {
-                    // Yemek ekleme SQL sorgusu
-                    $sql = "INSERT INTO meals (user_id, name, category, image_path, price) 
-                            VALUES ('$student_id', '$yemek_adi', '$kategori', '$upload_path', '$fiyat')";
-
-                    if ($conn->query($sql) === TRUE) {
-                        $message = "<div class='success'>Yemek başarıyla eklendi.</div>";
-
-                         header("Location: student.php");
-                         exit();  // Yönlendirme yaptıktan sonra kodun devamını çalıştırma
-                    } else {
-                        $message = "<div class='error'>Hata: " . $conn->error . "</div>";
-                    }
-                }
-            }
-        }
-
-        // Mesajı göster
-        if (!empty($message)) {
-            echo "<div class='message' id='message'>$message</div>";
-        }
-
-        // Bağlantıyı kapat
-        $conn->close();
-        ?>
     </div>
     
 </div>
+<!-- Yemek Listesi -->
 <div class="container">
-    <!-- Yemek Listesi Tablosu -->
-   <table class="meals-table">
+    <table class="meals-table">
         <thead>
             <tr>
                 <th>Resim</th>
@@ -513,7 +464,8 @@ foreach ($orders as $order) {
                 <th>Fiyat</th>
                 <th>Şehir</th>
                 <th>İçerik</th>
-                <th>İşlemler</th>
+                <th>Sil</th>
+                <th>Düzenle</th>
             </tr>
         </thead>
         <tbody>
@@ -525,14 +477,15 @@ foreach ($orders as $order) {
                     echo "<td>" . $meal['name'] . "</td>";
                     echo "<td>" . $meal['category'] . "</td>";
                     echo "<td>" . $meal['price'] . " TL</td>";
-                     echo "<td>" . $meal['city'] . "</td>";
-                    echo "<td>" . $meal['content'] . "</td>"; // İçerik sütunu
+                    echo "<td>" . $meal['city'] . "</td>";
+                    echo "<td>" . $meal['content'] . "</td>";
                     echo "<td><a href='student.php?delete=" . $meal['id'] . "' class='delete-btn'>Sil</a></td>";
+                    echo "<td><a href='student.php?edit=" . $meal['id'] . "' class='edit-btn'>Düzenle</a></td>";
                     echo "</tr>";
+                    
                 }
             } else {
-          echo "<tr><td colspan='4' class='no-meal-message'>Henüz yemek eklenmemiş.</td></tr>";
-
+                echo "<tr><td colspan='7'>Henüz yemek eklenmemiş.</td></tr>";
             }
             ?>
         </tbody>

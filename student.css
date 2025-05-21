@@ -349,7 +349,7 @@ textarea {
 
 /* Manuel sütun genişlikleri */
 .meals-table th:nth-child(1), .meals-table td:nth-child(1) {
-    width: 15%; /* Resim sütunu */
+    width: 12%; /* Resim sütunu */
 }
 
 .meals-table th:nth-child(2), .meals-table td:nth-child(2) {
@@ -368,10 +368,13 @@ textarea {
     width: 5%; /* şehir sütunu */
 }
 .meals-table th:nth-child(6), .meals-table td:nth-child(6) {
-    width: 30%; /* İçerik sütunu */
+    width: 35%; /* İçerik sütunu */
 }
 .meals-table th:nth-child(7), .meals-table td:nth-child(7) {
     width: 5%; /* işlem sütunu */
+}
+.meals-table th:nth-child(8), .meals-table td:nth-child(8) {
+    width: 10%; /* işlem sütunu */
 }
 
 
@@ -399,47 +402,24 @@ textarea {
 }
 
 
-/* Güncelle butonunu stilize et */
-#updateStudentForm button {
-    background-color: #511212; /* Yeşil arka plan */
-    color: white; /* Beyaz yazı */
-    padding: 12px 30px; /* İçerik için padding (üst-alt ve sağ-sol) */
-    font-size: 16px; /* Yazı boyutu */
-    border: none; /* Kenarlık kaldırma */
-    border-radius: 5px; /* Kenarları yuvarlama */
-    cursor: pointer; /* Fareyi üzerine getirdiğinde pointer işareti */
-    display: block; /* Butonu blok elemanı yaparak genişliğini ayarlıyoruz */
-    margin: 0 auto; /* Ortalamak için */
-    width: 200px; /* Genişlik */
-    transition: background-color 0.3s ease; /* Geçiş efekti */
+/* Silme Butonu */
+.edit-btn {
+    padding: 6px 12px;
+    background-color: #c82333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;  /* Butonun düzgün yerleşmesi için */
+    text-align: center;
+    font-weight: bold;
+}
+
+.edit-btn:hover {
+    background-color: #a71d2a;
 }
 
 
 
-/* Butonun içine biraz animasyon ekleyelim */
-#updateStudentForm button:active {
-    transform: scale(0.98); /* Butona tıklandığında biraz küçülme efekti */
-}
-
-/* Başarı mesajı için animasyon */
-@keyframes fadeOut {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-  
-  /* Başarı mesajı kaybolma animasyonu */
-  #updateMessage.fadeOut {
-    animation: fadeOut 1s ease-out forwards;
-  
-  }
-  #updateMessage{
-    color: #511212;
-  }
-  
 
   .container-status {
             width: 95.5%;

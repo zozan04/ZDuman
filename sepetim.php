@@ -3,7 +3,11 @@ session_start();
 include('db_connection.php'); // Veritabanı bağlantısı
 
 $user_id = $_SESSION['user_id']; // Bu satır, oturum yönetiminize bağlı olarak değişebilir
-$_SESSION['guest_id'] = $guest_id;
+
+if (!isset($_SESSION['guest_id'])) {
+    $_SESSION['guest_id'] = uniqid('guest_id', true);
+}
+
 
 // Kullanıcı bilgilerini çek
 $sql = "SELECT name, email FROM users WHERE id = ?";
@@ -157,12 +161,12 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete') {
     exit;
 }
 
-
+ 
 //giriş yapan kullanıcılar için not ekleme veritabanına kaydetme
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_note') {
     $meal_id = intval($_POST['meal_id']);
     $note = trim($_POST['note']);
-
+         
     if (!empty($note) && isset($_SESSION['user_id'])) {
         // Notu meal_notes tablosuna ekliyoruz
         $query = "INSERT INTO meal_notes (meal_id, note, user_id) VALUES (?, ?, ?)";
@@ -172,12 +176,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmt->close();
 
         echo json_encode(["status" => "success", "message" => "Not başarıyla eklendi."]);
-    } else {
+    
+    } else if(!empty($note) && isset($_SESSION['guest_id'])) {
+        $query = "INSERT INTO guest_notes (meal_id, note, guest_id) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("isi", $meal_id, $note, $_SESSION['guest_id']);
+        $stmt->execute();
+        $stmt->close();
         echo json_encode(["status" => "error", "message" => "Not eklenemedi."]);
     }
 
     exit;
 }
+if(!empty($note) && isset($_SESSION['guest_id'])) {
+        $query = "INSERT INTO guest_notes (meal_id, note, guest_id) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("isi", $meal_id, $note, $_SESSION['guest_id']);
+        $stmt->execute();
+        $stmt->close();
+        echo json_encode(["status" => "error", "message" => "Not eklenemedi."]);
+    }
 //giriş yapan kullanıcılar için not güncelleme
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Not güncelleme işlemi
@@ -193,8 +211,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $stmt->close();
             echo json_encode(["status" => "success", "message" => "Not güncellendi."]);
-        } else {
+        } else if(!empty($note) && isset($_SESSION['guest_id'])) {
+            
+            $query = "UPDATE guest_notes SET note = ? WHERE meal_id = ? AND guest_id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sii", $note, $meal_id, $_SESSION['guest_id']);
+            $stmt->execute();
+            $stmt->close();
+            echo json_encode(["status" => "success", "message" => "Not güncellendi."]);
             echo json_encode(["status" => "error", "message" => "Geçerli bir not girin."]);
+                                
         }
         exit;
     }
@@ -414,7 +440,7 @@ if (isset($_SESSION['user_id'])) {
                                 <textarea class="meal-note" placeholder="Yemeğiniz için özel bir not ekleyin..."></textarea>
                                 <button class="add-note-btn">Not Ekle</button>
                                 <button class="update-note-btn">Güncelle</button>
-                                <p class="note-success-message" style="display: none; color: green;">İsteklerinizi güncelledik!</p>
+                                <p class="note-success-message" style="display: none; color:#511212;">İsteklerinizi güncelledik!</p>
                             </div>
                         </div>
                     <?php endforeach; ?>

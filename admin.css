@@ -137,7 +137,7 @@ h2 {
 .alert {
     padding: 15px;
     background-color: #d4edda;
-    color: #155724;
+    color: #511212;
     border: 1px solid #c3e6cb;
     border-radius: 5px;
     margin-top: 20px;
@@ -148,17 +148,48 @@ h2 {
 }
 
 .cargo-container{
+    margin-top: 40px;
+    margin-bottom: 40px;
     background-color: white;
-margin-left: 50px;
-width: 93%;
-border-radius: 8px;
+    margin-left: 50px;
+    width: 93%;
+    border-radius: 8px;
+    padding-bottom: 30px; /* Ek olarak içerik altına boşluk bırakır */
 }
 
-   table { 
-    border-collapse: collapse;
-     width: 95%; 
-     margin-bottom: 30px; 
-    }
+  table { 
+    border-collapse: separate; /* Önemli: border-radius çalışması için collapsed olmamalı */
+    border-spacing: 0; /* İsteğe bağlı, aralık varsa sıfırlayabilirsin */
+    width: 95%; 
+    margin-left: 30px;
+    padding-bottom: 20px; 
+    border: 2px solid white; /* Tablo sınırı */
+    border-radius: 10px; /* Köşe yuvarlama */
+    overflow: hidden; /* Köşelerin düzgün görünmesi için */
+}
+
+/* Alt sol köşe */
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+/* Alt sağ köşe */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+.cargo-container h1 {
+    padding-top: 20px;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto 20px auto; /* alt tarafa 20px boşluk */
+}
+
+.cargo-container p {
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
         th, td { 
             border: 1px solid #ccc; 
             padding: 8px; 
