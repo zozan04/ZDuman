@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include('db_connection.php'); // Veritabanı bağlantısı
 
 $user_id = $_SESSION['user_id']; // Bu satır, oturum yönetiminize bağlı olarak değişebilir
@@ -65,4 +66,38 @@ if (isset($_POST['action']) && $_POST['action'] == 'decrease') {
     echo json_encode(["status" => "success", "message" => "Miktar azaltıldı."]);
     exit;
 }
+if (isset($_POST['action']) && $_POST['action'] == 'get_total') {
+    $total = 0;
+
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $query = "SELECT quantity, price FROM cart INNER JOIN meals ON cart.meal_id = meals.id WHERE user_id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $total += $row['quantity'] * $row['price'];
+        }
+
+        $stmt->close();
+    } elseif (isset($_SESSION['cart'])) {
+        foreach ($_SESSION['cart'] as $item) {
+            $total += $item['quantity'] * $item['price'];
+        }
+    }
+
+    $shipping = 2;
+    $grand_total = $total + $shipping;
+
+    echo json_encode([
+        "status" => "success",
+        "subtotal" => $total,
+        "shipping" => $shipping,
+        "total" => $grand_total
+    ]);
+    exit;
+}
+
 ?>

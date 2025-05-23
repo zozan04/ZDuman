@@ -1,8 +1,11 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
+
 include('db_connection.php'); // Veritabanı bağlantısı
 
-$user_id = $_SESSION['user_id']; // Bu satır, oturum yönetiminize bağlı olarak değişebilir
+$user_id = $_SESSION['user_id'] ?? null; 
 
 if (!isset($_SESSION['guest_id'])) {
     $_SESSION['guest_id'] = uniqid('guest_id', true);
@@ -17,11 +20,21 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// Ad ve soyadı ayır
-$full_name = explode(" ", $user['name'], 2);
-$first_name = $full_name[0];
-$last_name = isset($full_name[1]) ? $full_name[1] : "";
-$email = $user['email'];
+// $user dizisi var mı ve 'name' anahtarı dolu mu kontrol et
+$name = isset($user['name']) ? $user['name'] : '';
+
+if (!empty($name)) {
+    $full_name = explode(" ", $name, 2);
+    $first_name = $full_name[0];
+    $last_name = isset($full_name[1]) ? $full_name[1] : "";
+} else {
+    // Eğer isim boşsa ya da yoksa
+    $first_name = "";
+    $last_name = "";
+}
+
+$email = isset($user['email']) ? $user['email'] : "";
+
 
 
   // Adres kaydetme işlemi mi?
@@ -67,25 +80,7 @@ if (isset($_POST['delete_address'])) {
     exit;
 }
 
-// Adet artırma
-if (isset($_POST['action']) && $_POST['action'] == 'increase') {
-    $meal_id = $_POST['meal_id'];
 
-    if (isset($_SESSION['user_id'])) {
-        $user_id = $_SESSION['user_id'];
-        $update = "UPDATE cart SET quantity = quantity + 1 WHERE user_id = ? AND meal_id = ?";
-        $stmt = $conn->prepare($update);
-        $stmt->bind_param("ii", $user_id, $meal_id);
-        $stmt->execute();
-        $stmt->close();
-    } else {
-        if (isset($_SESSION['cart'][$meal_id])) {
-            $_SESSION['cart'][$meal_id]['quantity'] += 1;
-        }
-    }
-    echo json_encode(["status" => "success", "message" => "Miktar artırıldı."]);
-    exit;
-}
 
 // Adet azaltma
 if (isset($_POST['action']) && $_POST['action'] == 'decrease') {
@@ -308,29 +303,34 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     // Kullanıcı oturum açmamışsa, sepeti $_SESSION'den alıyoruz
-    $cart_items = [];
-    if (isset($_SESSION['cart'])) {
-        foreach ($_SESSION['cart'] as $meal_id => $item) {
-            // Veritabanından yemek bilgilerini çekmek
-            $query = "SELECT name, price, image_path FROM meals WHERE id = ?";
-            $stmt = $conn->prepare($query);
+   $cart_items = [];
+
+if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $meal_id => $item) {
+        // Veritabanından yemek bilgilerini çek
+        $query = "SELECT name, price, image_path FROM meals WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        if ($stmt) {
             $stmt->bind_param("i", $meal_id);
             $stmt->execute();
             $meal_result = $stmt->get_result();
 
-            if ($meal_result->num_rows > 0) {
+            if ($meal_result && $meal_result->num_rows > 0) {
                 $meal_info = $meal_result->fetch_assoc();
+
+                // Sepet öğesine ekle
                 $cart_items[] = [
-                    'name' => $meal_info['name'], // Yemek adı
+                    'id' => $meal_id,
+                    'name' => $meal_info['name'],
                     'quantity' => $item['quantity'],
-                    'price' => $meal_info['price'], // Yemek fiyatı
-                    'image_path' => $meal_info['image_path'] // Yemek resmi
+                    'price' => $meal_info['price'],
+                    'image_path' => $meal_info['image_path']
                 ];
             }
             $stmt->close();
         }
-    }
-}
+    }}}
+
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -423,26 +423,27 @@ if (isset($_SESSION['user_id'])) {
                 <p>Sepetinizdeki Yemekler:</p>
                 <div id="cart-items" class="cart-items">
                     <?php foreach ($cart_items as $item): ?>
-                        <div class="cart-item" data-meal-id="<?= $item['id'] ?>">
-                            <img src="<?= $item['image_path'] ?>" alt="<?= $item['name'] ?>" class="cart-item-image">
-                            <div class="cart-item-details">
-                                <p class="cart-item-name"><?= htmlspecialchars($item['name']) ?></p>
-                                <p class="cart-item-price"><?= number_format($item['price'], 2, ',', '.') ?> ₺</p>
-                                <div class="quantity-controls">
-                                    <button class="decrease-btn">-</button>
-                                    <span class="cart-item-quantity"><?= $item['quantity'] ?></span>
-                                    <button class="increase-btn">+</button>
-                                    <button class="delete-btn">🗑️</button>
-                                </div>
-                            </div>
-                            <!-- Yemek Notu Bölümü -->
-                            <div class="meal-note-section">
-                                <textarea class="meal-note" placeholder="Yemeğiniz için özel bir not ekleyin..."></textarea>
-                                <button class="add-note-btn">Not Ekle</button>
-                                <button class="update-note-btn">Güncelle</button>
-                                <p class="note-success-message" style="display: none; color:#511212;">İsteklerinizi güncelledik!</p>
-                            </div>
-                        </div>
+                       <div class="cart-item" data-meal-id="<?= isset($item['id']) ? htmlspecialchars($item['id']) : '' ?>">
+    <img src="<?= isset($item['image_path']) ? htmlspecialchars($item['image_path']) : 'default.jpg' ?>" alt="<?= isset($item['name']) ? htmlspecialchars($item['name']) : 'Yemek' ?>" class="cart-item-image">
+    <div class="cart-item-details">
+        <p class="cart-item-name"><?= isset($item['name']) ? htmlspecialchars($item['name']) : 'İsimsiz Yemek' ?></p>
+        <p class="cart-item-price"><?= isset($item['price']) ? number_format($item['price'], 2, ',', '.') . ' ₺' : 'Fiyat yok' ?></p>
+        <div class="quantity-controls">
+            <button class="decrease-btn">-</button>
+            <span class="cart-item-quantity"><?= isset($item['quantity']) ? (int)$item['quantity'] : 0 ?></span>
+            <button class="increase-btn">+</button>
+            <button class="delete-btn">🗑️</button>
+        </div>
+    </div>
+    <!-- Yemek Notu Bölümü -->
+    <div class="meal-note-section">
+        <textarea class="meal-note" placeholder="Yemeğiniz için özel bir not ekleyin..."></textarea>
+        <button class="add-note-btn">Not Ekle</button>
+        <button class="update-note-btn">Güncelle</button>
+        <p class="note-success-message" style="display: none; color:#511212;">İsteklerinizi güncelledik!</p>
+    </div>
+</div>
+
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>

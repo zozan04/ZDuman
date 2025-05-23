@@ -229,7 +229,7 @@ document.querySelectorAll(".decrease-btn").forEach(button => {
 });
 
 function updateCart(mealId, action) {
-    fetch("sepetim.php", {
+    fetch("guest_cart.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -239,7 +239,7 @@ function updateCart(mealId, action) {
     .then(response => response.json())
     .then(data => {
         console.log(data.message);
-        location.reload(); // veya sayfayı yenilemeden DOM'u güncellemek isteyebilirsin
+     updateTotalPrice(); // veya sayfayı yenilemeden DOM'u güncellemek isteyebilirsin
     })
     .catch(error => console.error("Hata:", error));
 }
@@ -407,6 +407,7 @@ function updateTotalPrice() {
     // Toplam fiyatı güncelle
     document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + '₺';
     document.getElementById('shipping-cost').innerText = shippingCost.toFixed(2).replace('.', ',') + '₺'; // Kargo ücreti
+    
 }
 
 // Adet artırma/azaltma ve silme olaylarını ekle
@@ -543,9 +544,4 @@ deleteAddressBtn.addEventListener('click', function () {
 
 
 
-fetch('sepetim.php')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Session verisi:', data);
-  })
-  .catch(err => console.error(err));
+
