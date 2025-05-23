@@ -402,9 +402,26 @@ button:hover {
     font-size: 14px;
 }
 
+
+/* Yorum içeriğinin doğru görünmesi için */
+.order-item p,
 .order-item p em {
-    font-style: italic;
+    display: block;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    max-width: 100%;
+    text-align: left;
 }
+
+/* Özellikle JS ile sonradan eklenen yorum için */
+.order-item .item-info > p em {
+    font-style: normal;
+    color: #333;
+    padding-top: 5px;
+}
+
 
 /* Hiza düzeni ve mesaj */
 .no-orders-message {
@@ -419,3 +436,4 @@ button:hover {
     flex-direction: row;
     gap: 2%;
 }
+

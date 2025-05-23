@@ -234,16 +234,15 @@ function updateCart(mealId, action) {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: "action=" + action + "&meal_id=" + mealId
+        body: "action=" + encodeURIComponent(action) + "&meal_id=" + encodeURIComponent(mealId)
     })
     .then(response => response.json())
     .then(data => {
         console.log(data.message);
-        location.reload(); // Sayfayı yenile, güncellenmiş hali göster
+        location.reload(); // veya sayfayı yenilemeden DOM'u güncellemek isteyebilirsin
     })
     .catch(error => console.error("Hata:", error));
 }
-
 
 //sepette silme işlemleri
 document.addEventListener('DOMContentLoaded', function() {
@@ -544,6 +543,9 @@ deleteAddressBtn.addEventListener('click', function () {
 
 
 
-
-
-
+fetch('sepetim.php')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Session verisi:', data);
+  })
+  .catch(err => console.error(err));

@@ -465,7 +465,7 @@ if (isset($_SESSION['user_id'])) {
         <form action="submit_order.php" method="POST" id="complete-order-form">
             <!-- Kişisel Bilgiler -->
             <h3>Kişisel Bilgiler</h3>
-            <h3>Kişisel Bilgiler</h3>
+            
 <div style="display: flex; gap: 10px;">
     <div style="flex: 1;">
         <label for="first_name">Ad:</label>
@@ -548,6 +548,7 @@ if (isset($_SESSION['user_id'])) {
 
 
     <script src="sepetim.js"></script>
+    
  
 </body>
 </html>

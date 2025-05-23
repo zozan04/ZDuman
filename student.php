@@ -38,6 +38,7 @@ if (!isset($_SESSION['student_id'])) {
 
 $student_id = $_SESSION['student_id']; // Get the logged-in student's ID
 
+
 /// Yemek ekleme işlemi
 $message = "";
 $edit_mode = false;
@@ -248,7 +249,22 @@ foreach ($orders as $order) {
 }
 
 
+//yorumları getirme
+$sql = "SELECT 
+            e.comment,
+            e.created_at,
+            u.name AS user_name,
+            m.name AS meal_name
+        FROM evaluations e
+        JOIN meals m ON e.meal_id = m.id
+        JOIN students u ON e.user_id = u.id
+        WHERE m.user_id = ?
+        ORDER BY e.created_at DESC";
 
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $student_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -493,6 +509,20 @@ foreach ($orders as $order) {
 </div>
 
 
+<h2>Yemeklerinize Yapılan Yorumlar</h2>
+<?php if ($result->num_rows > 0): ?>
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="comment-box">
+            <p><strong>Yemek:</strong> <?= htmlspecialchars($row['meal_name']) ?></p>
+            <p><strong>Yorumu Yapan:</strong> <?= htmlspecialchars($row['user_name']) ?></p>
+            <p><strong>Yorum:</strong> <?= nl2br(htmlspecialchars($row['comment'])) ?></p>
+            <p><em>Tarih: <?= $row['created_at'] ?></em></p>
+            <hr>
+        </div>
+    <?php endwhile; ?>
+<?php else: ?>
+    <p>Henüz yemeklerinize yorum yapılmamış.</p>
+<?php endif; ?>
 </div>
 <script src="student.js"></script>
 

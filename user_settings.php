@@ -62,6 +62,7 @@ while ($order = $order_result->fetch_assoc()) {
 
     $orders[] = $order;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -156,47 +157,82 @@ while ($order = $order_result->fetch_assoc()) {
         </form>
     </div>
 
-    <div class="container-orders">
-        <h2>Sipariş Geçmişi</h2>
-        <?php if (!empty($orders)): ?>
-            <?php foreach ($orders as $order): ?>
-                <div class="order-box">
-                    <div class="order-header">
-                        <span><strong>Sipariş Numaranız:</strong> <?= $order['id'] ?></span>
-                        <span><strong>Durum:</strong> <?= htmlspecialchars($order['items'][0]['status']) ?></span>
-
-                        <span><strong>Toplam:</strong> <?= number_format($order['total_price'], 2) ?>₺</span>
-                    </div>
-                    <div class="order-address">
-                        <p><strong>Adres:</strong> <?= htmlspecialchars($order['address']) ?>, <?= htmlspecialchars($order['city']) ?> <?= htmlspecialchars($order['postal_code']) ?></p>
-                    </div>
-                    <div class="order-items">
-                        <?php foreach ($order['items'] as $item): ?>
-                            <div class="order-item">
-                                <img src="<?= htmlspecialchars($item['image_path']) ?>" alt="<?= htmlspecialchars($item['meal_name']) ?>">
-                                <div class="item-info">
-                                    <h4><?= htmlspecialchars($item['meal_name']) ?></h4>
-                                    <p><strong>Adet:</strong> <?= $item['quantity'] ?></p>
-                                   
-                                    <p><strong>Fiyat:</strong> <?= number_format($item['price'], 2) ?>₺</p>
-                                    <?php if (!empty($item['note'])): ?>
-                                        <p><em>Not: <?= htmlspecialchars($item['note']) ?></em></p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+<div class="container-orders">
+    <h2>Sipariş Geçmişi</h2>
+    <?php if (!empty($orders)): ?>
+        <?php foreach ($orders as $order): ?>
+            <div class="order-box">
+                <div class="order-header">
+                    <span><strong>Sipariş Numaranız:</strong> <?= $order['id'] ?></span>
+                    <span><strong>Durum:</strong> <?= htmlspecialchars($order['items'][0]['status']) ?></span>
+                    <span><strong>Toplam:</strong> <?= number_format($order['total_price'], 2) ?>₺</span>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>Henüz sipariş vermediniz.</p>
-        <?php endif; ?>
-    </div>
+                <div class="order-address">
+                    <p><strong>Adres:</strong> <?= htmlspecialchars($order['address']) ?>, <?= htmlspecialchars($order['city']) ?> <?= htmlspecialchars($order['postal_code']) ?></p>
+                </div>
+                <div class="order-items">
+                    <?php foreach ($order['items'] as $item): ?>
+                        <div class="order-item">
+                            <img src="<?= htmlspecialchars($item['image_path']) ?>" alt="<?= htmlspecialchars($item['meal_name']) ?>">
+                            <div class="item-info">
+                                <h4><?= htmlspecialchars($item['meal_name']) ?></h4>
+                                <p><strong>Adet:</strong> <?= $item['quantity'] ?></p>
+                                <p><strong>Fiyat:</strong> <?= number_format($item['price'], 2) ?>₺</p>
+                                <?php if (!empty($item['note'])): ?>
+                                    <p><em>Not: <?= htmlspecialchars($item['note']) ?></em></p>
+                                <?php endif; ?>
+
+                                <?php
+                                $meal_id = $item['meal_id'];
+                                $status = $item['status'];
+                                $has_commented = false;
+                                $user_comment = '';
+
+                                // Yorum kontrolü
+                                $comment_query = "
+                                    SELECT comment FROM evaluations 
+                                    WHERE user_id = $user_id 
+                                    AND meal_id = $meal_id 
+                                    LIMIT 1
+                                ";
+                                $comment_result = mysqli_query($conn, $comment_query);
+                                if (mysqli_num_rows($comment_result) > 0) {
+                                    $has_commented = true;
+                                    $row = mysqli_fetch_assoc($comment_result);
+                                    $user_comment = $row['comment'];
+                                }
+                                ?>
+
+                                <?php if ($status === 'Teslim Edildi'): ?>
+                                    <?php if ($has_commented): ?>
+                                        <p><em>Yorumunuz: <?= htmlspecialchars($user_comment) ?></em></p>
+                                    <?php else: ?>
+                                        <form class="comment-form" data-meal-id="<?= $meal_id ?>">
+                                            <textarea name="comment" rows="3" cols="50" placeholder="Yemeği nasıl buldunuz?" required></textarea><br>
+                                            <button type="submit">Yorum Yap</button>
+                                            <div class="comment-response"></div>
+                                        </form>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Henüz sipariş vermediniz.</p>
+    <?php endif; ?>
+</div>
+
+
     
 
     <footer>
         <!-- Footer içerik -->
     </footer>
     <script src="user_settings.js"></script>
+    
+
 </body>
 </html>

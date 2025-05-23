@@ -177,3 +177,49 @@ document.addEventListener("click", function (event) {
         menu.style.display = "none";
     }
 });
+
+
+//yorum yapma
+document.addEventListener('DOMContentLoaded', function () {
+    const commentForms = document.querySelectorAll('.comment-form');
+
+    commentForms.forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const mealId = form.getAttribute('data-meal-id');
+            const commentText = form.querySelector('textarea').value;
+            const responseBox = form.querySelector('.comment-response');
+
+            fetch('evaluations_register.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `meal_id=${encodeURIComponent(mealId)}&comment=${encodeURIComponent(commentText)}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                responseBox.innerText = data;
+
+                if (data.includes("Yorumunuz kaydedildi")) {
+                    setTimeout(() => {
+                        const parent = form.parentElement;
+
+                        // Formu kaldır
+                        form.remove();
+
+                        // Yorum mesajını göster
+                        const userComment = document.createElement('p');
+                        userComment.innerHTML = `<p><em>Yorumunuz: ${commentText}</em></p>`;
+
+                        parent.appendChild(userComment);
+                    }, 2000);
+                }
+            })
+            .catch(error => {
+                responseBox.innerText = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+            });
+        });
+    });
+});
