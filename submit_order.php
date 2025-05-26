@@ -147,6 +147,20 @@ $phone = trim($_POST['phone']); // Eğer regex veya özel bir temizlik istiyorsa
             $orderItemInsert->execute();
         }
 
+        // Notları meal_notes tablosuna ekle (EĞER session'da varsa)
+if (isset($_SESSION['meal_notes'])) {
+    $noteInsert = $conn->prepare("INSERT INTO meal_notes (meal_id, user_id, order_id, note) VALUES (?, ?, ?, ?)");
+
+    foreach ($_SESSION['meal_notes'] as $meal_id => $note) {
+        $noteInsert->bind_param("iiis", $meal_id, $user_id, $order_id, $note);
+        $noteInsert->execute();
+    }
+    $noteInsert->close();
+
+    // Notlar kaydedildikten sonra session'dan sil
+    unset($_SESSION['meal_notes']);
+}
+
         $deleteCart = $conn->prepare("DELETE FROM cart WHERE user_id = ?");
         $deleteCart->bind_param("i", $user_id);
         $deleteCart->execute();
@@ -195,29 +209,42 @@ $phone = trim($_POST['phone']); // Eğer regex veya özel bir temizlik istiyorsa
         $insertAddress->bind_param("sssi", $address, $city, $postal_code, $guest_id);
         $insertAddress->execute();
 
-        $insertNote = $conn->prepare("INSERT INTO guest_notes (meal_id, note, guest_id) VALUES (?, ?, ?)");
-        foreach ($cartItems as $meal_id => $item) {
-            if (!empty($item['note'])) {
-                $insertNote->bind_param("isi", $meal_id, $item['note'], $guest_id);
-                $insertNote->execute();
-            }
-        }
 
-        $orderInsert = $conn->prepare("INSERT INTO guest_orders (guest_id, total_price, address, city, postal_code)
+  $orderInsert = $conn->prepare("INSERT INTO guest_orders (guest_id, total_price, address, city, postal_code)
                                        VALUES (?, ?, ?, ?, ?)");
         $orderInsert->bind_param("idsss", $guest_id, $total_price, $address, $city, $postal_code);
         if (!$orderInsert->execute()) {
             die("Misafir siparişi eklenemedi: " . $orderInsert->error);
         }
 
-        $order_id = $conn->insert_id;
+      // Notları guest_notes tablosuna ekle
+      $guest_order_id = $conn->insert_id;
 
-        // 🔁 Burada da her yemek için ayrı status ekleniyor
-        $orderItemInsert = $conn->prepare("INSERT INTO guest_order_items (guest_order_id, meal_id, quantity, price, status) VALUES (?, ?, ?, ?, 'Hazırlanıyor')");
-        foreach ($cartItems as $meal_id => $item) {
-            $orderItemInsert->bind_param("iiid", $order_id, $meal_id, $item['quantity'], $item['price']);
-            $orderItemInsert->execute();
+if (isset($_SESSION['guest_notes']) && !empty($_SESSION['guest_notes'])) {
+    $insertNote = $conn->prepare("INSERT INTO guest_notes (meal_id, note, guest_id, guest_order_id) VALUES (?, ?, ?, ?)");
+
+    foreach ($_SESSION['guest_notes'] as $meal_id => $note) {
+        if (!empty($note)) {
+            $insertNote->bind_param("isii", $meal_id, $note, $guest_id, $guest_order_id);
+            $insertNote->execute();
         }
+    }
+
+    $insertNote->close();
+
+    // Session'dan notları temizle
+    unset($_SESSION['guest_notes']);
+}
+
+
+      
+        // 🔁 Burada da her yemek için ayrı status ekleniyor
+       $orderItemInsert = $conn->prepare("INSERT INTO guest_order_items (guest_order_id, meal_id, quantity, price, status) VALUES (?, ?, ?, ?, 'Hazırlanıyor')");
+foreach ($cartItems as $meal_id => $item) {
+    $orderItemInsert->bind_param("iiid", $guest_order_id, $meal_id, $item['quantity'], $item['price']);
+    $orderItemInsert->execute();
+}
+
 
         unset($_SESSION['cart']);
     } else {

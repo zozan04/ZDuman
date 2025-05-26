@@ -141,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Kullanıcı Kayıt Formu -->
         <form id="userRegisterForm" class="form hidden">
             <h3>Kullanıcı Kayıt</h3>
-            <input type="text" id="userName" name="userName" placeholder="Kullanıcı Adı" required>
+            <input type="text" id="userName" name="userName" placeholder="Ad Soyad" required>
             <input type="email" id="userRegEmail" name="userRegEmail" placeholder="Email" required>
             <input type="password" id="userRegPassword" name="userRegPassword" placeholder="Şifre" required>
             <button type="submit">Kayıt Ol</button>

@@ -146,6 +146,8 @@ $result = $conn->query($sql);
                       </div>";
 
                 echo "<p class='dish-title'>" . $row['name'] . "</p>";
+               echo "<a href='#' class='open-evaluations' data-meal-id='" . $row['id'] . "' style='display:inline-block; margin-bottom:10px;'>⭐⭐⭐⭐⭐</a>";
+
 
               
                 echo "<div class='dish-footer'>
@@ -170,7 +172,7 @@ $result = $conn->query($sql);
     </div>
 </div>
 
-   <!-- Modal -->
+   <!-- içerik Modal -->
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-left">
@@ -190,6 +192,20 @@ $result = $conn->query($sql);
     </div>
 </div>
 
+<!-- değerlendirme Modal -->
+<div id="evaluationsModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); 
+     width: 400px; max-height: 60vh; background: white; border:1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.3); 
+     overflow-y: auto; padding: 20px; z-index: 1000;">
+    <button id="closeModal" style="float:right;">Kapat</button>
+    <h4>Yemek Değerlendirmeleri</h4>
+    <div id="evaluationsContent" style="margin-top: 30px;">
+        <!-- Değerlendirmeler buraya yüklenecek -->
+    </div>
+</div>
+
+<!-- Modal arka plan -->
+<div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+     background:rgba(0,0,0,0.5); z-index: 999;"></div>
 
  
 

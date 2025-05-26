@@ -179,7 +179,6 @@ document.addEventListener("click", function (event) {
 });
 
 
-//yorum yapma
 document.addEventListener('DOMContentLoaded', function () {
     const commentForms = document.querySelectorAll('.comment-form');
 
@@ -188,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             const mealId = form.getAttribute('data-meal-id');
+            const orderId = form.getAttribute('data-order-id');  // Eksikti, şimdi kullanılıyor
             const commentText = form.querySelector('textarea').value;
             const responseBox = form.querySelector('.comment-response');
 
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `meal_id=${encodeURIComponent(mealId)}&comment=${encodeURIComponent(commentText)}`
+                body: `meal_id=${encodeURIComponent(mealId)}&order_id=${encodeURIComponent(orderId)}&comment=${encodeURIComponent(commentText)}`
             })
             .then(response => response.text())
             .then(data => {

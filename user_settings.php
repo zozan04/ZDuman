@@ -63,6 +63,8 @@ while ($order = $order_result->fetch_assoc()) {
     $orders[] = $order;
 }
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -207,7 +209,7 @@ while ($order = $order_result->fetch_assoc()) {
                                     <?php if ($has_commented): ?>
                                         <p><em>Yorumunuz: <?= htmlspecialchars($user_comment) ?></em></p>
                                     <?php else: ?>
-                                        <form class="comment-form" data-meal-id="<?= $meal_id ?>">
+                                       <form class="comment-form" data-meal-id="<?= $meal_id ?>" data-order-id="<?= $order['id'] ?>">
                                             <textarea name="comment" rows="3" cols="50" placeholder="Yemeği nasıl buldunuz?" required></textarea><br>
                                             <button type="submit">Yorum Yap</button>
                                             <div class="comment-response"></div>

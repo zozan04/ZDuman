@@ -369,6 +369,76 @@ document.querySelectorAll(".add-to-carts").forEach(button => {
 });
 
 
+//değerlendirmeler
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('evaluationsModal');
+    const overlay = document.getElementById('modalOverlay');
+    const closeModalBtn = document.getElementById('closeModal');
+    const evaluationsContent = document.getElementById('evaluationsContent');
+
+    // Kullanıcı ismini gizle, sadece ilk harfi göster, kalanını yıldız yap
+    function anonymizeName(name) {
+        if (!name) return '';
+        const firstChar = name.charAt(0);
+        const stars = '*'.repeat(name.length - 1);
+        return firstChar + stars;
+    }
+
+    // Değerlendirmeler bağlantılarına tıklama dinleyicisi
+    document.querySelectorAll('.open-evaluations').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const mealId = this.getAttribute('data-meal-id');
+
+            // Modal ve overlay göster
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+
+            // Önce içeriği temizle
+            evaluationsContent.innerHTML = 'Yükleniyor...';
+
+            // AJAX ile yorumları çek
+            fetch('fetch_evaluations.php?meal_id=' + mealId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        evaluationsContent.innerHTML = '<p>Bu yemeğe ait değerlendirme bulunmamaktadır.</p>';
+                    } else {
+                        // Yorumları listele
+                        let html = '<ul style="list-style:none; padding-left:0;">';
+                       data.forEach(item => {
+    const hiddenName = anonymizeName(item.username);
+    html += `<li style="border-bottom:1px solid #ddd; margin-bottom:10px; padding-bottom:10px;">
+        <strong style="display:inline-block; margin-right:10px;">${hiddenName}:</strong>
+        <span>${item.comment}</span><br>
+        <small>${item.created_at}</small>
+    </li>`;
+});
+
+                        html += '</ul>';
+                        evaluationsContent.innerHTML = html;
+                    }
+                })
+                .catch(() => {
+                    evaluationsContent.innerHTML = '<p>Yorumlar yüklenirken hata oluştu.</p>';
+                });
+        });
+    });
+
+    // Modal kapatma butonu dinleyicisi (varsa)
+    closeModalBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    });
+
+    // Overlay tıklanınca modal kapatma (isteğe bağlı)
+    overlay.addEventListener('click', () => {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    });
+});
+
+
 
 
 

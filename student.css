@@ -482,3 +482,39 @@ textarea {
     color: #777;
     font-size: 16px;
 }
+
+/* değerlendirmeler */
+.comment-container {
+    display: flex;
+  flex-wrap: wrap;
+   gap: 20px; /* Kutular arasına boşluk */
+     justify-content: flex-start; /* sola yasla */
+    max-width: 1000px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.comment-box {
+     width: calc(33.333% - 13.33px); /* Üç sütun için genişlik, gap ile uyumlu */
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-sizing: border-box; /* padding ve border genişliğe dahil olsun */
+}
+
+.comment-box h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.comment-box p {
+    margin: 0 0 5px 0;
+    font-style: italic;
+    color: #555;
+}
+
+.comment-box small {
+    color: #999;
+}

@@ -1,0 +1,24 @@
+[]
+{"action":"update_note","meal_id":"60","note":"en son hali"}
+[]
+[]
+[]
+[]
+[]
+[]
+{"action":"update_note","meal_id":"60","note":"artıkkkkkkkk"}
+[]
+{"meal_id":"52"}
+{"meal_id":"52"}
+{"meal_id":"52"}
+{"meal_id":"52"}
+[]
+[]
+{"meal_id":"52"}
+{"meal_id":"55"}
+{"meal_id":"60"}
+[]
+{"action":"update_note","meal_id":"52","note":"şahane not"}
+[]
+[]
+[]

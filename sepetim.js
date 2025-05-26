@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //not ekleme işlemi
 document.addEventListener('DOMContentLoaded', function() {
     const addNoteButtons = document.querySelectorAll('.add-note-btn');
-    const updateNoteButtons = document.querySelectorAll('.update-note-btn');
+  
 
     addNoteButtons.forEach(function(button) {
         button.addEventListener('click', function() {
@@ -302,9 +302,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const noteTextarea = mealItem.querySelector('.meal-note');
             const note = noteTextarea.value.trim();
 
-            if (note) {
+            if (note!=null) {
                 // Not ekleme işlemi
-                fetch('', {
+                fetch('sepetim.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -340,48 +340,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+
+
     // Güncelle butonunun işlevselliği
-    updateNoteButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const mealItem = this.closest('.cart-item');
-            const mealId = mealItem.getAttribute('data-meal-id');
-            const noteTextarea = mealItem.querySelector('.meal-note');
-            const note = noteTextarea.value.trim();
+      
+   const updateNoteButtons = document.querySelectorAll('.update-note-btn');
 
-            if (note) {
-                // Not güncelleme işlemi
-                fetch('', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `action=update_note&meal_id=${mealId}&note=${encodeURIComponent(note)}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Başarılı not güncelleme mesajı
-                        const successMessage = mealItem.querySelector('.note-success-message');
-                        successMessage.textContent = "İsteklerinizi güncelledik!";
-                        successMessage.style.display = 'block';
+updateNoteButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+        const mealItem = this.closest('.cart-item');
+        const mealId = mealItem.getAttribute('data-meal-id');
+        const noteTextarea = mealItem.querySelector('.meal-note');
+        const note = noteTextarea.value.trim();
 
-                        // 2 saniye sonra mesajı gizle
-                        setTimeout(function() {
-                            successMessage.style.display = 'none';
-                        }, 2000); // 2000 ms = 2 saniye
-                    } else {
-                        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Hata:', error);
-                    alert('İşlem sırasında bir hata oluştu.');
-                });
-            } else {
-                alert('Lütfen bir not girin.');
-            }
-        });
+        if (note !== "") {
+            // Not güncelleme işlemi
+            fetch('sepetim.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=update_note&meal_id=${mealId}&note=${encodeURIComponent(note)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const successMessage = mealItem.querySelector('.note-success-message');
+                    successMessage.textContent = "İsteklerinizi güncelledik!";
+                    successMessage.style.display = 'block';
+
+                    noteTextarea.value = '';
+
+                    setTimeout(function() {
+                        successMessage.style.display = 'none';
+                    }, 2000);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                alert('Güncelleme sırasında bir hata oluştu.');
+            });
+        } else {
+            alert('Güncellemek için boş olmayan bir not girin.');
+        }
     });
+});
+
 });
 
                           //sipariş işlemeleri

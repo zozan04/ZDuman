@@ -3,6 +3,8 @@ include('db_connection.php');
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_order_status'])) {
     $order_id = intval($_POST['order_id']);
     $meal_id = intval($_POST['meal_id']);
@@ -250,21 +252,28 @@ foreach ($orders as $order) {
 
 
 //yorumları getirme
-$sql = "SELECT 
-            e.comment,
-            e.created_at,
-            u.name AS user_name,
-            m.name AS meal_name
-        FROM evaluations e
-        JOIN meals m ON e.meal_id = m.id
-        JOIN students u ON e.user_id = u.id
-        WHERE m.user_id = ?
-        ORDER BY e.created_at DESC";
+$student_id = (int) $_SESSION['student_id']; // Güvenlik için cast
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $student_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$query = "
+    SELECT 
+        m.name AS meal_name, 
+        e.comment, 
+        e.created_at,
+        e.order_id
+    FROM meals m
+    JOIN evaluations e ON m.id = e.meal_id
+    WHERE m.user_id = $student_id
+    ORDER BY e.created_at DESC
+";
+
+$result = mysqli_query($conn, $query);
+if (!$result) {
+    die("Sorgu hatası: " . mysqli_error($conn));
+}
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -509,21 +518,25 @@ $result = $stmt->get_result();
 </div>
 
 
-<h2>Yemeklerinize Yapılan Yorumlar</h2>
-<?php if ($result->num_rows > 0): ?>
-    <?php while ($row = $result->fetch_assoc()): ?>
-        <div class="comment-box">
-            <p><strong>Yemek:</strong> <?= htmlspecialchars($row['meal_name']) ?></p>
-            <p><strong>Yorumu Yapan:</strong> <?= htmlspecialchars($row['user_name']) ?></p>
-            <p><strong>Yorum:</strong> <?= nl2br(htmlspecialchars($row['comment'])) ?></p>
-            <p><em>Tarih: <?= $row['created_at'] ?></em></p>
-            <hr>
-        </div>
-    <?php endwhile; ?>
-<?php else: ?>
-    <p>Henüz yemeklerinize yorum yapılmamış.</p>
-<?php endif; ?>
+<div class="comment-container">
+    <h2>Yaptığınız Yemeklere Yapılan Yorumlar</h2>
+
+    <?php if (mysqli_num_rows($result) > 0): ?>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <div class="comment-box">
+                <h3><?php echo htmlspecialchars($row['meal_name']); ?></h3>
+                <p>"<?php echo nl2br(htmlspecialchars($row['comment'])); ?>"</p>
+                <small>
+                    Yorum Tarihi: <?php echo date('d-m-Y H:i', strtotime($row['created_at'])); ?><br>
+                    Sipariş ID: <?php echo htmlspecialchars($row['order_id']); ?>
+                </small>
+            </div>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <p>Henüz yemeklerinize yorum yapılmamış.</p>
+    <?php endif; ?>
 </div>
+
 <script src="student.js"></script>
 
 </body>
