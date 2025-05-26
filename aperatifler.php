@@ -144,7 +144,7 @@ $result = $conn->query($sql);
                       </div>";
 
                 echo "<p class='dish-title'>" . $row['name'] . "</p>";
-
+                echo "<a href='#' class='open-evaluations star-link' data-meal-id='" . $row['id'] . "'>⭐⭐⭐⭐⭐</a>";
                 echo "<div class='dish-footer'>
                         <div class='dish-price'>₺" . number_format($row['price'], 2) . "</div>
                         <div class='separator'></div>
@@ -167,7 +167,7 @@ $result = $conn->query($sql);
     </div>
 </div>
 
-    <!-- Modal -->
+    
       <!-- Modal -->
 <div id="myModal" class="modal">
     <div class="modal-content">
@@ -188,6 +188,18 @@ $result = $conn->query($sql);
     </div>
 </div>
 
+
+<!-- Değerlendirme Modal -->
+<div id="evaluationsModal" class="modal-evaluations">
+    <button id="closeModal" class="close-button">Kapat</button>
+    <h4>Yemek Değerlendirmeleri</h4>
+    <div id="evaluationsContent" class="modal-content">
+        <!-- Değerlendirmeler buraya yüklenecek -->
+    </div>
+</div>
+
+<!-- Modal Arka Plan -->
+<div id="modalOverlay" class="modal-overlay"></div>
 
     <script src="ana_yemekler.js"></script>
     <script>

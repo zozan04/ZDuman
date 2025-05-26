@@ -1,8 +1,5 @@
 <?php
 
-var_dump($_POST);
-exit;
-
 session_start();
 include('db_connection.php');
 
@@ -14,8 +11,9 @@ $user_id = $_SESSION['user_id'];
 $order_id = (int)$_POST['order_id'];
 $meal_id = (int)$_POST['meal_id'];
 
-var_dump($user_id, $meal_id, $order_id);  // Değerleri kontrol etmek için buraya ekle
+
 $comment = mysqli_real_escape_string($conn, $_POST['comment']);
+
 
 
 

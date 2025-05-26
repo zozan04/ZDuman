@@ -30,7 +30,7 @@ html {
     display: flex;
     justify-content: space-between; /* Center the content horizontally */
     align-items: center; /* Center the content vertically */
-    background-color: rgba(74, 11, 11, 0.5); /* Navbar background color */
+    background-color: rgba(74, 11, 11, 1); /* Navbar background color */
     padding: 20px 0; /* Top and bottom padding to create space */
     z-index: 1000;
     width: 100%;

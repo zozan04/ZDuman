@@ -709,8 +709,73 @@ h2{
     }
 }
 
+/* değerlendirme */
+.star-link {
+    display: inline-block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: #f5b301; /* altın sarısı yıldız rengi */
+    transition: transform 0.3s ease;
+}
 
+.star-link:hover {
+    transform: scale(1.1);
+    color: #ffa500; /* daha parlak sarı */
+}
 
+.modal-evaluations {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    max-height: 60vh;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    overflow-y: auto;
+    padding: 1px;
+    z-index: 1000;
+    border-radius: 8px;
+}
 
+.modal-evaluations h4{
+      text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+.close-button {
+    float: right;
+    background-color: #eee;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.close-button:hover {
+    background-color: #ddd;
+}
+
+.modal-content {
+    margin-top: 1px;
+    margin-top: 30px;
+    width: 80%;
+    height: 80%;
+}
 
 
