@@ -485,20 +485,35 @@ textarea {
 
 /* değerlendirmeler */
 .comment-container {
+    width: 95.5%;
     display: flex;
   flex-wrap: wrap;
    gap: 20px; /* Kutular arasına boşluk */
      justify-content: flex-start; /* sola yasla */
-    max-width: 1000px;
+   border-radius: 8px;
     margin: 20px auto;
     font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
 }
+ .comment-container h2 {
+            text-align: center;
+            color: #511212;
+            width: 100%;
+        }
+
+.comment-container p {
+            text-align: center;
+            color: #511212;
+            
+        }
 
 .comment-box {
-     width: calc(33.333% - 13.33px); /* Üç sütun için genişlik, gap ile uyumlu */
+    width: calc(33.333% - 30px); /* Üç sütun için genişlik, gap ile uyumlu */
     border: 1px solid #ccc;
-    padding: 15px;
+    padding: 10px;
     margin-bottom: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
     border-radius: 8px;
     background-color: #f9f9f9;
     box-sizing: border-box; /* padding ve border genişliğe dahil olsun */
@@ -511,7 +526,7 @@ textarea {
 
 .comment-box p {
     margin: 0 0 5px 0;
-    font-style: italic;
+    text-align: left;
     color: #555;
 }
 

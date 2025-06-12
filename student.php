@@ -533,7 +533,9 @@ if (!$result) {
             </div>
         <?php endwhile; ?>
     <?php else: ?>
-        <p>Henüz yemeklerinize yorum yapılmamış.</p>
+       <div style="width: 100%;">
+            <p>Henüz yemeklerinize yorum yapılmamış.</p>
+        </div>
     <?php endif; ?>
 </div>
 
